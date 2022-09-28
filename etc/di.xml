@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="GuenturMagentoImport" xsi:type="object">Guentur\MagentoImport\Console\DefaultImport</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <preference for="Guentur\MagentoImport\Api\DataProviderPoolInterface"
+                type="Guentur\MagentoImport\Model\DataProvider\DataProviderPool" />
+    <type name="Guentur\MagentoImport\Api\DataProviderPoolInterface">
+        <arguments>
+            <argument name="dataProviders" xsi:type="array">
+                <item name="database" xsi:type="object">Guentur\MagentoImport\Model\DataProvider\DbDataProvider</item>
+                <item name="csv" xsi:type="object">Guentur\MagentoImport\Model\DataProvider\CsvDataProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <preference for="Guentur\MagentoImport\Api\DataImporterPoolInterface"
+                type="Guentur\MagentoImport\Model\DataImporter\DataImporterPool" />
+    <type name="Guentur\MagentoImport\Api\DataImporterPoolInterface">
+        <arguments>
+            <argument name="dataImporters" xsi:type="array">
+                <item name="database" xsi:type="string">Guentur\MagentoImport\Model\DataImporter\DbDataImporter</item>
+                <item name="csv" xsi:type="string">Guentur\MagentoImport\Model\DataImporter\CsvDataImporter</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Guentur\MagentoImport\Model\Solver\StorageSolverProvider">
+        <arguments>
+            <argument name="solvers" xsi:type="array">
+<!--                @todo-->
+<!--                <item name="database" xsi:type="string"></item>-->
+                <item name="csv" xsi:type="object">Guentur\MagentoImport\Model\Solver\CsvStorageSolver</item>
+            </argument>
+        </arguments>
+    </type>
+
+<!--    <type name="Guentur\MagentoImport\Api\PoolInterface">-->
+<!--        <arguments>-->
+<!--            <argument name="type" xsi:type="array">-->
+<!--                <item name="database" xsi:type="array">-->
+<!--                    <item name="dataImporter" xsi:type="string">Guentur\MagentoImport\Model\DataImporter\DbDataImporter</item>-->
+<!--                    <item name="dataProvider" xsi:type="string">Guentur\MagentoImport\Model\DataProvider\DbDataProvider</item>-->
+<!--                </item>-->
+<!--                <item name="csv" xsi:type="array">-->
+<!--                    <item name="dataImporter" xsi:type="string">Guentur\MagentoImport\Model\DataImporter\CsvDataImporter</item>-->
+<!--                    <item name="dataProvider" xsi:type="string">Guentur\MagentoImport\Model\DataProvider\CsvDataProvider</item>-->
+<!--                    <item name="solver" xsi:type="string">Guentur\MagentoImport\Model\Solver\CsvStorageSolver</item>-->
+<!--                </item>-->
+<!--            </argument>-->
+<!--        </arguments>-->
+<!--    </type>-->
+
+    <type name="Guentur\MagentoImport\Model\ImportState">
+        <arguments>
+            <argument name="rememberedEntitiesStorageType" xsi:type="const">Guentur\MagentoImport\Model\DataImporter\CsvDataImporter::TYPE</argument>
+            <argument name="rememberedEntitiesStoragePath" xsi:type="const">Guentur\MagentoImport\Model\ImportState::IMPORT_STATE_FILE_NAME</argument>
+        </arguments>
+    </type>
+
+    <preference for="Guentur\MagentoImport\Api\Data\DataImportInfoInterface"
+                type="Guentur\MagentoImport\Model\Data\DataImportInfo" />
+</config>
