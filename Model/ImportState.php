@@ -3,10 +3,8 @@
 namespace Guentur\MagentoImport\Model;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
-use Guentur\MagentoImport\Api\DataImporterInterface;
-use Guentur\MagentoImport\Model\DataImporter\CsvDataImporter;
-use Guentur\MagentoImport\Model\DataProvider\CsvDataProvider;
-use Guentur\MagentoImport\Api\DataImporterPoolInterface;
+use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
+use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
 use Guentur\MagentoImport\Api\DataProviderPoolInterface;
 use Guentur\MagentoImport\Model\EntityManager;
 use Guentur\MagentoImport\Model\Solver\StorageSolverProvider;

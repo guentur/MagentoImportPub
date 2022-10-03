@@ -2,22 +2,19 @@
 
 namespace Guentur\MagentoImport\Console;
 
+use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
+use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
+use Guentur\MagentoImport\Api\DataProviderPoolInterface;
+use Guentur\MagentoImport\Api\ImportWithProgressBarInterface;
+use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
+use Guentur\MagentoImport\Model\ProgressBarWrapper;
 use Magento\Framework\Console\Cli;
+use Magento\Framework\DB\Adapter\TableNotFoundException;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-
-use Guentur\MagentoImport\Api\DataProviderPoolInterface;
-use Guentur\MagentoImport\Api\DataImporterPoolInterface;
-use Guentur\MagentoImport\Api\DataImporterInterface;
-use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
-use Guentur\MagentoImport\Api\ImportWithProgressBarInterface;
-use Guentur\MagentoImport\Model\ProgressBarWrapper;
-use Magento\Framework\DB\Adapter\TableNotFoundException;
 
 class DefaultImport extends Command
 {

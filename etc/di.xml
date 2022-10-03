@@ -20,9 +20,9 @@
         </arguments>
     </type>
 
-    <preference for="Guentur\MagentoImport\Api\DataImporterPoolInterface"
+    <preference for="Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface"
                 type="Guentur\MagentoImport\Model\DataImporter\DataImporterPool" />
-    <type name="Guentur\MagentoImport\Api\DataImporterPoolInterface">
+    <type name="Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface">
         <arguments>
             <argument name="dataImporters" xsi:type="array">
                 <item name="database_remember" xsi:type="string">Guentur\MagentoImport\Model\Database\DataImporter\DbImporterRemember</item>

@@ -2,10 +2,10 @@
 
 namespace Guentur\MagentoImport\Model\DataImporter;
 
-use Guentur\MagentoImport\Api\DataImporterPoolInterface;
-use Guentur\MagentoImport\Api\DataImporterInterface;
+use Guentur\MagentoImport\Api\DataImporter\DataImporterInterface;
+use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
+use InvalidArgumentException;
 use Magento\Framework\Exception\LocalizedException;
-use \InvalidArgumentException;
 use Magento\Framework\ObjectManagerInterface;
 
 class DataImporterPool implements DataImporterPoolInterface
