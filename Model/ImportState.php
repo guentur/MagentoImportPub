@@ -77,10 +77,11 @@ class ImportState
 
         /** DataImportInfoInterface $dataImportInfo */
         $dataImportInfo = $this->dataImportInfoF->create();
-        $dataImportInfo->setPathToDataProvider($pathToProvider);
-        $dataImportInfo->setPathToRecipient($pathToRecipient);
+        //@todo Hide not used cell from dataImportInfo
+        //@todo if we dont remember failed entity while import remembered entities data there is not required path to data-provider
+        $dataImportInfo->setPathToRecipient($this->rememberedEntitiesStoragePath);
 
-        /** @var \Guentur\MagentoImport\Api\DataImporterInterface $dataImporter */
+        /** @var \Guentur\MagentoImport\Api\DataImporter\DataImporterInterface $dataImporter */
         $dataImporter = $this->dataImporterPool->getDataImporter($this->rememberedEntitiesStorageType);
         $dataImporter->setDataImportInfo($dataImportInfo);
         $dataImporter->importData($dataForImport);
