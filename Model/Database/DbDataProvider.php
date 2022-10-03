@@ -1,6 +1,6 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\DataProvider;
+namespace Guentur\MagentoImport\Model\Database;
 
 use Guentur\MagentoImport\Api\TableDataProviderInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;

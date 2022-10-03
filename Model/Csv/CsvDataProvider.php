@@ -1,6 +1,6 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\DataProvider;
+namespace Guentur\MagentoImport\Model\Csv;
 
 use Guentur\MagentoImport\Api\TableDataProviderInterface;
 use Guentur\MagentoImport\Model\DataProvider\Csv\DataProviderValidator;

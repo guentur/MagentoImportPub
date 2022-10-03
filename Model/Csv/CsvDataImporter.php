@@ -1,6 +1,6 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\DataImporter;
+namespace Guentur\MagentoImport\Model\Csv;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\DataImporterInterface;
@@ -20,6 +20,8 @@ class CsvDataImporter implements DataImporterInterface
      * @todo Apply mapping
      */
     public function importData(array $dataToInsert, string $mode = self::MODE_ALL): bool {
+        //@todo Validate Path to data-receiver
+
         //@todo refactor for the reason to pass associative arrays with different keys and save them all to the csv file
         //@todo Implement Mapping functionality
         $resource = fopen($this->getDataImportInfo()->getPathToRecipient(), 'w');

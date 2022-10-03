@@ -1,6 +1,6 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\DataImporter;
+namespace Guentur\MagentoImport\Model\Database;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\DataImporterInterface;
