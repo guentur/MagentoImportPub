@@ -3,7 +3,6 @@
 namespace Guentur\MagentoImport\Model\Database\DataImporter;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
-use Guentur\MagentoImport\Api\DataImporter\DataImporterInterface;
 use Guentur\MagentoImport\Api\DataImporter\ImporterBaseInterface;
 use Guentur\MagentoImport\Api\ImportWithProgressBarInterface;
 use Guentur\MagentoImport\Model\EntityScopeManager;
@@ -14,7 +13,7 @@ use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
-class DbImporterBase implements DataImporterInterface, ImportWithProgressBarInterface, ImporterBaseInterface
+class DbImporterBase implements ImportWithProgressBarInterface, ImporterBaseInterface
 {
     const TYPE = 'database';
 

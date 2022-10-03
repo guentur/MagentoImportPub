@@ -2,7 +2,7 @@
 
 namespace Guentur\MagentoImport\Api\DataImporter;
 
-interface ImporterRememberInterface
+interface ImporterRememberInterface extends DataImporterInterface
 {
 
 }
