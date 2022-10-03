@@ -34,8 +34,10 @@ class DbDataProvider implements TableDataProviderInterface
         $tableName = $this->moduleDataSetup->getTable($dataProviderPath);
         $dbAdapter = $this->moduleDataSetup->getConnection();
 
+        //@todo optimize
         $data = $dbAdapter->describeTable($tableName);
+        $columnNames = array_keys($data);
 
-        return $data;
+        return $columnNames;
     }
 }
