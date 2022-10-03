@@ -1,11 +1,11 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\DataProvider\Csv;
+namespace Guentur\MagentoImport\Model\Csv\Validator;
 
-use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Guentur\MagentoImport\Model\Exception\InvalidFileExtensionException;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
-class DataProviderValidator
+class CsvFileValidator
 {
     public function validatePath(string $dataProviderPath)
     {

@@ -3,14 +3,14 @@
 namespace Guentur\MagentoImport\Model\Csv;
 
 use Guentur\MagentoImport\Api\TableDataProviderInterface;
-use Guentur\MagentoImport\Model\DataProvider\Csv\DataProviderValidator;
+use Guentur\MagentoImport\Model\Csv\Validator\CsvFileValidator;
 
 class CsvDataProvider implements TableDataProviderInterface
 {
     private $validator;
 
     public function __construct(
-        DataProviderValidator $validator
+        CsvFileValidator $validator
     ) {
         $this->validator = $validator;
     }
