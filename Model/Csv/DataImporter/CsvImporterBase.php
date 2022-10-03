@@ -28,8 +28,8 @@ class CsvImporterBase implements ImporterBaseInterface
      * @todo Make validation
      * @todo Apply mapping
      */
-    public function importData(array $dataToInsert, string $mode = self::MODE_ALL): bool {
-        //@todo Validate Path to data-receiver
+    public function importData(array $dataToInsert, string $mode = self::MODE_ALL): bool
+    {
         $pathToRecipient = $this->getDataImportInfo()->getPathToRecipient();
         $this->validator->validatePath($pathToRecipient);
 
