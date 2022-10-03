@@ -23,30 +23,30 @@ class DataImporterPool implements DataImporterPoolInterface
     }
 
     /**
-     * @param string $name
+     * @param string $type
      * @return DataImporterInterface
      * @throws LocalizedException
      */
-    public function getDataImporter(string $name): DataImporterInterface
+    public function getDataImporter(string $type): DataImporterInterface
     {
-        if (!array_key_exists($name, $this->dataImporters)) {
-            throw new InvalidArgumentException('Data importer for name ' . $name . ' not found.
+        if (!array_key_exists($type, $this->dataImporters)) {
+            throw new InvalidArgumentException('Data importer for name ' . $type . ' not found.
              Data importer must be defined in di.xml file for Guentur\MagentoImport\Api\DataImporterPoolInterface');
         }
 
-        $dataImporterInstance = $this->create($this->dataImporters[$name]);
+        $dataImporterInstance = $this->create($this->dataImporters[$type]);
 
         return $dataImporterInstance;
     }
 
     /**
-     * @param $name
+     * @param $type
      * @return DataImporterInterface
      * @throws LocalizedException
      */
-    protected function create($name): DataImporterInterface
+    protected function create($type): DataImporterInterface
     {
-        $dataImporterInstance = $this->objectManager->create($name);
+        $dataImporterInstance = $this->objectManager->create($type);
 
         if (!($dataImporterInstance instanceof DataImporterInterface)) {
             throw new LocalizedException(
