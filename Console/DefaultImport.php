@@ -42,6 +42,8 @@ class DefaultImport extends Command
 
     private const OPTION_COLUMNS_MAPPING = 'columns-mapping';
 
+    private const OPTION_DONT_REMEMBER_FAILED_ENTITY = 'dont-remember-failed-entity';
+
     /**
      * @var DataProviderPoolInterface
      */
@@ -191,7 +193,12 @@ class DefaultImport extends Command
         $output->writeln(__("Recipient name: %1", $dataImportInfo->getRecipientName()));
         $output->writeln(__("Data-provider name: %1", $dataImportInfo->getDataProviderName()));
 
-        /** @var \Guentur\MagentoImport\Api\DataImporterInterface $dataImporter */
+        $optionDontRememberFailedEntity = $input->getOption(self::OPTION_DONT_REMEMBER_FAILED_ENTITY);
+        if (!$optionDontRememberFailedEntity) {
+            $recipientType .= '_remember';
+        }
+
+        /** @var \Guentur\MagentoImport\Api\DataImporter\DataImporterInterface $dataImporter */
         $dataImporter = $this->dataImporterPool->getDataImporter($recipientType);
         $dataImporter->setDataImportInfo($dataImportInfo);
 
@@ -277,6 +284,11 @@ class DefaultImport extends Command
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'Format: data_provider_column/data_recipient_column',
                 []),
+            new InputOption(
+                self::OPTION_DONT_REMEMBER_FAILED_ENTITY,
+                null,
+                InputOption::VALUE_NONE,
+                'Value: either true or false'),
 
             //@todo
 //            new InputOption(
