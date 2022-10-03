@@ -6,7 +6,7 @@ use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\DataImporter\ImporterBaseInterface;
 use Guentur\MagentoImport\Model\Csv\Validator\CsvFileValidator;
 
-class CsvBaseImporter implements ImporterBaseInterface
+class CsvImporterBase implements ImporterBaseInterface
 {
     const TYPE = 'csv';
 

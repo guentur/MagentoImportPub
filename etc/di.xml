@@ -29,8 +29,8 @@
                 <item name="database" xsi:type="string">Guentur\MagentoImport\Model\Database\DataImporter\DbImporterBase</item>
 <!--                @todo create csv data importer with remembering-->
 <!--                <item name="csv_remember" xsi:type="string">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterRemember</item>-->
-                <item name="csv_remember" xsi:type="string">Guentur\MagentoImport\Model\Csv\DataImporter\CsvBaseImporter</item>
-                <item name="csv" xsi:type="string">Guentur\MagentoImport\Model\Csv\DataImporter\CsvBaseImporter</item>
+                <item name="csv_remember" xsi:type="string">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterBase</item>
+                <item name="csv" xsi:type="string">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterBase</item>
             </argument>
         </arguments>
     </type>
@@ -63,7 +63,7 @@
 
     <type name="Guentur\MagentoImport\Model\ImportState">
         <arguments>
-            <argument name="rememberedEntitiesStorageType" xsi:type="const">Guentur\MagentoImport\Model\Csv\DataImporter\CsvBaseImporter::TYPE</argument>
+            <argument name="rememberedEntitiesStorageType" xsi:type="const">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterBase::TYPE</argument>
             <argument name="rememberedEntitiesStoragePath" xsi:type="const">Guentur\MagentoImport\Model\ImportState::IMPORT_STATE_FILE_NAME</argument>
         </arguments>
     </type>
