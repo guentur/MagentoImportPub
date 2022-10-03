@@ -18,7 +18,7 @@ class CsvFileValidator
         // @todo why it find file that does not exist (command example in the saved notes in the telegram group)
         if (!file_exists($dataProviderPath)) {
 //            throw new \InvalidArgumentException('File ' . $dataProviderPath . ' does not exist');
-            throw new FileNotFoundException(__('File "%s" could not be found.', $dataProviderPath));
+            throw new FileNotFoundException(__('File "%1" could not be found.', $dataProviderPath));
         }
     }
 }
