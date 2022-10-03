@@ -6,10 +6,7 @@ use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
 use Guentur\MagentoImport\Api\DataProviderPoolInterface;
-use Guentur\MagentoImport\Model\EntityManager;
 use Guentur\MagentoImport\Model\Solver\StorageSolverProvider;
-use Guentur\MagentoImport\Model\EntityScopeManager;
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 
 class ImportState
 {
@@ -116,7 +113,7 @@ class ImportState
     public function getArraySinceRememberedEntity(array $array, DataImportInfoInterface $dataImportInfo): array
     {
         $rememberedEntity = $this->getRememberedEntity($dataImportInfo);
-        if (isset($rememberedEntity)) {
+        if (isset($rememberedEntity) && array_key_exists($rememberedEntity, $array)) {
             $array = array_slice($array, $rememberedEntity);
         }
         return $array;
