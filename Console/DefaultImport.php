@@ -30,7 +30,7 @@ class DefaultImport extends Command
     /**
      * default = db
      */
-    private const OPTION_RECIPIENT = 'recipient';
+    private const OPTION_RECIPIENT = 'recipient-type';
 
     /**
      * Path to file OR Database table name with data.
@@ -41,7 +41,7 @@ class DefaultImport extends Command
     /**
      * default = csv
      */
-    private const OPTION_DATA_PROVIDER = 'data-provider';
+    private const OPTION_DATA_PROVIDER = 'data-provider-type';
 
     private const OPTION_COLUMNS_MAPPING = 'columns-mapping';
 
