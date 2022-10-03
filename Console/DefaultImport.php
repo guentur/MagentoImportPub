@@ -213,7 +213,7 @@ class DefaultImport extends Command
             $secondMessage = __('Check if you rightly set up Recipient Type. Your Recipient Type is "%1"',
                                 '<fg=cyan>' . $recipientType . '</>');
             $infoMessage = __('Use option %1 to set up a Recipient Type. Run %2 for more info',
-                '<fg=cyan>--recipient</>',
+                '<fg=cyan>--' . self::OPTION_RECIPIENT . '</>',
                               '<fg=cyan>' . $this->getName() . ' --help</>');
             $output->writeln('<error>' . $message . '</error>');
             $output->writeln('<error>' . $secondMessage . '</error>');
