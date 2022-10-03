@@ -1,12 +1,13 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Csv;
+namespace Guentur\MagentoImport\Model\Csv\DataImporter;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
-use Guentur\MagentoImport\Api\DataImporterInterface;
+use Guentur\MagentoImport\Api\DataImporter\DataImporterInterface;
+use Guentur\MagentoImport\Api\DataImporter\ImporterBaseInterface;
 use Guentur\MagentoImport\Model\Csv\Validator\CsvFileValidator;
 
-class CsvDataImporter implements DataImporterInterface
+class CsvBaseImporter implements DataImporterInterface, ImporterBaseInterface
 {
     const TYPE = 'csv';
 
