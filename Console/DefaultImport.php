@@ -117,8 +117,7 @@ class DefaultImport extends Command
         $dataForImport = $this->getDataForImport($input, $output);
         try {
             $statusCode = $this->importData($dataForImport, $input, $output);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
         }
 

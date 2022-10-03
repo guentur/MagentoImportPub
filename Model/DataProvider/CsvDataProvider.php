@@ -3,31 +3,38 @@
 namespace Guentur\MagentoImport\Model\DataProvider;
 
 use Guentur\MagentoImport\Api\TableDataProviderInterface;
+use Guentur\MagentoImport\Model\DataProvider\Csv\DataProviderValidator;
 
 class CsvDataProvider implements TableDataProviderInterface
 {
+    private $validator;
+
+    public function __construct(
+        DataProviderValidator $validator
+    ) {
+        $this->validator = $validator;
+    }
+
     public function getData(string $dataProviderPath): array
     {
-        $allRows = [];
+        $this->validator->validatePath($dataProviderPath);
 
-        //@todo throw an exception
-        if (file_exists($dataProviderPath)) {
-            $resource = fopen($dataProviderPath, 'r');
-            $header = fgetcsv($resource);
-            //@todo optimize
-            while ($row = fgetcsv($resource)) {
-                $allRows[] = array_combine($header, $row);
-            }
-            fclose($resource);
-        } else {
-            throw new \InvalidArgumentException('File ' . $dataProviderPath . ' does not exist');
+        $allRows = [];
+        $resource = fopen($dataProviderPath, 'r');
+        $header = fgetcsv($resource);
+        //@todo optimize
+        while ($row = fgetcsv($resource)) {
+            $allRows[] = array_combine($header, $row);
         }
+        fclose($resource);
 
         return $allRows;
     }
 
     public function getColumnNames(string $dataProviderPath): array
     {
+        $this->validator->validatePath($dataProviderPath);
+
         $resource = fopen($dataProviderPath, 'r');
         $header = fgetcsv($resource, 1000, ",");
         fclose($resource);
