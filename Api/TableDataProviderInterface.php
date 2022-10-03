@@ -7,6 +7,11 @@ namespace Guentur\MagentoImport\Api;
 interface TableDataProviderInterface extends DataProviderInterface
 {
     /**
+     * $columnNames = [
+     *      1 => column_name,
+     *      ...
+     * ]
+     *
      * @param string $dataProviderPath
      * @return array
      */
