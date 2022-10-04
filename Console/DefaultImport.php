@@ -142,7 +142,15 @@ class DefaultImport extends Command
     {
         $optionMapping = $input->getOption(self::OPTION_COLUMNS_MAPPING);
         $enteredMapping = $this->defaultMapping->formatMapping($optionMapping);
-        $enteredMapping = $this->interactMappingOption($input, $output, $enteredMapping);
+        try {
+            $enteredMapping = $this->interactMappingOption($input, $output, $enteredMapping);
+        } catch (TableNotFoundException $e) {
+            $dataProviderType = $input->getOption(self::OPTION_DATA_PROVIDER);
+            $pathToDataProvider = $input->getOption(self::OPTION_PATH_TO_DATA_PROVIDER);
+            $message = $this->getTableNotFoundException($dataProviderType, $pathToDataProvider, 'DataProvider');
+            $output->writeln('<error>' . $message . '</error>');
+            exit(1);
+        }
 
         $this->defaultMapping->setMapping($enteredMapping);
     }
@@ -155,17 +163,21 @@ class DefaultImport extends Command
     public function getDataForImport(InputInterface $input, OutputInterface $output): array
     {
         $dataProviderType = $input->getOption(self::OPTION_DATA_PROVIDER);
-        $dataProviderPath = $input->getOption(self::OPTION_PATH_TO_DATA_PROVIDER);
+        $pathToDataProvider = $input->getOption(self::OPTION_PATH_TO_DATA_PROVIDER);
         $output->writeln(__("Data-provider type: %1", $dataProviderType));
-        $output->writeln(__("Path to data-provider: %1", $dataProviderPath));
+        $output->writeln(__("Path to data-provider: %1", $pathToDataProvider));
 
         $dataForImport = [];
         try {
             /** @var \Guentur\MagentoImport\Api\TableDataProviderInterface $dataProvider */
             $dataProvider = $this->dataProviderPool->getDataProvider($dataProviderType);
-            $dataForImport = $dataProvider->getData($dataProviderPath);
+            $dataForImport = $dataProvider->getData($pathToDataProvider);
         } catch (\InvalidArgumentException $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
+        } catch (TableNotFoundException $e) {
+            $message = $this->getTableNotFoundException($dataProviderType, $pathToDataProvider, 'DataProvider');
+            $output->writeln('<error>' . $message . '</error>');
+            exit(1);
         }
 
         return $dataForImport;
@@ -209,15 +221,8 @@ class DefaultImport extends Command
         try {
             $dataImporter->importData($dataForImport);
         } catch (TableNotFoundException $e) {
-            $message = __('Cannot find table by path to Recipient: %1', $pathToRecipient);
-            $secondMessage = __('Check if you rightly set up Recipient Type. Your Recipient Type is "%1"',
-                                '<fg=cyan>' . $recipientType . '</>');
-            $infoMessage = __('Use option %1 to set up a Recipient Type. Run %2 for more info',
-                '<fg=cyan>--' . self::OPTION_RECIPIENT . '</>',
-                              '<fg=cyan>' . $this->getName() . ' --help</>');
+            $message = $this->getTableNotFoundException($recipientType, $pathToRecipient, 'Recipient');
             $output->writeln('<error>' . $message . '</error>');
-            $output->writeln('<error>' . $secondMessage . '</error>');
-            $output->writeln('<info>' . $infoMessage . '</info>');
             return Cli::RETURN_FAILURE;
         }
 
@@ -236,10 +241,17 @@ class DefaultImport extends Command
     public function interactMappingOption(InputInterface $input, OutputInterface $output, array $enteredMapping): array
     {
         $dataProviderType = $input->getOption(self::OPTION_DATA_PROVIDER);
-        $dataProviderPath = $input->getOption(self::OPTION_PATH_TO_DATA_PROVIDER);
+        $pathToDataProvider = $input->getOption(self::OPTION_PATH_TO_DATA_PROVIDER);
         /** @var \Guentur\MagentoImport\Api\TableDataProviderInterface $dataProvider */
         $dataProvider = $this->dataProviderPool->getDataProvider($dataProviderType);
-        $dataProviderColumns = $dataProvider->getColumnNames($dataProviderPath);
+        $dataProviderColumns = [];
+//        try {
+            $dataProviderColumns = $dataProvider->getColumnNames($pathToDataProvider);
+//        } catch (TableNotFoundException $e) {
+//            $message = $this->getTableNotFoundException($dataProviderType, $pathToDataProvider);
+//            $output->writeln('<error>' . $message . '</error>');
+//        }
+
 
         /** @var \Symfony\Component\Console\Helper\QuestionHelper $questionHelper */
         $questionHelper = $this->getHelper('question');
@@ -252,6 +264,17 @@ class DefaultImport extends Command
             }
         }
         return $enteredMapping;
+    }
+
+    public function getTableNotFoundException(string $type, string $path, string $logicType): string
+    {
+        $message = __('Cannot find table by path to ' . $logicType . ': %1', $path);
+        $secondMessage = __('Check if you rightly set up ' . $logicType . ' Type. Your ' . $logicType . ' Type is "%1"',
+                            '<fg=cyan>' . $type . '</>');
+        $infoMessage = __('Use option %1 to set up a ' . $logicType . ' Type. Run %2 for more info',
+                          '<fg=cyan>--' . self::OPTION_RECIPIENT . '</>',
+                          '<fg=cyan>' . $this->getName() . ' --help</>');
+        return $message . PHP_EOL . $secondMessage . PHP_EOL . $infoMessage;
     }
 
     /**
