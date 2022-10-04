@@ -74,7 +74,7 @@ class ImportState
 
         /** DataImportInfoInterface $dataImportInfo */
         $dataImportInfo = $this->dataImportInfoF->create();
-        //@todo Hide not used cell from dataImportInfo
+        //@todo Hide not used cells from dataImportInfo. In this case pathToDataProvider
         //@todo if we dont remember failed entity while import remembered entities data there is not required path to data-provider
         $dataImportInfo->setPathToRecipient($this->rememberedEntitiesStoragePath);
 

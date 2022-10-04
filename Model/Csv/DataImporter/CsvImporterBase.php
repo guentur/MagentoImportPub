@@ -25,8 +25,7 @@ class CsvImporterBase implements ImporterBaseInterface
      * @param string $mode
      * @return bool
      *
-     * @todo Make validation
-     * @todo Apply mapping
+     * @todo Implement Mapping functionality
      */
     public function importData(array $dataToInsert, string $mode = self::MODE_ALL): bool
     {
@@ -34,7 +33,6 @@ class CsvImporterBase implements ImporterBaseInterface
         $this->validator->validatePath($pathToRecipient);
 
         //@todo refactor for the reason to pass associative arrays with different keys and save them all to the csv file
-        //@todo Implement Mapping functionality
         $resource = fopen($pathToRecipient, 'w');
         fputcsv($resource, array_keys(array_values($dataToInsert)[0]));
         foreach ($dataToInsert as $row) {
