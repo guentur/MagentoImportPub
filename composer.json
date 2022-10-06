@@ -1,5 +1,5 @@
 {
-    "name": "Guentur/module-cli-import",
+    "name": "guentur/module-cli-import",
     "description": "Run import from csv to database table and vise versa. You can extend functionality",
     "require": {
         "magento/framework": "*",
