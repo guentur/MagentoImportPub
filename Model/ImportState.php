@@ -3,15 +3,10 @@
 namespace Guentur\MagentoImport\Model;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
-use Guentur\MagentoImport\Api\DataImporterInterface;
-use Guentur\MagentoImport\Model\DataImporter\CsvDataImporter;
-use Guentur\MagentoImport\Model\DataProvider\CsvDataProvider;
-use Guentur\MagentoImport\Api\DataImporterPoolInterface;
-use Guentur\MagentoImport\Api\DataProviderPoolInterface;
-use Guentur\MagentoImport\Model\EntityManager;
-use Guentur\MagentoImport\Model\Solver\StorageSolverProvider;
-use Guentur\MagentoImport\Model\EntityScopeManager;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
+use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
+use Guentur\MagentoImport\Api\DataProviderPoolInterface;
+use Guentur\MagentoImport\Model\Solver\StorageSolverProvider;
 
 class ImportState
 {
@@ -79,10 +74,11 @@ class ImportState
 
         /** DataImportInfoInterface $dataImportInfo */
         $dataImportInfo = $this->dataImportInfoF->create();
-        $dataImportInfo->setPathToDataProvider($pathToProvider);
-        $dataImportInfo->setPathToRecipient($pathToRecipient);
+        //@todo Hide not used cells from dataImportInfo. In this case pathToDataProvider
+        //@todo if we dont remember failed entity while import remembered entities data there is not required path to data-provider
+        $dataImportInfo->setPathToRecipient($this->rememberedEntitiesStoragePath);
 
-        /** @var \Guentur\MagentoImport\Api\DataImporterInterface $dataImporter */
+        /** @var \Guentur\MagentoImport\Api\DataImporter\DataImporterInterface $dataImporter */
         $dataImporter = $this->dataImporterPool->getDataImporter($this->rememberedEntitiesStorageType);
         $dataImporter->setDataImportInfo($dataImportInfo);
         $dataImporter->importData($dataForImport);
@@ -117,7 +113,7 @@ class ImportState
     public function getArraySinceRememberedEntity(array $array, DataImportInfoInterface $dataImportInfo): array
     {
         $rememberedEntity = $this->getRememberedEntity($dataImportInfo);
-        if (isset($rememberedEntity)) {
+        if (isset($rememberedEntity) && array_key_exists($rememberedEntity, $array)) {
             $array = array_slice($array, $rememberedEntity);
         }
         return $array;

@@ -1,27 +1,23 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\DataImporter;
+namespace Guentur\MagentoImport\Model\Database\DataImporter;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
-use Guentur\MagentoImport\Api\DataImporterInterface;
-use Guentur\MagentoImport\Model\EntityScopeManager;
-use Magento\Framework\Setup\ModuleDataSetupInterface;
-use Magento\Framework\Event\ManagerInterface;
-use Magento\Framework\DataObject;
+use Guentur\MagentoImport\Api\DataImporter\ImporterBaseInterface;
 use Guentur\MagentoImport\Api\ImportWithProgressBarInterface;
-
-use Guentur\MagentoImport\Model\ImportState;
+use Guentur\MagentoImport\Model\EntityScopeManager;
 use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
-use Magento\Framework\DB\Adapter\AdapterInterface;
 use Guentur\MagentoImport\Model\ProgressBarWrapper;
+use Magento\Framework\DataObject;
+use Magento\Framework\DB\Adapter\AdapterInterface;
+use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\Setup\ModuleDataSetupInterface;
 
-class DbDataImporter implements DataImporterInterface, ImportWithProgressBarInterface
+class DbImporterBase implements ImportWithProgressBarInterface, ImporterBaseInterface
 {
     const TYPE = 'database';
 
     private $moduleDataSetup;
-
-    private $importState;
 
     private $entityScopeManager;
 
@@ -48,20 +44,17 @@ class DbDataImporter implements DataImporterInterface, ImportWithProgressBarInte
 
     /**
      * @param ModuleDataSetupInterface $moduleDataSetup
-     * @param ImportState $importState
      * @param EntityScopeManager $entityScopeManager
      * @param DefaultMapping $mapping
      * @param ManagerInterface $eventManager
      */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
-        ImportState $importState,
         EntityScopeManager $entityScopeManager,
         DefaultMapping $mapping,
         ManagerInterface $eventManager
     ) {
         $this->moduleDataSetup = $moduleDataSetup;
-        $this->importState = $importState;
         $this->entityScopeManager = $entityScopeManager;
         $this->mapping = $mapping;
         $this->eventManager = $eventManager;
@@ -76,8 +69,6 @@ class DbDataImporter implements DataImporterInterface, ImportWithProgressBarInte
         array $dataToInsert,
         string $mode = self::MODE_ALL
     ) {
-        $dataToInsert = $this->importState->getArraySinceRememberedEntity($dataToInsert, $this->getDataImportInfo());
-
         if ($this->getProgressBarWrapper() instanceof ProgressBarWrapper) {
             $this->runImportWithProgressBar($dataToInsert);
         } else {
@@ -92,12 +83,7 @@ class DbDataImporter implements DataImporterInterface, ImportWithProgressBarInte
     public function runDefaultImport(array $dataToInsert)
     {
         foreach ($dataToInsert as $dataItemKey => $dataItem) {
-            try {
-                $this->importItem($dataItem);
-            } catch (\RuntimeException|\Exception $e) {
-                $this->importState->rememberEntity($dataItemKey, $this->getDataImportInfo());
-                throw $e;
-            }
+            $this->importItem($dataItem);
         }
     }
 
@@ -180,12 +166,7 @@ class DbDataImporter implements DataImporterInterface, ImportWithProgressBarInte
         $progressBar->start();
         foreach ($dataToInsert as $dataItemKey => $dataItem) {
             $progressBar->display();
-            try {
-                $this->importItem($dataItem);
-            } catch (\RuntimeException|\Exception $e) {
-                $this->importState->rememberEntity($dataItemKey, $this->getDataImportInfo());
-                throw $e;
-            }
+            $this->importItem($dataItem);
             $progressBar->advance();
         }
         $progressBar->finish();

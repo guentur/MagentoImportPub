@@ -1,28 +1,39 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\DataImporter;
+namespace Guentur\MagentoImport\Model\Csv\DataImporter;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
-use Guentur\MagentoImport\Api\DataImporterInterface;
+use Guentur\MagentoImport\Api\DataImporter\ImporterBaseInterface;
+use Guentur\MagentoImport\Model\Csv\Validator\CsvFileValidator;
 
-class CsvDataImporter implements DataImporterInterface
+class CsvImporterBase implements ImporterBaseInterface
 {
     const TYPE = 'csv';
 
     private $dataImportInfo;
+
+    private $validator;
+
+    public function __construct(
+        CsvFileValidator $validator
+    ) {
+        $this->validator = $validator;
+    }
 
     /**
      * @param array $dataToInsert
      * @param string $mode
      * @return bool
      *
-     * @todo Make validation
-     * @todo Apply mapping
+     * @todo Implement Mapping functionality
      */
-    public function importData(array $dataToInsert, string $mode = self::MODE_ALL): bool {
+    public function importData(array $dataToInsert, string $mode = self::MODE_ALL): bool
+    {
+        $pathToRecipient = $this->getDataImportInfo()->getPathToRecipient();
+        $this->validator->validatePath($pathToRecipient);
+
         //@todo refactor for the reason to pass associative arrays with different keys and save them all to the csv file
-        //@todo Implement Mapping functionality
-        $resource = fopen($this->getDataImportInfo()->getPathToRecipient(), 'w');
+        $resource = fopen($pathToRecipient, 'w');
         fputcsv($resource, array_keys(array_values($dataToInsert)[0]));
         foreach ($dataToInsert as $row) {
             fputcsv($resource, $row);

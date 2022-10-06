@@ -2,22 +2,19 @@
 
 namespace Guentur\MagentoImport\Console;
 
+use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
+use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
+use Guentur\MagentoImport\Api\DataProviderPoolInterface;
+use Guentur\MagentoImport\Api\ImportWithProgressBarInterface;
+use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
+use Guentur\MagentoImport\Model\ProgressBarWrapper;
 use Magento\Framework\Console\Cli;
+use Magento\Framework\DB\Adapter\TableNotFoundException;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-
-use Guentur\MagentoImport\Api\DataProviderPoolInterface;
-use Guentur\MagentoImport\Api\DataImporterPoolInterface;
-use Guentur\MagentoImport\Api\DataImporterInterface;
-use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
-use Guentur\MagentoImport\Api\ImportWithProgressBarInterface;
-use Guentur\MagentoImport\Model\ProgressBarWrapper;
-use Magento\Framework\DB\Adapter\TableNotFoundException;
 
 class DefaultImport extends Command
 {
@@ -30,7 +27,7 @@ class DefaultImport extends Command
     /**
      * default = db
      */
-    private const OPTION_RECIPIENT = 'recipient';
+    private const OPTION_RECIPIENT = 'recipient-type';
 
     /**
      * Path to file OR Database table name with data.
@@ -41,9 +38,11 @@ class DefaultImport extends Command
     /**
      * default = csv
      */
-    private const OPTION_DATA_PROVIDER = 'data-provider';
+    private const OPTION_DATA_PROVIDER = 'data-provider-type';
 
     private const OPTION_COLUMNS_MAPPING = 'columns-mapping';
+
+    private const OPTION_DONT_REMEMBER_FAILED_ENTITY = 'dont-remember-failed-entity';
 
     /**
      * @var DataProviderPoolInterface
@@ -117,8 +116,7 @@ class DefaultImport extends Command
         $dataForImport = $this->getDataForImport($input, $output);
         try {
             $statusCode = $this->importData($dataForImport, $input, $output);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
         }
 
@@ -144,7 +142,15 @@ class DefaultImport extends Command
     {
         $optionMapping = $input->getOption(self::OPTION_COLUMNS_MAPPING);
         $enteredMapping = $this->defaultMapping->formatMapping($optionMapping);
-        $enteredMapping = $this->interactMappingOption($input, $output, $enteredMapping);
+        try {
+            $enteredMapping = $this->interactMappingOption($input, $output, $enteredMapping);
+        } catch (TableNotFoundException $e) {
+            $dataProviderType = $input->getOption(self::OPTION_DATA_PROVIDER);
+            $pathToDataProvider = $input->getOption(self::OPTION_PATH_TO_DATA_PROVIDER);
+            $message = $this->getTableNotFoundException($dataProviderType, $pathToDataProvider, 'DataProvider');
+            $output->writeln('<error>' . $message . '</error>');
+            exit(1);
+        }
 
         $this->defaultMapping->setMapping($enteredMapping);
     }
@@ -157,17 +163,21 @@ class DefaultImport extends Command
     public function getDataForImport(InputInterface $input, OutputInterface $output): array
     {
         $dataProviderType = $input->getOption(self::OPTION_DATA_PROVIDER);
-        $dataProviderPath = $input->getOption(self::OPTION_PATH_TO_DATA_PROVIDER);
+        $pathToDataProvider = $input->getOption(self::OPTION_PATH_TO_DATA_PROVIDER);
         $output->writeln(__("Data-provider type: %1", $dataProviderType));
-        $output->writeln(__("Path to data-provider: %1", $dataProviderPath));
+        $output->writeln(__("Path to data-provider: %1", $pathToDataProvider));
 
         $dataForImport = [];
         try {
             /** @var \Guentur\MagentoImport\Api\TableDataProviderInterface $dataProvider */
             $dataProvider = $this->dataProviderPool->getDataProvider($dataProviderType);
-            $dataForImport = $dataProvider->getData($dataProviderPath);
+            $dataForImport = $dataProvider->getData($pathToDataProvider);
         } catch (\InvalidArgumentException $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
+        } catch (TableNotFoundException $e) {
+            $message = $this->getTableNotFoundException($dataProviderType, $pathToDataProvider, 'DataProvider');
+            $output->writeln('<error>' . $message . '</error>');
+            exit(1);
         }
 
         return $dataForImport;
@@ -195,7 +205,12 @@ class DefaultImport extends Command
         $output->writeln(__("Recipient name: %1", $dataImportInfo->getRecipientName()));
         $output->writeln(__("Data-provider name: %1", $dataImportInfo->getDataProviderName()));
 
-        /** @var \Guentur\MagentoImport\Api\DataImporterInterface $dataImporter */
+        $optionDontRememberFailedEntity = $input->getOption(self::OPTION_DONT_REMEMBER_FAILED_ENTITY);
+        if (!$optionDontRememberFailedEntity) {
+            $recipientType .= '_remember';
+        }
+
+        /** @var \Guentur\MagentoImport\Api\DataImporter\DataImporterInterface $dataImporter */
         $dataImporter = $this->dataImporterPool->getDataImporter($recipientType);
         $dataImporter->setDataImportInfo($dataImportInfo);
 
@@ -206,15 +221,8 @@ class DefaultImport extends Command
         try {
             $dataImporter->importData($dataForImport);
         } catch (TableNotFoundException $e) {
-            $message = __('Cannot find table by path to Recipient: %1', $pathToRecipient);
-            $secondMessage = __('Check if you rightly set up Recipient Type. Your Recipient Type is "%1"',
-                                '<fg=cyan>' . $recipientType . '</>');
-            $infoMessage = __('Use option %1 to set up a Recipient Type. Run %2 for more info',
-                '<fg=cyan>--recipient</>',
-                              '<fg=cyan>' . $this->getName() . ' --help</>');
+            $message = $this->getTableNotFoundException($recipientType, $pathToRecipient, 'Recipient');
             $output->writeln('<error>' . $message . '</error>');
-            $output->writeln('<error>' . $secondMessage . '</error>');
-            $output->writeln('<info>' . $infoMessage . '</info>');
             return Cli::RETURN_FAILURE;
         }
 
@@ -233,10 +241,17 @@ class DefaultImport extends Command
     public function interactMappingOption(InputInterface $input, OutputInterface $output, array $enteredMapping): array
     {
         $dataProviderType = $input->getOption(self::OPTION_DATA_PROVIDER);
-        $dataProviderPath = $input->getOption(self::OPTION_PATH_TO_DATA_PROVIDER);
+        $pathToDataProvider = $input->getOption(self::OPTION_PATH_TO_DATA_PROVIDER);
         /** @var \Guentur\MagentoImport\Api\TableDataProviderInterface $dataProvider */
         $dataProvider = $this->dataProviderPool->getDataProvider($dataProviderType);
-        $dataProviderColumns = $dataProvider->getColumnNames($dataProviderPath);
+        $dataProviderColumns = [];
+//        try {
+            $dataProviderColumns = $dataProvider->getColumnNames($pathToDataProvider);
+//        } catch (TableNotFoundException $e) {
+//            $message = $this->getTableNotFoundException($dataProviderType, $pathToDataProvider);
+//            $output->writeln('<error>' . $message . '</error>');
+//        }
+
 
         /** @var \Symfony\Component\Console\Helper\QuestionHelper $questionHelper */
         $questionHelper = $this->getHelper('question');
@@ -249,6 +264,17 @@ class DefaultImport extends Command
             }
         }
         return $enteredMapping;
+    }
+
+    public function getTableNotFoundException(string $type, string $path, string $logicType): string
+    {
+        $message = __('Cannot find table by path to ' . $logicType . ': %1', $path);
+        $secondMessage = __('Check if you rightly set up ' . $logicType . ' Type. Your ' . $logicType . ' Type is "%1"',
+                            '<fg=cyan>' . $type . '</>');
+        $infoMessage = __('Use option %1 to set up a ' . $logicType . ' Type. Run %2 for more info',
+                          '<fg=cyan>--' . self::OPTION_RECIPIENT . '</>',
+                          '<fg=cyan>' . $this->getName() . ' --help</>');
+        return $message . PHP_EOL . $secondMessage . PHP_EOL . $infoMessage;
     }
 
     /**
@@ -281,6 +307,11 @@ class DefaultImport extends Command
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'Format: data_provider_column/data_recipient_column',
                 []),
+            new InputOption(
+                self::OPTION_DONT_REMEMBER_FAILED_ENTITY,
+                null,
+                InputOption::VALUE_NONE,
+                'Value: either true or false'),
 
             //@todo
 //            new InputOption(

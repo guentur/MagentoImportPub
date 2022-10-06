@@ -14,19 +14,23 @@
     <type name="Guentur\MagentoImport\Api\DataProviderPoolInterface">
         <arguments>
             <argument name="dataProviders" xsi:type="array">
-                <item name="database" xsi:type="object">Guentur\MagentoImport\Model\DataProvider\DbDataProvider</item>
-                <item name="csv" xsi:type="object">Guentur\MagentoImport\Model\DataProvider\CsvDataProvider</item>
+                <item name="database" xsi:type="object">Guentur\MagentoImport\Model\Database\DbDataProvider</item>
+                <item name="csv" xsi:type="object">Guentur\MagentoImport\Model\Csv\CsvDataProvider</item>
             </argument>
         </arguments>
     </type>
 
-    <preference for="Guentur\MagentoImport\Api\DataImporterPoolInterface"
+    <preference for="Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface"
                 type="Guentur\MagentoImport\Model\DataImporter\DataImporterPool" />
-    <type name="Guentur\MagentoImport\Api\DataImporterPoolInterface">
+    <type name="Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface">
         <arguments>
             <argument name="dataImporters" xsi:type="array">
-                <item name="database" xsi:type="string">Guentur\MagentoImport\Model\DataImporter\DbDataImporter</item>
-                <item name="csv" xsi:type="string">Guentur\MagentoImport\Model\DataImporter\CsvDataImporter</item>
+                <item name="database_remember" xsi:type="string">Guentur\MagentoImport\Model\Database\DataImporter\DbImporterRemember</item>
+                <item name="database" xsi:type="string">Guentur\MagentoImport\Model\Database\DataImporter\DbImporterBase</item>
+<!--                @todo create csv data importer with remembering-->
+<!--                <item name="csv_remember" xsi:type="string">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterRemember</item>-->
+                <item name="csv_remember" xsi:type="string">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterBase</item>
+                <item name="csv" xsi:type="string">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterBase</item>
             </argument>
         </arguments>
     </type>
@@ -45,7 +49,7 @@
 <!--        <arguments>-->
 <!--            <argument name="type" xsi:type="array">-->
 <!--                <item name="database" xsi:type="array">-->
-<!--                    <item name="dataImporter" xsi:type="string">Guentur\MagentoImport\Model\DataImporter\DbDataImporter</item>-->
+<!--                    <item name="dataImporter" xsi:type="string">Guentur\MagentoImport\Model\Database\DataImporter\DbImporterRemember</item>-->
 <!--                    <item name="dataProvider" xsi:type="string">Guentur\MagentoImport\Model\DataProvider\DbDataProvider</item>-->
 <!--                </item>-->
 <!--                <item name="csv" xsi:type="array">-->
@@ -59,7 +63,7 @@
 
     <type name="Guentur\MagentoImport\Model\ImportState">
         <arguments>
-            <argument name="rememberedEntitiesStorageType" xsi:type="const">Guentur\MagentoImport\Model\DataImporter\CsvDataImporter::TYPE</argument>
+            <argument name="rememberedEntitiesStorageType" xsi:type="const">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterBase::TYPE</argument>
             <argument name="rememberedEntitiesStoragePath" xsi:type="const">Guentur\MagentoImport\Model\ImportState::IMPORT_STATE_FILE_NAME</argument>
         </arguments>
     </type>
