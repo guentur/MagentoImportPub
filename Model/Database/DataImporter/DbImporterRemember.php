@@ -15,7 +15,7 @@ use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterface;
 
-class DbImporterRemember implements ImportWithProgressBarInterface, ApplyObserverInterface, ImporterRememberInterface
+class DbImporterRemember implements ImportWithProgressBarInterface, ImporterRememberInterface
 {
     const TYPE = 'database_remember';
 
@@ -23,11 +23,9 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ApplyObserve
 
     private $importState;
 
-    private $entityScopeManager;
+    private $applyObserver;
 
     private $mapping;
-
-    private $eventManager;
 
     /**
      * @var
@@ -49,22 +47,19 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ApplyObserve
     /**
      * @param ModuleDataSetupInterface $moduleDataSetup
      * @param ImportState $importState
-     * @param EntityScopeManager $entityScopeManager
+     * @param ApplyObserverInterface $applyObserver
      * @param DefaultMapping $mapping
-     * @param ManagerInterface $eventManager
      */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
         ImportState $importState,
-        EntityScopeManager $entityScopeManager,
-        DefaultMapping $mapping,
-        ManagerInterface $eventManager
+        ApplyObserverInterface $applyObserver,
+        DefaultMapping $mapping
     ) {
         $this->moduleDataSetup = $moduleDataSetup;
         $this->importState = $importState;
-        $this->entityScopeManager = $entityScopeManager;
+        $this->applyObserver = $applyObserver;
         $this->mapping = $mapping;
-        $this->eventManager = $eventManager;
     }
 
     /**
@@ -110,7 +105,7 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ApplyObserve
         $tableName = $this->getTableName();
         $dbAdapter = $this->getConnection();
 
-        $dataItem = $this->callObserver($dataItem);
+        $dataItem = $this->applyObserver->callObserver($dataItem, $this->getDataImportInfo());
         $this->mapping->applyMappingForItem($dataItem);
         $dbAdapter->insertOnDuplicate($tableName, $dataItem);
     }
@@ -136,38 +131,6 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ApplyObserve
         }
         return $this->tableName;
     }
-
-    //@todo Observer Interface
-    //----------------- Observer Interface
-    /**
-     * @param array $dataItem
-     * @return array
-     */
-    public function callObserver(array $dataItem): array
-    {
-        $dataItemObject = new DataObject($dataItem);
-        // if there is error throw \RuntimeException
-        $this->eventManager->dispatch(
-            $this->getEventName(),
-            [
-                'data_item' => $dataItemObject
-            ]
-        );
-        return $dataItemObject->getData();
-    }
-
-    /**
-     * @return string
-     */
-    public function getEventName(): string
-    {
-        //@todo add importer name part to event name
-        return 'guentur_import_'
-            . $this->entityScopeManager->getEntityScopeEventFormat(
-                $this->getDataImportInfo()
-            );
-    }
-    //----------------- //Observer Interface
 
     // ---------------- ImportWithProgressBarInterface
     /**

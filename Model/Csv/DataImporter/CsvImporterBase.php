@@ -8,7 +8,7 @@ use Guentur\MagentoImport\Model\Csv\Validator\CsvFileValidator;
 use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterface;
 use Magento\Framework\DataObject;
 
-class CsvImporterBase implements ImporterBaseInterface, ApplyObserverInterface
+class CsvImporterBase implements ImporterBaseInterface
 {
     const TYPE = 'csv';
 
@@ -16,10 +16,14 @@ class CsvImporterBase implements ImporterBaseInterface, ApplyObserverInterface
 
     private $validator;
 
+    private $applyObserver;
+
     public function __construct(
-        CsvFileValidator $validator
+        CsvFileValidator $validator,
+        ApplyObserverInterface $applyObserver
     ) {
         $this->validator = $validator;
+        $this->applyObserver = $applyObserver;
     }
 
     /**
@@ -38,33 +42,12 @@ class CsvImporterBase implements ImporterBaseInterface, ApplyObserverInterface
         $resource = fopen($pathToRecipient, 'w');
         fputcsv($resource, array_keys(array_values($dataToInsert)[0]));
         foreach ($dataToInsert as $row) {
+            $this->applyObserver->callObserver($row, $this->getDataImportInfo());
             fputcsv($resource, $row);
         }
         $status = fclose($resource);
 
         return $status;
-    }
-
-    public function getEventName(): string
-    {
-        //@todo add importer name part to event name
-        return 'guentur_import_'
-            . $this->entityScopeManager->getEntityScopeEventFormat(
-                $this->getDataImportInfo()
-            );
-    }
-
-    public function callObserver(array $dataItem): array
-    {
-        $dataItemObject = new DataObject($dataItem);
-        // if there is error throw \RuntimeException
-        $this->eventManager->dispatch(
-            $this->getEventName(),
-            [
-                'data_item' => $dataItemObject
-            ]
-        );
-        return $dataItemObject->getData();
     }
 
     /**
