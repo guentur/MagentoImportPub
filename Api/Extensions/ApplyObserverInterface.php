@@ -17,5 +17,5 @@ interface ApplyObserverInterface
      * @param DataImportInfoInterface $dataImportInfo
      * @return string
      */
-    public function getEventName(DataImportInfoInterface $dataImportInfo): string;
+    public function getFullEventName(DataImportInfoInterface $dataImportInfo): string;
 }

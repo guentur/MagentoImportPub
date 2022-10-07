@@ -33,7 +33,7 @@ class ApplyObserver implements ApplyObserverInterface
         $dataItemObject = new DataObject($dataItem);
         // if there is error throw \RuntimeException
         $this->eventManager->dispatch(
-            $this->getEventName($dataImportInfo),
+            $this->getFullEventName($dataImportInfo),
             [
                 'data_item' => $dataItemObject
             ]
@@ -45,7 +45,7 @@ class ApplyObserver implements ApplyObserverInterface
      * @param DataImportInfoInterface $dataImportInfo
      * @return string
      */
-    public function getEventName(DataImportInfoInterface $dataImportInfo): string
+    public function getFullEventName(DataImportInfoInterface $dataImportInfo): string
     {
         //@todo write in documentation that file name (not path, but exactly filename) of separate dataProviders must be different
         $providerName = $dataImportInfo->getDataProviderName();
