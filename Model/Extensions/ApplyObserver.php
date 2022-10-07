@@ -56,7 +56,7 @@ class ApplyObserver implements ApplyObserverInterface
      */
     public function getEventName(DataImportInfoInterface $dataImportInfo): string
     {
-        //@todo add importer name part to event name
+        //@todo add importer type part to event name
         return 'guentur_import_'
             . $this->entityScopeManager->getEntityScopeEventFormat(
                 $dataImportInfo
