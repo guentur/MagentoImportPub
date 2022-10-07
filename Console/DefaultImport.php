@@ -5,7 +5,7 @@ namespace Guentur\MagentoImport\Console;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
 use Guentur\MagentoImport\Api\DataProviderPoolInterface;
-use Guentur\MagentoImport\Api\ImportWithProgressBarInterface;
+use Guentur\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
 use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
 use Guentur\MagentoImport\Model\ProgressBarWrapper;
 use Magento\Framework\Console\Cli;

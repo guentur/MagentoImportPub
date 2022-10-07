@@ -4,7 +4,7 @@ namespace Guentur\MagentoImport\Model\Database\DataImporter;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\DataImporter\ImporterRememberInterface;
-use Guentur\MagentoImport\Api\ImportWithProgressBarInterface;
+use Guentur\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
 use Guentur\MagentoImport\Model\EntityScopeManager;
 use Guentur\MagentoImport\Model\ImportState;
 use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
