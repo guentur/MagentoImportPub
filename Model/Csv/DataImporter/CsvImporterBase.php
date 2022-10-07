@@ -5,8 +5,10 @@ namespace Guentur\MagentoImport\Model\Csv\DataImporter;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\DataImporter\ImporterBaseInterface;
 use Guentur\MagentoImport\Model\Csv\Validator\CsvFileValidator;
+use Guentur\MagentoImport\Api\Extensions\CallObserverInterface;
+use Magento\Framework\DataObject;
 
-class CsvImporterBase implements ImporterBaseInterface
+class CsvImporterBase implements ImporterBaseInterface, CallObserverInterface
 {
     const TYPE = 'csv';
 
@@ -41,6 +43,28 @@ class CsvImporterBase implements ImporterBaseInterface
         $status = fclose($resource);
 
         return $status;
+    }
+
+    public function getEventName(): string
+    {
+        //@todo add importer name part to event name
+        return 'guentur_import_'
+            . $this->entityScopeManager->getEntityScopeEventFormat(
+                $this->getDataImportInfo()
+            );
+    }
+
+    public function applyObserver(array $dataItem): array
+    {
+        $dataItemObject = new DataObject($dataItem);
+        // if there is error throw \RuntimeException
+        $this->eventManager->dispatch(
+            $this->getEventName(),
+            [
+                'data_item' => $dataItemObject
+            ]
+        );
+        return $dataItemObject->getData();
     }
 
     /**
