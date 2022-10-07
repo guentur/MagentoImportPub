@@ -201,6 +201,9 @@ class DefaultImport extends Command
         $dataImportInfo = $this->dataImportInfoF->create();
         $dataImportInfo->setPathToDataProvider($pathToProvider);
         $dataImportInfo->setPathToRecipient($pathToRecipient);
+        $dataProviderType = $input->getOption(self::OPTION_DATA_PROVIDER);
+        $dataImportInfo->setDataProviderType($dataProviderType);
+        $dataImportInfo->setRecipientType($recipientType);
 
         $output->writeln(__("Recipient name: %1", $dataImportInfo->getRecipientName()));
         $output->writeln(__("Data-provider name: %1", $dataImportInfo->getDataProviderName()));
