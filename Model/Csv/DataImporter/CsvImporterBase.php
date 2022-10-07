@@ -42,7 +42,7 @@ class CsvImporterBase implements ImporterBaseInterface
         $resource = fopen($pathToRecipient, 'w');
         fputcsv($resource, array_keys(array_values($dataToInsert)[0]));
         foreach ($dataToInsert as $row) {
-            $this->applyObserver->callObserver($row, $this->getDataImportInfo());
+            $row = $this->applyObserver->callObserver($row, $this->getDataImportInfo());
             fputcsv($resource, $row);
         }
         $status = fclose($resource);
