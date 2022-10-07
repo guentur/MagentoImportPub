@@ -2,13 +2,13 @@
 
 namespace Guentur\MagentoImport\Api\Extensions;
 
-interface CallObserverInterface
+interface ApplyObserverInterface
 {
     /**
      * @param array $dataItem
      * @return array $dataItem
      */
-    public function applyObserver(array $dataItem): array;
+    public function callObserver(array $dataItem): array;
 
     /**
      * @return string

@@ -13,8 +13,9 @@ use Magento\Framework\DataObject;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
+use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterface;
 
-class DbImporterRemember implements ImportWithProgressBarInterface, ImporterRememberInterface
+class DbImporterRemember implements ImportWithProgressBarInterface, ApplyObserverInterface, ImporterRememberInterface
 {
     const TYPE = 'database_remember';
 
@@ -109,7 +110,7 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
         $tableName = $this->getTableName();
         $dbAdapter = $this->getConnection();
 
-        $dataItem = $this->applyObserver($dataItem);
+        $dataItem = $this->callObserver($dataItem);
         $this->mapping->applyMappingForItem($dataItem);
         $dbAdapter->insertOnDuplicate($tableName, $dataItem);
     }
@@ -142,7 +143,7 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
      * @param array $dataItem
      * @return array
      */
-    public function applyObserver(array $dataItem): array
+    public function callObserver(array $dataItem): array
     {
         $dataItemObject = new DataObject($dataItem);
         // if there is error throw \RuntimeException

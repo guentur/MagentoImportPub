@@ -12,8 +12,9 @@ use Magento\Framework\DataObject;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
+use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterface;
 
-class DbImporterBase implements ImportWithProgressBarInterface, ImporterBaseInterface
+class DbImporterBase implements ImportWithProgressBarInterface, ApplyObserverInterface, ImporterBaseInterface
 {
     const TYPE = 'database';
 
@@ -96,7 +97,7 @@ class DbImporterBase implements ImportWithProgressBarInterface, ImporterBaseInte
         $tableName = $this->getTableName();
         $dbAdapter = $this->getConnection();
 
-        $dataItem = $this->applyObserver($dataItem);
+        $dataItem = $this->callObserver($dataItem);
         $this->mapping->applyMappingForItem($dataItem);
         $dbAdapter->insertOnDuplicate($tableName, $dataItem);
     }
@@ -129,7 +130,7 @@ class DbImporterBase implements ImportWithProgressBarInterface, ImporterBaseInte
      * @param array $dataItem
      * @return array
      */
-    public function applyObserver(array $dataItem): array
+    public function callObserver(array $dataItem): array
     {
         $dataItemObject = new DataObject($dataItem);
         // if there is error throw \RuntimeException

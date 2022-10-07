@@ -5,10 +5,10 @@ namespace Guentur\MagentoImport\Model\Csv\DataImporter;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\DataImporter\ImporterBaseInterface;
 use Guentur\MagentoImport\Model\Csv\Validator\CsvFileValidator;
-use Guentur\MagentoImport\Api\Extensions\CallObserverInterface;
+use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterface;
 use Magento\Framework\DataObject;
 
-class CsvImporterBase implements ImporterBaseInterface, CallObserverInterface
+class CsvImporterBase implements ImporterBaseInterface, ApplyObserverInterface
 {
     const TYPE = 'csv';
 
@@ -54,7 +54,7 @@ class CsvImporterBase implements ImporterBaseInterface, CallObserverInterface
             );
     }
 
-    public function applyObserver(array $dataItem): array
+    public function callObserver(array $dataItem): array
     {
         $dataItemObject = new DataObject($dataItem);
         // if there is error throw \RuntimeException
