@@ -6,7 +6,6 @@ namespace Guentur\MagentoImport\Model\Data;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Magento\Framework\Api\AbstractSimpleObject;
-use Magento\Tests\NamingConvention\true\string;
 
 class DataImportInfo extends AbstractSimpleObject implements DataImportInfoInterface
 {
