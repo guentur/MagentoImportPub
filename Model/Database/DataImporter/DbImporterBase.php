@@ -8,7 +8,6 @@ use Guentur\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
 use Guentur\MagentoImport\Model\EntityScopeManager;
 use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
 use Guentur\MagentoImport\Model\ProgressBarWrapper;
-use Magento\Framework\DataObject;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
@@ -46,9 +45,8 @@ class DbImporterBase implements ImportWithProgressBarInterface, ImporterBaseInte
 
     /**
      * @param ModuleDataSetupInterface $moduleDataSetup
-     * @param EntityScopeManager $entityScopeManager
+     * @param ApplyObserverInterface $applyObserver
      * @param DefaultMapping $mapping
-     * @param ManagerInterface $eventManager
      */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,

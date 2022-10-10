@@ -6,7 +6,7 @@ use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\DataImporter\ImporterBaseInterface;
 use Guentur\MagentoImport\Model\Csv\Validator\CsvFileValidator;
 use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterface;
-use Magento\Framework\DataObject;
+use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
 
 class CsvImporterBase implements ImporterBaseInterface
 {
@@ -18,12 +18,16 @@ class CsvImporterBase implements ImporterBaseInterface
 
     private $applyObserver;
 
+    private $mapping;
+
     public function __construct(
         CsvFileValidator $validator,
-        ApplyObserverInterface $applyObserver
+        ApplyObserverInterface $applyObserver,
+        DefaultMapping $mapping
     ) {
         $this->validator = $validator;
         $this->applyObserver = $applyObserver;
+        $this->mapping = $mapping;
     }
 
     /**
@@ -40,8 +44,11 @@ class CsvImporterBase implements ImporterBaseInterface
 
         //@todo refactor for the reason to pass associative arrays with different keys and save them all to the csv file
         $resource = fopen($pathToRecipient, 'w');
-        fputcsv($resource, array_keys(array_values($dataToInsert)[0]));
+        $header = $this->mapping->applyMappingForItem(array_values($dataToInsert)[0]);
+        fputcsv($resource, array_keys($header));
+
         foreach ($dataToInsert as $row) {
+            $this->mapping->applyMappingForItem($row);
             $row = $this->applyObserver->callObserver($row, $this->getDataImportInfo());
             fputcsv($resource, $row);
         }
