@@ -1,6 +1,6 @@
 <?php
 
-namespace Guentur\MagentoImport\Api;
+namespace Guentur\MagentoImport\Api\Extensions;
 
 use Guentur\MagentoImport\Model\ProgressBarWrapper;
 

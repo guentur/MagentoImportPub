@@ -5,7 +5,7 @@ namespace Guentur\MagentoImport\Console;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
 use Guentur\MagentoImport\Api\DataProviderPoolInterface;
-use Guentur\MagentoImport\Api\ImportWithProgressBarInterface;
+use Guentur\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
 use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
 use Guentur\MagentoImport\Model\ProgressBarWrapper;
 use Magento\Framework\Console\Cli;
@@ -201,6 +201,9 @@ class DefaultImport extends Command
         $dataImportInfo = $this->dataImportInfoF->create();
         $dataImportInfo->setPathToDataProvider($pathToProvider);
         $dataImportInfo->setPathToRecipient($pathToRecipient);
+        $dataProviderType = $input->getOption(self::OPTION_DATA_PROVIDER);
+        $dataImportInfo->setDataProviderType($dataProviderType);
+        $dataImportInfo->setRecipientType($recipientType);
 
         $output->writeln(__("Recipient name: %1", $dataImportInfo->getRecipientName()));
         $output->writeln(__("Data-provider name: %1", $dataImportInfo->getDataProviderName()));
