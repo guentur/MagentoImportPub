@@ -68,12 +68,10 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
 
     /**
      * @param array $dataToInsert
-     * @param string $mode
      * @return mixed|void
      */
     public function importData(
-        array $dataToInsert,
-        string $mode = self::MODE_ALL
+        array $dataToInsert
     ) {
         $dataToInsert = $this->importState->getArraySinceRememberedEntity($dataToInsert, $this->getDataImportInfo());
 

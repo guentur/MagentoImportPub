@@ -22,12 +22,11 @@ class CsvImporterBase implements ImporterBaseInterface
 
     /**
      * @param array $dataToInsert
-     * @param string $mode
      * @return bool
      *
      * @todo Implement Mapping functionality
      */
-    public function importData(array $dataToInsert, string $mode = self::MODE_ALL): bool
+    public function importData(array $dataToInsert): bool
     {
         $pathToRecipient = $this->getDataImportInfo()->getPathToRecipient();
         $this->validator->validatePath($pathToRecipient);
