@@ -6,8 +6,8 @@ use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
 use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
 use Guentur\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
+use Guentur\MagentoImport\Model\Extensions\ProgressBarWrapper;
 use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
-use Guentur\MagentoImport\Model\ProgressBarWrapper;
 use Magento\Framework\Console\Cli;
 use Magento\Framework\DB\Adapter\TableNotFoundException;
 use Symfony\Component\Console\Command\Command;
@@ -247,15 +247,7 @@ class DefaultImport extends Command
         $pathToDataProvider = $input->getOption(self::OPTION_PATH_TO_DATA_PROVIDER);
         /** @var \Guentur\MagentoImport\Api\DataProvider\TableDataProviderInterface $dataProvider */
         $dataProvider = $this->dataProviderPool->getDataProvider($dataProviderType);
-        $dataProviderColumns = [];
-//        try {
-            $dataProviderColumns = $dataProvider->getColumnNames($pathToDataProvider);
-//        } catch (TableNotFoundException $e) {
-//            $message = $this->getTableNotFoundException($dataProviderType, $pathToDataProvider);
-//            $output->writeln('<error>' . $message . '</error>');
-//        }
-
-
+        $dataProviderColumns = $dataProvider->getColumnNames($pathToDataProvider);
         /** @var \Symfony\Component\Console\Helper\QuestionHelper $questionHelper */
         $questionHelper = $this->getHelper('question');
 

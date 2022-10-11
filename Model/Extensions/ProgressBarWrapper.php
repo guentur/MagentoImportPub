@@ -1,10 +1,10 @@
 <?php
 
-namespace Guentur\MagentoImport\Model;
+namespace Guentur\MagentoImport\Model\Extensions;
 
 use Magento\Framework\ObjectManagerInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class ProgressBarWrapper
 {

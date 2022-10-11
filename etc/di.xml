@@ -61,10 +61,10 @@
 <!--        </arguments>-->
 <!--    </type>-->
 
-    <type name="Guentur\MagentoImport\Model\ImportState">
+    <type name="Guentur\MagentoImport\Model\Extensions\ImportState">
         <arguments>
             <argument name="rememberedEntitiesStorageType" xsi:type="const">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterBase::TYPE</argument>
-            <argument name="rememberedEntitiesStoragePath" xsi:type="const">Guentur\MagentoImport\Model\ImportState::IMPORT_STATE_FILE_NAME</argument>
+            <argument name="rememberedEntitiesStoragePath" xsi:type="const">Guentur\MagentoImport\Model\Extensions\ImportState::IMPORT_STATE_FILE_NAME</argument>
         </arguments>
     </type>
 
