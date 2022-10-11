@@ -33,8 +33,6 @@ class CsvImporterBase implements ImporterBaseInterface
     /**
      * @param array $dataToInsert
      * @return bool
-     *
-     * @todo Implement Mapping functionality
      */
     public function importData(array $dataToInsert): bool
     {

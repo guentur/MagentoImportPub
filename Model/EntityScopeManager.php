@@ -23,16 +23,10 @@ class EntityScopeManager
         return $providerName . DefaultMapping::DEFAULT_SEPARATOR . $recipientName;
     }
 
-    public function getEntityScopeEventFormat(DataImportInfoInterface $dataImportInfo): string
-    {
-        //@todo write in documentation that file name (not path, but exactly filename) of separate dataProviders must be different
-        $providerName = $dataImportInfo->getDataProviderName();
-        $recipientName = $dataImportInfo->getRecipientName();
-        return $providerName . '_' . $recipientName;
-    }
-
     /**
      * @see self::getEntityScope()
+     *
+     * @todo Make class for $importFormatEntity
      *
      * @param string $scope
      * @return array
