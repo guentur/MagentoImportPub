@@ -9,9 +9,9 @@
         </arguments>
     </type>
 
-    <preference for="Guentur\MagentoImport\Api\DataProviderPoolInterface"
+    <preference for="Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface"
                 type="Guentur\MagentoImport\Model\DataProvider\DataProviderPool" />
-    <type name="Guentur\MagentoImport\Api\DataProviderPoolInterface">
+    <type name="Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface">
         <arguments>
             <argument name="dataProviders" xsi:type="array">
                 <item name="database" xsi:type="object">Guentur\MagentoImport\Model\Database\DbDataProvider</item>

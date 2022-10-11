@@ -2,7 +2,7 @@
 
 namespace Guentur\MagentoImport\Model\Csv;
 
-use Guentur\MagentoImport\Api\TableDataProviderInterface;
+use Guentur\MagentoImport\Api\DataProvider\TableDataProviderInterface;
 use Guentur\MagentoImport\Model\Csv\Validator\CsvFileValidator;
 
 class CsvDataProvider implements TableDataProviderInterface

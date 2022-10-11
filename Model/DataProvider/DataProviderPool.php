@@ -2,10 +2,10 @@
 
 namespace Guentur\MagentoImport\Model\DataProvider;
 
-use Guentur\MagentoImport\Api\DataProviderPoolInterface;
+use Guentur\MagentoImport\Api\DataProvider\DataProviderInterface;
+use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
+use InvalidArgumentException;
 use Magento\Framework\Exception\LocalizedException;
-use Guentur\MagentoImport\Api\DataProviderInterface;
-use \InvalidArgumentException;
 
 class DataProviderPool implements DataProviderPoolInterface
 {

@@ -5,7 +5,7 @@ namespace Guentur\MagentoImport\Model;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
-use Guentur\MagentoImport\Api\DataProviderPoolInterface;
+use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
 use Guentur\MagentoImport\Model\Solver\StorageSolverProvider;
 
 class ImportState
