@@ -60,12 +60,10 @@ class DbImporterBase implements ImportWithProgressBarInterface, ImporterBaseInte
 
     /**
      * @param array $dataToInsert
-     * @param string $mode
      * @return mixed|void
      */
     public function importData(
-        array $dataToInsert,
-        string $mode = self::MODE_ALL
+        array $dataToInsert
     ) {
         if ($this->getProgressBarWrapper() instanceof ProgressBarWrapper) {
             $this->runImportWithProgressBar($dataToInsert);

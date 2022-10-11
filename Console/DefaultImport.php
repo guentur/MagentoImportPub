@@ -4,7 +4,7 @@ namespace Guentur\MagentoImport\Console;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
-use Guentur\MagentoImport\Api\DataProviderPoolInterface;
+use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
 use Guentur\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
 use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
 use Guentur\MagentoImport\Model\ProgressBarWrapper;
@@ -169,7 +169,7 @@ class DefaultImport extends Command
 
         $dataForImport = [];
         try {
-            /** @var \Guentur\MagentoImport\Api\TableDataProviderInterface $dataProvider */
+            /** @var \Guentur\MagentoImport\Api\DataProvider\TableDataProviderInterface $dataProvider */
             $dataProvider = $this->dataProviderPool->getDataProvider($dataProviderType);
             $dataForImport = $dataProvider->getData($pathToDataProvider);
         } catch (\InvalidArgumentException $e) {
@@ -245,7 +245,7 @@ class DefaultImport extends Command
     {
         $dataProviderType = $input->getOption(self::OPTION_DATA_PROVIDER);
         $pathToDataProvider = $input->getOption(self::OPTION_PATH_TO_DATA_PROVIDER);
-        /** @var \Guentur\MagentoImport\Api\TableDataProviderInterface $dataProvider */
+        /** @var \Guentur\MagentoImport\Api\DataProvider\TableDataProviderInterface $dataProvider */
         $dataProvider = $this->dataProviderPool->getDataProvider($dataProviderType);
         $dataProviderColumns = [];
 //        try {

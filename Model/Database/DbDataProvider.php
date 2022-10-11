@@ -2,7 +2,7 @@
 
 namespace Guentur\MagentoImport\Model\Database;
 
-use Guentur\MagentoImport\Api\TableDataProviderInterface;
+use Guentur\MagentoImport\Api\DataProvider\TableDataProviderInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
 class DbDataProvider implements TableDataProviderInterface
