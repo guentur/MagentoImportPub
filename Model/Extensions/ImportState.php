@@ -13,7 +13,7 @@ use Guentur\MagentoImport\Model\Solver\StorageSolverProvider;
 class ImportState
 {
     // @todo setup only filename. Make absolute path by function like getMediaPath() in Magento
-    const IMPORT_STATE_FILE_NAME = __DIR__ . '/../etc/import_state.csv';
+    const IMPORT_STATE_FILE_NAME = __DIR__ . '/../../etc/import_state.csv';
 
     private $dataImporterPool;
 
