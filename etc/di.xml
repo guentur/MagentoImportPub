@@ -70,4 +70,7 @@
 
     <preference for="Guentur\MagentoImport\Api\Data\DataImportInfoInterface"
                 type="Guentur\MagentoImport\Model\Data\DataImportInfo" />
+
+    <preference for="Guentur\MagentoImport\Api\Extensions\ApplyObserverInterface"
+                type="Guentur\MagentoImport\Model\Extensions\ApplyObserver" />
 </config>
