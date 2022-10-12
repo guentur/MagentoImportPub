@@ -1,7 +1,7 @@
 # Guentur_MagentoImport
 
 ## How to install
-`composer require guentur/module-cli-import`
+`composer require guentur/magento-import`
 
 ## Functionality
 - Database data provider/importer
