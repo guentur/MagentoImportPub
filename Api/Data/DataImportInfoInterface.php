@@ -34,7 +34,7 @@ interface DataImportInfoInterface
     /**
      * @return string
      */
-    public function getRecipientName(): string;
+    public function getRecipientName();
 
     /**
      * @return string
@@ -63,5 +63,5 @@ interface DataImportInfoInterface
     /**
      * @return string
      */
-    public function getRecipientType(): string;
+    public function getRecipientType();
 }
