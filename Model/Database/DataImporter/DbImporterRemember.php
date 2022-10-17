@@ -4,7 +4,7 @@ namespace Guentur\MagentoImport\Model\Database\DataImporter;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\DataImporter\ImporterRememberInterface;
-use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterface;
+use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterfaceFactory;
 use Guentur\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
 use Guentur\MagentoImport\Model\Extensions\ImportState;
 use Guentur\MagentoImport\Model\Extensions\ProgressBarWrapper;
@@ -20,7 +20,7 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
 
     private $importState;
 
-    private $applyObserver;
+    private $importObserverFactory;
 
     private $mapping;
 
@@ -44,18 +44,18 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
     /**
      * @param ModuleDataSetupInterface $moduleDataSetup
      * @param ImportState $importState
-     * @param ApplyObserverInterface $applyObserver
+     * @param ApplyObserverInterface $importObserverFactory
      * @param DefaultMapping $mapping
      */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
         ImportState $importState,
-        ApplyObserverInterface $applyObserver,
+        ApplyObserverInterfaceFactory $importObserverFactory,
         DefaultMapping $mapping
     ) {
         $this->moduleDataSetup = $moduleDataSetup;
         $this->importState = $importState;
-        $this->applyObserver = $applyObserver;
+        $this->importObserverFactory = $importObserverFactory;
         $this->mapping = $mapping;
     }
 
@@ -81,8 +81,10 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
      */
     public function runDefaultImport(array $dataToInsert)
     {
+        $importObserver = $this->importObserverFactory->create();
         foreach ($dataToInsert as $dataItemKey => $dataItem) {
             try {
+                $importObserver->callObserver($dataItem, $this->getDataImportInfo());
                 $this->importItem($dataItem);
             } catch (\RuntimeException|\Exception $e) {
                 $this->importState->rememberEntity($dataItemKey, $this->getDataImportInfo());
@@ -100,7 +102,6 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
         $tableName = $this->getTableName();
         $dbAdapter = $this->getConnection();
 
-        $dataItem = $this->applyObserver->callObserver($dataItem, $this->getDataImportInfo());
         $this->mapping->applyMappingForItem($dataItem);
         $dbAdapter->insertOnDuplicate($tableName, $dataItem);
     }
@@ -135,10 +136,12 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
     public function runImportWithProgressBar(array $dataToInsert)
     {
         $progressBar = $this->getProgressBarWrapper()->getProgressBarInstance(count($dataToInsert));
+        $importObserver = $this->importObserverFactory->create();
         $progressBar->start();
         foreach ($dataToInsert as $dataItemKey => $dataItem) {
             $progressBar->display();
             try {
+                $importObserver->callObserver($dataItem, $this->getDataImportInfo());
                 $this->importItem($dataItem);
             } catch (\RuntimeException|\Exception $e) {
                 $this->importState->rememberEntity($dataItemKey, $this->getDataImportInfo());

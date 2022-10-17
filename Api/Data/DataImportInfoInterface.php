@@ -16,7 +16,7 @@ interface DataImportInfoInterface
     /**
      * @return string
      */
-    public function getPathToDataProvider(): string;
+    public function getPathToDataProvider();
 
     /**
      * @param string $pathToRecipient
@@ -39,7 +39,7 @@ interface DataImportInfoInterface
     /**
      * @return string
      */
-    public function getDataProviderName(): string;
+    public function getDataProviderName();
 
     // Type
 
@@ -52,7 +52,7 @@ interface DataImportInfoInterface
     /**
      * @return string
      */
-    public function getDataProviderType(): string;
+    public function getDataProviderType();
 
     /**
      * @param string $recipientType
