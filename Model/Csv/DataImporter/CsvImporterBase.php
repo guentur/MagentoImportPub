@@ -5,7 +5,7 @@ namespace Guentur\MagentoImport\Model\Csv\DataImporter;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\DataImporter\ImporterBaseInterface;
 use Guentur\MagentoImport\Model\Csv\Validator\CsvFileValidator;
-use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterface;
+use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterfaceFactory;
 use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
 
 class CsvImporterBase implements ImporterBaseInterface
@@ -16,23 +16,26 @@ class CsvImporterBase implements ImporterBaseInterface
 
     private $validator;
 
-    private $applyObserver;
+    private $importObserverFactory;
 
     private $mapping;
 
     public function __construct(
         CsvFileValidator $validator,
-        ApplyObserverInterface $applyObserver,
+        ApplyObserverInterfaceFactory $importObserverFactory,
         DefaultMapping $mapping
     ) {
         $this->validator = $validator;
-        $this->applyObserver = $applyObserver;
+        $this->importObserverFactory = $importObserverFactory;
         $this->mapping = $mapping;
     }
 
     /**
      * @param array $dataToInsert
      * @return bool
+     *
+     * @todo Ask Alexander: "Is it right to pass dataToInsert into Guentur\MagentoImport\Model\Data\DataImportInfo
+     * I think it is the right thing, because the data for importing should transfer with information where it is transfering
      */
     public function importData(array $dataToInsert): bool
     {
@@ -41,12 +44,18 @@ class CsvImporterBase implements ImporterBaseInterface
 
         //@todo refactor for the reason to pass associative arrays with different keys and save them all to the csv file
         $resource = fopen($pathToRecipient, 'w');
+        //@todo refactor. Separate DataModel and Buiseness Logic Model in mapping.
+        // We should use MappingFactory for non-injectable DataModels
         $header = $this->mapping->applyMappingForItem(array_values($dataToInsert)[0]);
         fputcsv($resource, array_keys($header));
 
+        $importObserver = $this->importObserverFactory->create();
+
         foreach ($dataToInsert as $row) {
             $this->mapping->applyMappingForItem($row);
-            $row = $this->applyObserver->callObserver($row, $this->getDataImportInfo());
+            //@todo refactor. Separate DataModel and Buiseness Logic Model in mapping.
+            // We should use ImportObserverFactory for non-injectable DataModels
+            $row = $importObserver->callObserver($row, $this->getDataImportInfo());
             fputcsv($resource, $row);
         }
         $status = fclose($resource);
