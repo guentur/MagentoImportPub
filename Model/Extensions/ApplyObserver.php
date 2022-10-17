@@ -14,6 +14,8 @@ class ApplyObserver implements ApplyObserverInterface
      */
     private $eventManager;
 
+    private $fullEventName;
+
     /**
      * @param ManagerInterface $eventManager
      */
@@ -47,16 +49,19 @@ class ApplyObserver implements ApplyObserverInterface
      */
     public function getFullEventName(DataImportInfoInterface $dataImportInfo): string
     {
-        //@todo write in documentation that file name (not path, but exactly filename) of separate dataProviders must be different
-        $providerName = $dataImportInfo->getDataProviderName();
-        $recipientName = $dataImportInfo->getRecipientName();
-        $name = $providerName . '_' . $recipientName;
+        if (null === $this->fullEventName) {
+            //@todo write in documentation that file name (not path, but exactly filename) of separate dataProviders must be different
+            $providerName = $dataImportInfo->getDataProviderName() ?? 'blank';
+            $recipientName = $dataImportInfo->getRecipientName() ?? 'blank';
+            $providerType = $dataImportInfo->getDataProviderType() ?? 'blank';
+            $recipientType = $dataImportInfo->getRecipientType() ?? 'blank';
 
-        $providerType = $dataImportInfo->getDataProviderType();
-        $recipientType = $dataImportInfo->getRecipientType();
-        $type = $providerType . '_' . $recipientType;
+            $name = $providerName . '_' . $recipientName;
+            $type = $providerType . '_' . $recipientType;
 
-        //@todo add importer type part to event name
-        return 'guentur_import_' . $name . '_' . $type;
+            //@todo add importer type part to event name
+            $this->fullEventName = 'guentur_import_' . $name . '_' . $type;
+        }
+        return $this->fullEventName;
     }
 }
