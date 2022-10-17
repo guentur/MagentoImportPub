@@ -64,10 +64,10 @@ class ImportState
         $pathToRecipient = $dataImportInfo->getPathToRecipient();
         $pathToProvider = $dataImportInfo->getPathToDataProvider();
         $currentEntityInfo = [
-                'path_to_provider' => $pathToProvider,
-                'path_to_recipient' => $pathToRecipient,
-                'entity_key' => (int) $entityKey,
-            ];
+            'path_to_provider' => $pathToProvider,
+            'path_to_recipient' => $pathToRecipient,
+            'entity_key' => (int) $entityKey,
+        ];
         $rememberedEntities = $this->getRememberedEntities();
         $rememberedEntities[] = $currentEntityInfo;
 
@@ -116,7 +116,7 @@ class ImportState
     {
         $rememberedEntity = $this->getRememberedEntity($dataImportInfo);
         if (isset($rememberedEntity) && array_key_exists($rememberedEntity, $array)) {
-            $array = array_slice($array, $rememberedEntity);
+            $array = array_slice($array, $rememberedEntity, null, true);
         }
         return $array;
     }

@@ -19,7 +19,7 @@ class DataImportInfo extends AbstractSimpleObject implements DataImportInfoInter
         $this->setData('path_to_recipient', $pathToRecipient);
     }
 
-    public function getPathToDataProvider(): string
+    public function getPathToDataProvider()
     {
         return $this->_get('path_to_data_provider');
     }
@@ -29,16 +29,16 @@ class DataImportInfo extends AbstractSimpleObject implements DataImportInfoInter
         return $this->_get('path_to_recipient');
     }
 
-    public function getDataProviderName(): string
+    public function getDataProviderName()
     {
         $pathToProvider = $this->getPathToDataProvider();
-        return pathinfo($pathToProvider)['filename'];
+        return $pathToProvider == null ? null : pathinfo($pathToProvider)['filename'];
     }
 
-    public function getRecipientName(): string
+    public function getRecipientName()
     {
         $pathToRecipient = $this->getPathToRecipient();
-        return pathinfo($pathToRecipient)['filename'];
+        return $pathToRecipient == null ? null : pathinfo($pathToRecipient)['filename'];
     }
 
     public function setDataProviderType(string $dataProviderType): void
@@ -46,7 +46,7 @@ class DataImportInfo extends AbstractSimpleObject implements DataImportInfoInter
         $this->setData('data_provider_type', $dataProviderType);
     }
 
-    public function getDataProviderType(): string
+    public function getDataProviderType()
     {
         return $this->_get('data_provider_type');
     }
@@ -56,7 +56,7 @@ class DataImportInfo extends AbstractSimpleObject implements DataImportInfoInter
         $this->setData('recipient_type', $recipientType);
     }
 
-    public function getRecipientType(): string
+    public function getRecipientType()
     {
         return $this->_get('recipient_type');
     }
