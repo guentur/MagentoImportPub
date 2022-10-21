@@ -1,22 +1,16 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Extensions;
+namespace Guentur\MagentoImport\Model\Extensions\Rememberer;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
-use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
 use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
+use Guentur\MagentoImport\Api\Extensions\Rememberer\RememberedEntitiesProviderInterface;
 use Guentur\MagentoImport\Model\EntityManager;
 use Guentur\MagentoImport\Model\EntityScopeManager;
 use Guentur\MagentoImport\Model\Solver\StorageSolverProvider;
 
-class ImportState
+class RememberedEntitiesProvider implements RememberedEntitiesProviderInterface
 {
-    // @todo setup only filename. Make absolute path by function like getMediaPath() in Magento
-    const IMPORT_STATE_FILE_NAME = __DIR__ . '/../../etc/import_state.csv';
-
-    private $dataImporterPool;
-
     private $dataProviderPool;
 
     private $entityManager;
@@ -29,61 +23,20 @@ class ImportState
 
     private $rememberedEntitiesStoragePath;
 
-    /**
-     * @var DataImportInfoInterfaceFactory
-     */
-    private $dataImportInfoF;
-
     public function __construct(
-        DataImporterPoolInterface $dataImporterPool,
         DataProviderPoolInterface $dataProviderPool,
         EntityManager $entityManager,
         StorageSolverProvider $storageSolverProvider,
-        DataImportInfoInterfaceFactory $dataImportInfoF,
         EntityScopeManager $entityScopeManager,
         string $rememberedEntitiesStorageType,
         string $rememberedEntitiesStoragePath
     ) {
-        $this->dataImporterPool = $dataImporterPool;
         $this->dataProviderPool = $dataProviderPool;
         $this->entityManager = $entityManager;
         $this->storageSolverProvider = $storageSolverProvider;
-        $this->dataImportInfoF = $dataImportInfoF;
         $this->entityScopeManager = $entityScopeManager;
         $this->rememberedEntitiesStorageType = $rememberedEntitiesStorageType;
         $this->rememberedEntitiesStoragePath = $rememberedEntitiesStoragePath;
-    }
-
-    /**
-     * @param int $entityKey
-     * @param DataImportInfoInterface $dataImportInfo
-     * @return void
-     */
-    public function rememberEntity(int $entityKey, DataImportInfoInterface $dataImportInfo)
-    {
-        $pathToRecipient = $dataImportInfo->getPathToRecipient();
-        $pathToProvider = $dataImportInfo->getPathToDataProvider();
-        $currentEntityInfo = [
-            'path_to_provider' => $pathToProvider,
-            'path_to_recipient' => $pathToRecipient,
-            'entity_key' => (int) $entityKey,
-        ];
-        $rememberedEntities = $this->getRememberedEntities();
-        $rememberedEntities[] = $currentEntityInfo;
-
-        $scopeFormatEntityList = $this->entityManager->getScopeFormatEntityList($rememberedEntities);
-        $dataForImport = $this->entityManager->getImportFormatEntityList($scopeFormatEntityList);
-
-        /** DataImportInfoInterface $dataImportInfo */
-        $dataImportInfo = $this->dataImportInfoF->create();
-        //@todo Hide not used cells from dataImportInfo. In this case pathToDataProvider
-        //@todo if we dont remember failed entity while import remembered entities data there is not required path to data-provider
-        $dataImportInfo->setPathToRecipient($this->rememberedEntitiesStoragePath);
-
-        /** @var \Guentur\MagentoImport\Api\DataImporter\DataImporterInterface $dataImporter */
-        $dataImporter = $this->dataImporterPool->getDataImporter($this->rememberedEntitiesStorageType);
-        $dataImporter->setDataImportInfo($dataImportInfo);
-        $dataImporter->importData($dataForImport);
     }
 
     public function getRememberedEntities(): array
@@ -94,7 +47,7 @@ class ImportState
             $dataProvider = $this->dataProviderPool->getDataProvider($this->rememberedEntitiesStorageType);
             $rememberedEntities = $dataProvider->getData($this->rememberedEntitiesStoragePath);
         } catch(\InvalidArgumentException $e) {
-            //@todo create the file for remembering entities if it is not exist
+            // create the file for remembering entities if it does not exist
             $solver = $this->storageSolverProvider->getSolver($this->rememberedEntitiesStorageType);
             $solver->execute($this->rememberedEntitiesStoragePath);
             $message = __(' We cannot access to storage for remembered entities.'
