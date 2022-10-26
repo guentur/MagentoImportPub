@@ -6,15 +6,13 @@ use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
 use Guentur\MagentoImport\Model\EntityManager;
-use Guentur\MagentoImport\Model\Extensions\Rememberer\RememberedEntitiesProvider;
+use Guentur\MagentoImport\Api\Extensions\Rememberer\RememberedEntitiesProviderInterface;
 use Guentur\MagentoImport\Api\Extensions\Rememberer\RememberProcessorInterface;
 
 class RememberReplace implements RememberProcessorInterface
 {
     // @todo setup only filename. Make absolute path by function like getMediaPath() in Magento
     const IMPORT_STATE_FILE_NAME = __DIR__ . '/../../../etc/import_state.csv';
-
-    private $dataImporterPool;
 
     private $entityManager;
 
@@ -23,26 +21,17 @@ class RememberReplace implements RememberProcessorInterface
     private $rememberedEntitiesStoragePath;
 
     /**
-     * @var DataImportInfoInterfaceFactory
-     */
-    private $dataImportInfoF;
-
-    /**
-     * @var \Guentur\MagentoImport\Model\Extensions\Rememberer\RememberedEntitiesProvider
+     * @var RememberedEntitiesProviderInterface
      */
     private $rememberedEntitiesProvider;
 
     public function __construct(
-        DataImporterPoolInterface $dataImporterPool,
         EntityManager $entityManager,
-        DataImportInfoInterfaceFactory $dataImportInfoF,
-        RememberedEntitiesProvider $rememberedEntitiesProvider,
+        RememberedEntitiesProviderInterface $rememberedEntitiesProvider,
         string $rememberedEntitiesStorageType,
         string $rememberedEntitiesStoragePath
     ) {
-        $this->dataImporterPool = $dataImporterPool;
         $this->entityManager = $entityManager;
-        $this->dataImportInfoF = $dataImportInfoF;
         $this->rememberedEntitiesProvider = $rememberedEntitiesProvider;
         $this->rememberedEntitiesStorageType = $rememberedEntitiesStorageType;
         $this->rememberedEntitiesStoragePath = $rememberedEntitiesStoragePath;
@@ -51,9 +40,10 @@ class RememberReplace implements RememberProcessorInterface
     /**
      * @param int $entityKey
      * @param DataImportInfoInterface $dataImportInfo
+     * @param $exception
      * @return void
      */
-    public function rememberEntity(int $entityKey, DataImportInfoInterface $dataImportInfo)
+    public function rememberEntity(int $entityKey, DataImportInfoInterface $dataImportInfo, $exception)
     {
         $pathToRecipient = $dataImportInfo->getPathToRecipient();
         $pathToProvider = $dataImportInfo->getPathToDataProvider();
@@ -64,9 +54,14 @@ class RememberReplace implements RememberProcessorInterface
             'entity_key' => (int) $entityKey,
         ];
 
-        $rememberedEntities = $this->rememberedEntitiesProvider->getRememberedEntities();
+        $rememberedEntities = $this->getRememberedEntities();
         $allRememberedEntities = $this->mergeWithAllRememberedEntities($rememberedEntities, $currentEntityInfo);
-        $this->importRememberedEntities($allRememberedEntities);
+        $this->rememberedEntitiesProvider->importRememberedEntities($allRememberedEntities,
+                                                                    $this->rememberedEntitiesStoragePath,
+                                                                    $this->rememberedEntitiesStorageType
+        );
+
+        throw $exception;
     }
 
     public function mergeWithAllRememberedEntities(array $rememberedEntities, array $currentEntityInfo): array
@@ -79,17 +74,21 @@ class RememberReplace implements RememberProcessorInterface
         return $rememberedEntities;
     }
 
-    protected function importRememberedEntities(array $allRememberedEntities)
+    public function getRememberedEntities()
     {
-        /** DataImportInfoInterface $dataImportInfo */
-        $dataImportInfo = $this->dataImportInfoF->create();
-        // Hide not used cells from dataImportInfo. In this case pathToDataProvider
-        // if we dont remember failed entity while import remembered entities data there is not required path to data-provider
-        $dataImportInfo->setPathToRecipient($this->rememberedEntitiesStoragePath);
+        return $this->rememberedEntitiesProvider->getRememberedEntities(
+            $this->rememberedEntitiesStoragePath,
+            $this->rememberedEntitiesStorageType
+        );
+    }
 
-        /** @var \Guentur\MagentoImport\Api\DataImporter\DataImporterInterface $dataImporter */
-        $dataImporter = $this->dataImporterPool->getDataImporter($this->rememberedEntitiesStorageType);
-        $dataImporter->setDataImportInfo($dataImportInfo);
-        $dataImporter->importData($allRememberedEntities);
+    public function getStoragePath(): string
+    {
+        return $this->rememberedEntitiesStoragePath;
+    }
+
+    public function getStorageType(): string
+    {
+        return $this->rememberedEntitiesStorageType;
     }
 }

@@ -7,9 +7,22 @@ use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 interface RememberProcessorInterface
 {
     /**
+     * @todo remove Exception param
+     *
      * @param int $entityKey
      * @param DataImportInfoInterface $dataImportInfo
-     * @return void
+     * @param \RuntimeException $exception
+     * @return mixed
      */
-    public function rememberEntity(int $entityKey, DataImportInfoInterface $dataImportInfo);
+    public function rememberEntity(int $entityKey, DataImportInfoInterface $dataImportInfo, \RuntimeException $exception);
+
+    /**
+     * @return string
+     */
+    public function getStoragePath(): string;
+
+    /**
+     * @return string
+     */
+    public function getStorageType(): string;
 }
