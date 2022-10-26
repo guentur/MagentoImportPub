@@ -6,11 +6,12 @@ use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\DataImporter\ImporterRememberInterface;
 use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterfaceFactory;
 use Guentur\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
-use Guentur\MagentoImport\Model\Extensions\ImportState;
+use Guentur\MagentoImport\Api\Extensions\Rememberer\RememberedEntitiesProviderInterface;
 use Guentur\MagentoImport\Model\Extensions\ProgressBarWrapper;
 use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
+use Guentur\MagentoImport\Api\Extensions\Rememberer\RememberProcessorInterface;
 
 class DbImporterRemember implements ImportWithProgressBarInterface, ImporterRememberInterface
 {
@@ -18,7 +19,12 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
 
     private $moduleDataSetup;
 
-    private $importState;
+    private $rememberedEntitiesProvider;
+
+    /**
+     * @var RememberProcessorInterface
+     */
+    private $rememberProcessor;
 
     private $importObserverFactory;
 
@@ -43,18 +49,18 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
 
     /**
      * @param ModuleDataSetupInterface $moduleDataSetup
-     * @param ImportState $importState
-     * @param ApplyObserverInterface $importObserverFactory
+     * @param RememberedEntitiesProviderInterface $rememberedEntitiesProvider
+     * @param ApplyObserverInterfaceFactory $importObserverFactory
      * @param DefaultMapping $mapping
      */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
-        ImportState $importState,
+        RememberedEntitiesProviderInterface $rememberedEntitiesProvider,
         ApplyObserverInterfaceFactory $importObserverFactory,
         DefaultMapping $mapping
     ) {
         $this->moduleDataSetup = $moduleDataSetup;
-        $this->importState = $importState;
+        $this->rememberedEntitiesProvider = $rememberedEntitiesProvider;
         $this->importObserverFactory = $importObserverFactory;
         $this->mapping = $mapping;
     }
@@ -66,13 +72,32 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
     public function importData(
         array $dataToInsert
     ) {
-        $dataToInsert = $this->importState->getArraySinceRememberedEntity($dataToInsert, $this->getDataImportInfo());
+        $dataToInsert = $this->getArraySinceRememberedEntity($dataToInsert, $this->getDataImportInfo());
 
         if ($this->getProgressBarWrapper() instanceof ProgressBarWrapper) {
             $this->runImportWithProgressBar($dataToInsert);
         } else {
             $this->runDefaultImport($dataToInsert);
         }
+    }
+
+    /**
+     * @param array $array
+     * @param DataImportInfoInterface $dataImportInfo
+     * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getArraySinceRememberedEntity(array $array, DataImportInfoInterface $dataImportInfo): array
+    {
+        $rememberedEntity = $this->rememberedEntitiesProvider->getRememberedEntitiesByScope(
+            $dataImportInfo,
+            $this->getRememberProcessor()->getStoragePath(),
+            $this->getRememberProcessor()->getStorageType(),
+        );
+        if (isset($rememberedEntity) && array_key_exists($rememberedEntity, $array)) {
+            $array = array_slice($array, $rememberedEntity, null, true);
+        }
+        return $array;
     }
 
     /**
@@ -87,8 +112,7 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
                 $importObserver->callObserver($dataItem, $this->getDataImportInfo());
                 $this->importItem($dataItem);
             } catch (\RuntimeException|\Exception $e) {
-                $this->importState->rememberEntity($dataItemKey, $this->getDataImportInfo());
-                throw $e;
+                $this->getRememberProcessor()->rememberEntity($dataItemKey, $this->getDataImportInfo(), $e);
             }
         }
     }
@@ -128,6 +152,19 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
         return $this->tableName;
     }
 
+    // ------------------- RememberLogic interface
+
+    public function getRememberProcessor(): RememberProcessorInterface
+    {
+        return $this->rememberProcessor;
+    }
+
+    public function setRememberProcessor(RememberProcessorInterface $rememberProcessor)
+    {
+        $this->rememberProcessor = $rememberProcessor;
+    }
+    // ------------------- RememberLogic interface
+
     // ---------------- ImportWithProgressBarInterface
     /**
      * @param array $dataToInsert
@@ -144,8 +181,7 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
                 $importObserver->callObserver($dataItem, $this->getDataImportInfo());
                 $this->importItem($dataItem);
             } catch (\RuntimeException|\Exception $e) {
-                $this->importState->rememberEntity($dataItemKey, $this->getDataImportInfo());
-                throw $e;
+                $this->getRememberProcessor()->rememberEntity($dataItemKey, $this->getDataImportInfo(), $e);
             }
             $progressBar->advance();
         }
@@ -162,6 +198,7 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
     }
 
     /**
+     * @todo test if it returns NULL
      * @return ProgressBarWrapper
      */
     public function getProgressBarWrapper(): ProgressBarWrapper
