@@ -81,9 +81,6 @@
     <preference for="Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorPoolInterface"
                 type="Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberProcessorPool" />
 
-    <preference for="Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberedEntitiesProviderInterface"
-                type="Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberedEntitiesProvider" />
-
     <type name="Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorPoolInterface">
         <arguments>
             <argument name="rememberProcessors" xsi:type="array">

@@ -5,37 +5,51 @@ namespace Guentur\MagentoImport\Model\Extensions\RememberProcessor;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
+use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
 use Guentur\MagentoImport\Model\EntityManager;
 use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
-use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberedEntitiesProviderInterface;
+use Guentur\MagentoImport\Model\EntityScopeManager;
+use Guentur\MagentoImport\Model\Solver\StorageSolverPool;
 
-class RememberWhole implements RememberProcessorInterface
+class RememberWhole extends RememberProcessorAbstract implements RememberProcessorInterface
 {
 // @todo setup only filename. Make absolute path by function like getMediaPath() in Magento
     public const IMPORT_STATE_FILE_NAME = __DIR__ . '/../../../etc/whole_broken_entities.csv';
 
-    private $rememberedEntitiesStorageType;
+    protected $rememberedEntitiesStorageType;
 
-    private $rememberedEntitiesStoragePath;
-
-    /**
-     * @var RememberedEntitiesProviderInterface
-     */
-    private $rememberedEntitiesProvider;
+    protected $rememberedEntitiesStoragePath;
 
     /**
-     * @param RememberedEntitiesProviderInterface $rememberedEntitiesProvider
+     * @param DataImporterPoolInterface $dataImporterPool
+     * @param DataImportInfoInterfaceFactory $dataImportInfoF
+     * @param DataProviderPoolInterface $dataProviderPool
+     * @param EntityManager $entityManager
+     * @param StorageSolverPool $storageSolverPool
+     * @param EntityScopeManager $entityScopeManager
      * @param string $rememberedEntitiesStorageType
      * @param string $rememberedEntitiesStoragePath
      */
     public function __construct(
-        RememberedEntitiesProviderInterface $rememberedEntitiesProvider,
+        DataImporterPoolInterface $dataImporterPool,
+        DataImportInfoInterfaceFactory $dataImportInfoF,
+        DataProviderPoolInterface $dataProviderPool,
+        EntityManager $entityManager,
+        StorageSolverPool $storageSolverPool,
+        EntityScopeManager $entityScopeManager,
         string $rememberedEntitiesStorageType,
         string $rememberedEntitiesStoragePath
     ) {
-        $this->rememberedEntitiesProvider = $rememberedEntitiesProvider;
         $this->rememberedEntitiesStorageType = $rememberedEntitiesStorageType;
         $this->rememberedEntitiesStoragePath = $rememberedEntitiesStoragePath;
+        parent::__construct(
+            $dataImporterPool,
+            $dataImportInfoF,
+            $dataProviderPool,
+            $entityManager,
+            $storageSolverPool,
+            $entityScopeManager
+        );
     }
 
     /**
@@ -57,20 +71,7 @@ class RememberWhole implements RememberProcessorInterface
 
         $rememberedEntities = $this->getRememberedEntities();
         $rememberedEntities[] = $currentEntityInfo;
-        $this->rememberedEntitiesProvider->importRememberedEntities($rememberedEntities,
-                                                                    $this->rememberedEntitiesStoragePath,
-                                                                    $this->rememberedEntitiesStorageType);
-    }
-
-    /**
-     * @return array
-     */
-    public function getRememberedEntities()
-    {
-        return $this->rememberedEntitiesProvider->getRememberedEntities(
-            $this->rememberedEntitiesStoragePath,
-            $this->rememberedEntitiesStorageType
-        );
+        $this->importRememberedEntities($rememberedEntities);
     }
 
     //@todo refactor

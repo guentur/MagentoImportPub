@@ -5,43 +5,45 @@ namespace Guentur\MagentoImport\Model\Extensions\RememberProcessor;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
+use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
 use Guentur\MagentoImport\Model\EntityManager;
-use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberedEntitiesProviderInterface;
 use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
+use Guentur\MagentoImport\Model\EntityScopeManager;
+use Guentur\MagentoImport\Model\Solver\StorageSolverPool;
 
-class RememberReplace implements RememberProcessorInterface
+class RememberReplace extends RememberProcessorAbstract implements RememberProcessorInterface
 {
     // @todo setup only filename. Make absolute path by function like getMediaPath() in Magento
     const IMPORT_STATE_FILE_NAME = __DIR__ . '/../../../etc/import_state.csv';
 
-    private $entityManager;
-
-    private $rememberedEntitiesStorageType;
-
-    private $rememberedEntitiesStoragePath;
-
-    /**
-     * @var RememberedEntitiesProviderInterface
-     */
-    private $rememberedEntitiesProvider;
-
     public function __construct(
+        DataImporterPoolInterface $dataImporterPool,
+        DataImportInfoInterfaceFactory $dataImportInfoF,
+        DataProviderPoolInterface $dataProviderPool,
         EntityManager $entityManager,
-        RememberedEntitiesProviderInterface $rememberedEntitiesProvider,
+        StorageSolverPool $storageSolverPool,
+        EntityScopeManager $entityScopeManager,
         string $rememberedEntitiesStorageType,
         string $rememberedEntitiesStoragePath
     ) {
-        $this->entityManager = $entityManager;
-        $this->rememberedEntitiesProvider = $rememberedEntitiesProvider;
         $this->rememberedEntitiesStorageType = $rememberedEntitiesStorageType;
         $this->rememberedEntitiesStoragePath = $rememberedEntitiesStoragePath;
+        parent::__construct(
+            $dataImporterPool,
+            $dataImportInfoF,
+            $dataProviderPool,
+            $entityManager,
+            $storageSolverPool,
+            $entityScopeManager
+        );
     }
 
     /**
      * @param int $entityKey
      * @param DataImportInfoInterface $dataImportInfo
      * @param $exception
-     * @return void
+     * @return mixed
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function rememberEntity(int $entityKey, DataImportInfoInterface $dataImportInfo, $exception)
     {
@@ -56,10 +58,7 @@ class RememberReplace implements RememberProcessorInterface
 
         $rememberedEntities = $this->getRememberedEntities();
         $allRememberedEntities = $this->mergeWithAllRememberedEntities($rememberedEntities, $currentEntityInfo);
-        $this->rememberedEntitiesProvider->importRememberedEntities($allRememberedEntities,
-                                                                    $this->rememberedEntitiesStoragePath,
-                                                                    $this->rememberedEntitiesStorageType
-        );
+        $this->importRememberedEntities($allRememberedEntities);
 
         throw $exception;
     }
@@ -72,14 +71,6 @@ class RememberReplace implements RememberProcessorInterface
         $rememberedEntities = $this->entityManager->getImportFormatEntityList($scopeFormatEntityList);
 
         return $rememberedEntities;
-    }
-
-    public function getRememberedEntities()
-    {
-        return $this->rememberedEntitiesProvider->getRememberedEntities(
-            $this->rememberedEntitiesStoragePath,
-            $this->rememberedEntitiesStorageType
-        );
     }
 
     public function getStoragePath(): string

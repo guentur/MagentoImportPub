@@ -6,7 +6,6 @@ use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\DataImporter\ImporterRememberInterface;
 use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterfaceFactory;
 use Guentur\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
-use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberedEntitiesProviderInterface;
 use Guentur\MagentoImport\Model\Extensions\ProgressBarWrapper;
 use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
 use Magento\Framework\DB\Adapter\AdapterInterface;
@@ -18,8 +17,6 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
     const TYPE = 'database_remember';
 
     private $moduleDataSetup;
-
-    private $rememberedEntitiesProvider;
 
     /**
      * @var RememberProcessorInterface
@@ -49,18 +46,15 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
 
     /**
      * @param ModuleDataSetupInterface $moduleDataSetup
-     * @param RememberedEntitiesProviderInterface $rememberedEntitiesProvider
      * @param ApplyObserverInterfaceFactory $importObserverFactory
      * @param DefaultMapping $mapping
      */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
-        RememberedEntitiesProviderInterface $rememberedEntitiesProvider,
         ApplyObserverInterfaceFactory $importObserverFactory,
         DefaultMapping $mapping
     ) {
         $this->moduleDataSetup = $moduleDataSetup;
-        $this->rememberedEntitiesProvider = $rememberedEntitiesProvider;
         $this->importObserverFactory = $importObserverFactory;
         $this->mapping = $mapping;
     }
@@ -90,11 +84,7 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
      */
     public function getArraySinceRememberedEntity(array $array, DataImportInfoInterface $dataImportInfo): array
     {
-        $rememberedEntity = $this->rememberedEntitiesProvider->getRememberedEntitiesByScope(
-            $dataImportInfo,
-            $this->getRememberProcessor()->getStoragePath(),
-            $this->getRememberProcessor()->getStorageType(),
-        );
+        $rememberedEntity = $this->getRememberProcessor()->getRememberedEntitiesByScope($dataImportInfo);
         if (isset($rememberedEntity) && array_key_exists($rememberedEntity, $array)) {
             $array = array_slice($array, $rememberedEntity, null, true);
         }
