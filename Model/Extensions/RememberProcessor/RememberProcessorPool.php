@@ -1,9 +1,9 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Extensions\Rememberer;
+namespace Guentur\MagentoImport\Model\Extensions\RememberProcessor;
 
-use Guentur\MagentoImport\Api\Extensions\Rememberer\RememberProcessorPoolInterface;
-use Guentur\MagentoImport\Api\Extensions\Rememberer\RememberProcessorInterface;
+use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorPoolInterface;
+use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
 use Magento\Framework\Exception\LocalizedException;
 
 class RememberProcessorPool implements RememberProcessorPoolInterface

@@ -1,6 +1,6 @@
 <?php
 
-namespace Guentur\MagentoImport\Api\Extensions\Rememberer;
+namespace Guentur\MagentoImport\Api\Extensions\RememberProcessor;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 

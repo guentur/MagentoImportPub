@@ -1,13 +1,13 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Extensions\Rememberer;
+namespace Guentur\MagentoImport\Model\Extensions\RememberProcessor;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
 use Guentur\MagentoImport\Model\EntityManager;
-use Guentur\MagentoImport\Api\Extensions\Rememberer\RememberProcessorInterface;
-use Guentur\MagentoImport\Api\Extensions\Rememberer\RememberedEntitiesProviderInterface;
+use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
+use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberedEntitiesProviderInterface;
 
 class RememberWhole implements RememberProcessorInterface
 {
@@ -46,12 +46,12 @@ class RememberWhole implements RememberProcessorInterface
      */
     public function rememberEntity(int $entityKey, DataImportInfoInterface $dataImportInfo, $exception)
     {
-        $pathToRecipient = $dataImportInfo->getPathToRecipient();
-        $pathToProvider = $dataImportInfo->getPathToDataProvider();
+        $recipientName = $dataImportInfo->getRecipientName();
+        $providerName = $dataImportInfo->getDataProviderName();
         //@todo Important. Refactor to use Guentur\MagentoImport\Model\Data\DataImportInfo
         $currentEntityInfo = [
-            'path_to_provider' => $pathToProvider,
-            'path_to_recipient' => $pathToRecipient,
+            'path_to_provider' => $providerName,
+            'path_to_recipient' => $recipientName,
             'entity_key' => (int) $entityKey,
         ];
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Extensions\Rememberer;
+namespace Guentur\MagentoImport\Model\Extensions\RememberProcessor;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
 use Guentur\MagentoImport\Model\EntityManager;
-use Guentur\MagentoImport\Api\Extensions\Rememberer\RememberedEntitiesProviderInterface;
-use Guentur\MagentoImport\Api\Extensions\Rememberer\RememberProcessorInterface;
+use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberedEntitiesProviderInterface;
+use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
 
 class RememberReplace implements RememberProcessorInterface
 {

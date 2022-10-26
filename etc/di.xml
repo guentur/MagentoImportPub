@@ -61,34 +61,34 @@
 <!--        </arguments>-->
 <!--    </type>-->
 
-    <type name="Guentur\MagentoImport\Model\Extensions\Rememberer\RememberReplace">
+    <type name="Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberReplace">
         <arguments>
             <argument name="rememberedEntitiesStorageType" xsi:type="const">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterBase::TYPE</argument>
-            <argument name="rememberedEntitiesStoragePath" xsi:type="const">Guentur\MagentoImport\Model\Extensions\Rememberer\RememberReplace::IMPORT_STATE_FILE_NAME</argument>
+            <argument name="rememberedEntitiesStoragePath" xsi:type="const">Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberReplace::IMPORT_STATE_FILE_NAME</argument>
         </arguments>
     </type>
 
-    <type name="Guentur\MagentoImport\Model\Extensions\Rememberer\RememberWhole">
+    <type name="Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberWhole">
         <arguments>
             <argument name="rememberedEntitiesStorageType" xsi:type="const">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterBase::TYPE</argument>
-            <argument name="rememberedEntitiesStoragePath" xsi:type="const">Guentur\MagentoImport\Model\Extensions\Rememberer\RememberWhole::IMPORT_STATE_FILE_NAME</argument>
+            <argument name="rememberedEntitiesStoragePath" xsi:type="const">Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberWhole::IMPORT_STATE_FILE_NAME</argument>
         </arguments>
     </type>
 
     <preference for="Guentur\MagentoImport\Api\Data\DataImportInfoInterface"
                 type="Guentur\MagentoImport\Model\Data\DataImportInfo" />
 
-    <preference for="Guentur\MagentoImport\Api\Extensions\Rememberer\RememberProcessorPoolInterface"
-                type="Guentur\MagentoImport\Model\Extensions\Rememberer\RememberProcessorPool" />
+    <preference for="Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorPoolInterface"
+                type="Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberProcessorPool" />
 
-    <preference for="Guentur\MagentoImport\Api\Extensions\Rememberer\RememberedEntitiesProviderInterface"
-                type="Guentur\MagentoImport\Model\Extensions\Rememberer\RememberedEntitiesProvider" />
+    <preference for="Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberedEntitiesProviderInterface"
+                type="Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberedEntitiesProvider" />
 
-    <type name="Guentur\MagentoImport\Api\Extensions\Rememberer\RememberProcessorPoolInterface">
+    <type name="Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorPoolInterface">
         <arguments>
             <argument name="rememberProcessors" xsi:type="array">
-                <item name="remember-all-failed-entities" xsi:type="object">Guentur\MagentoImport\Model\Extensions\Rememberer\RememberWhole</item>
-                <item name="remember-with-replace" xsi:type="object">Guentur\MagentoImport\Model\Extensions\Rememberer\RememberReplace</item>
+                <item name="remember-all-failed-entities" xsi:type="object">Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberWhole</item>
+                <item name="remember-with-replace" xsi:type="object">Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberReplace</item>
             </argument>
             <argument name="defaultProcessorMode" xsi:type="string">remember-with-replace</argument>
         </arguments>

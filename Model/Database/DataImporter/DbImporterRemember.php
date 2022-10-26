@@ -6,12 +6,12 @@ use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\DataImporter\ImporterRememberInterface;
 use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterfaceFactory;
 use Guentur\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
-use Guentur\MagentoImport\Api\Extensions\Rememberer\RememberedEntitiesProviderInterface;
+use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberedEntitiesProviderInterface;
 use Guentur\MagentoImport\Model\Extensions\ProgressBarWrapper;
 use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
-use Guentur\MagentoImport\Api\Extensions\Rememberer\RememberProcessorInterface;
+use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
 
 class DbImporterRemember implements ImportWithProgressBarInterface, ImporterRememberInterface
 {
