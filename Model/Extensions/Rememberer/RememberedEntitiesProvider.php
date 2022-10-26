@@ -10,6 +10,7 @@ use Guentur\MagentoImport\Api\Extensions\Rememberer\RememberedEntitiesProviderIn
 use Guentur\MagentoImport\Model\EntityManager;
 use Guentur\MagentoImport\Model\EntityScopeManager;
 use Guentur\MagentoImport\Model\Solver\StorageSolverPool;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 class RememberedEntitiesProvider implements RememberedEntitiesProviderInterface
 {
@@ -80,14 +81,14 @@ class RememberedEntitiesProvider implements RememberedEntitiesProviderInterface
         try {
             $dataProvider = $this->dataProviderPool->getDataProvider($rememberedEntitiesStorageType);
             $rememberedEntities = $dataProvider->getData($rememberedEntitiesStoragePath);
-        } catch(\InvalidArgumentException $e) {
+        } catch(FileNotFoundException $e) {
             // create the file for remembering entities if it does not exist
             $solver = $this->storageSolverPool->getSolver($rememberedEntitiesStorageType);
             $solver->execute($rememberedEntitiesStoragePath);
             $message = __(' We cannot access to storage for remembered entities.'
                           . ' The storage provider returned this message: ' . $e->getMessage()
                           . ' The solver script have been run.'
-                          . ' You can configure your class with solver script in the di.xml config.'
+                          . ' You can configure your Solver class in the di.xml config.'
                           . ' See node type for class ' . StorageSolverPool::class);
             echo $message;
         }

@@ -68,6 +68,7 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
     /**
      * @param array $dataToInsert
      * @return mixed|void
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function importData(
         array $dataToInsert
@@ -178,6 +179,9 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
         foreach ($dataToInsert as $dataItemKey => $dataItem) {
             $progressBar->display();
             try {
+                if ($dataItemKey % 2) {
+                    throw new \RuntimeException('$dataItemKey % 2');
+                }
                 $importObserver->callObserver($dataItem, $this->getDataImportInfo());
                 $this->importItem($dataItem);
             } catch (\RuntimeException|\Exception $e) {
