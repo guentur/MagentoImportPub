@@ -7,7 +7,7 @@ use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
 use Guentur\MagentoImport\Api\Extensions\Rememberer\RememberedEntitiesProviderInterface;
 use Guentur\MagentoImport\Model\EntityManager;
 use Guentur\MagentoImport\Model\EntityScopeManager;
-use Guentur\MagentoImport\Model\Solver\StorageSolverProvider;
+use Guentur\MagentoImport\Model\Solver\StorageSolverPool;
 
 class RememberedEntitiesProvider implements RememberedEntitiesProviderInterface
 {
@@ -15,7 +15,10 @@ class RememberedEntitiesProvider implements RememberedEntitiesProviderInterface
 
     private $entityManager;
 
-    private $storageSolverProvider;
+    /**
+     * @var StorageSolverPool
+     */
+    private $storageSolverPool;
 
     private $entityScopeManager;
 
@@ -26,14 +29,14 @@ class RememberedEntitiesProvider implements RememberedEntitiesProviderInterface
     public function __construct(
         DataProviderPoolInterface $dataProviderPool,
         EntityManager $entityManager,
-        StorageSolverProvider $storageSolverProvider,
+        StorageSolverPool $storageSolverPool,
         EntityScopeManager $entityScopeManager,
         string $rememberedEntitiesStorageType,
         string $rememberedEntitiesStoragePath
     ) {
         $this->dataProviderPool = $dataProviderPool;
         $this->entityManager = $entityManager;
-        $this->storageSolverProvider = $storageSolverProvider;
+        $this->storageSolverPool = $storageSolverPool;
         $this->entityScopeManager = $entityScopeManager;
         $this->rememberedEntitiesStorageType = $rememberedEntitiesStorageType;
         $this->rememberedEntitiesStoragePath = $rememberedEntitiesStoragePath;
@@ -48,13 +51,13 @@ class RememberedEntitiesProvider implements RememberedEntitiesProviderInterface
             $rememberedEntities = $dataProvider->getData($this->rememberedEntitiesStoragePath);
         } catch(\InvalidArgumentException $e) {
             // create the file for remembering entities if it does not exist
-            $solver = $this->storageSolverProvider->getSolver($this->rememberedEntitiesStorageType);
+            $solver = $this->storageSolverPool->getSolver($this->rememberedEntitiesStorageType);
             $solver->execute($this->rememberedEntitiesStoragePath);
             $message = __(' We cannot access to storage for remembered entities.'
                           . ' The storage provider returned this message: ' . $e->getMessage()
                           . ' The solver script have been run.'
                           . ' You can configure your class with solver script in the di.xml config.'
-                          . ' See node type for class Guentur\MagentoImport\Model\Solver\StorageSolverProvider');
+                          . ' See node type for class ' . StorageSolverPool::class);
             echo $message;
         }
         return $rememberedEntities;

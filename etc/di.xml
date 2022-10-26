@@ -35,7 +35,7 @@
         </arguments>
     </type>
 
-    <type name="Guentur\MagentoImport\Model\Solver\StorageSolverProvider">
+    <type name="Guentur\MagentoImport\Model\Solver\StorageSolverPool">
         <arguments>
             <argument name="solvers" xsi:type="array">
 <!--                @todo-->

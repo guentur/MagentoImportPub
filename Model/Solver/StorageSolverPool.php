@@ -5,7 +5,7 @@ namespace Guentur\MagentoImport\Model\Solver;
 use Guentur\MagentoImport\Api\EntitiesStorageSolverInterface;
 use Magento\Framework\Exception\LocalizedException;
 
-class StorageSolverProvider
+class StorageSolverPool
 {
     private $solvers;
 
