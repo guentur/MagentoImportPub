@@ -78,6 +78,22 @@
     <preference for="Guentur\MagentoImport\Api\Data\DataImportInfoInterface"
                 type="Guentur\MagentoImport\Model\Data\DataImportInfo" />
 
+    <preference for="Guentur\MagentoImport\Api\Extensions\Rememberer\RememberProcessorPoolInterface"
+                type="Guentur\MagentoImport\Model\Extensions\Rememberer\RememberProcessorPool" />
+
+    <preference for="Guentur\MagentoImport\Api\Extensions\Rememberer\RememberedEntitiesProviderInterface"
+                type="Guentur\MagentoImport\Model\Extensions\Rememberer\RememberedEntitiesProvider" />
+
+    <type name="Guentur\MagentoImport\Api\Extensions\Rememberer\RememberProcessorPoolInterface">
+        <arguments>
+            <argument name="rememberProcessors" xsi:type="array">
+                <item name="remember-all-failed-entities" xsi:type="object">Guentur\MagentoImport\Model\Extensions\Rememberer\RememberWhole</item>
+                <item name="remember-with-replace" xsi:type="object">Guentur\MagentoImport\Model\Extensions\Rememberer\RememberReplace</item>
+            </argument>
+            <argument name="defaultProcessorMode" xsi:type="string">remember-with-replace</argument>
+        </arguments>
+    </type>
+
     <preference for="Guentur\MagentoImport\Api\Extensions\ApplyObserverInterface"
                 type="Guentur\MagentoImport\Model\Extensions\ApplyObserver" />
 </config>
