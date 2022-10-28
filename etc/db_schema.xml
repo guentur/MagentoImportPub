@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="broken_import_entities" resource="default" comment="List of broken entities">
+        <column xsi:type="smallint" name="broken_entity_id" identity="true" comment="Broken Entity Id" />
+        <column xsi:type="int" name="broken_entity_key" nullable="false" comment="Broken Entity Key in DataProvider for import" />
+        <column xsi:type="varchar" name="scope" length="1024" nullable="false" comment="Scope of import" />
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Creation Time"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Update Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="broken_entity_id" />
+        </constraint>
+    </table>
+</schema>
