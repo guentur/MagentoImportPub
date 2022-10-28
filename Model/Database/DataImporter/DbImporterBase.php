@@ -20,7 +20,7 @@ class DbImporterBase implements ImportWithProgressBarInterface, ImporterBaseInte
     /**
      * @var ApplyObserverInterfaceFactory
      */
-    private $applyObserverFactory;
+    private $importObserverFactory;
 
     private $mapping;
 
@@ -43,16 +43,16 @@ class DbImporterBase implements ImportWithProgressBarInterface, ImporterBaseInte
 
     /**
      * @param ModuleDataSetupInterface $moduleDataSetup
-     * @param ApplyObserverInterface $applyObserver
+     * @param ApplyObserverInterfaceFactory $importObserverFactory
      * @param DefaultMapping $mapping
      */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
-        ApplyObserverInterface $applyObserverFactory,
+        ApplyObserverInterfaceFactory $importObserverFactory,
         DefaultMapping $mapping
     ) {
         $this->moduleDataSetup = $moduleDataSetup;
-        $this->applyObserverFactory = $applyObserverFactory;
+        $this->importObserverFactory = $importObserverFactory;
         $this->mapping = $mapping;
     }
 

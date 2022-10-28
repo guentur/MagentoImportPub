@@ -1,0 +1,14 @@
+{
+    "broken_import_entities": {
+        "column": {
+            "broken_entity_id": true,
+            "broken_entity_key": true,
+            "scope": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

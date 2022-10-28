@@ -5,11 +5,14 @@ namespace Guentur\MagentoImport\Console;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
 use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
+use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorPoolInterface;
 use Guentur\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
+use Guentur\MagentoImport\Api\DataImporter\ImporterRememberInterface;
 use Guentur\MagentoImport\Model\Extensions\ProgressBarWrapper;
 use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
 use Magento\Framework\Console\Cli;
 use Magento\Framework\DB\Adapter\TableNotFoundException;
+use Magento\Framework\Exception\LocalizedException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -42,7 +45,9 @@ class DefaultImport extends Command
 
     private const OPTION_COLUMNS_MAPPING = 'columns-mapping';
 
-    private const OPTION_DONT_REMEMBER_FAILED_ENTITY = 'dont-remember-failed-entity';
+    private const OPTION_REMEMBER_MODE = 'remember-mode';
+
+    private const REMEMBER_MODE_DONT_REMEMBER_FAILED_ENTITY = 'dont-remember-failed-entity';
 
     /**
      * @var DataProviderPoolInterface
@@ -68,10 +73,15 @@ class DefaultImport extends Command
      * @var DefaultMapping
      */
     private $defaultMapping;
+    /**
+     * @var RememberProcessorPoolInterface
+     */
+    private $rememberProcessorPool;
 
     /**
      * @param DataProviderPoolInterface $dataProviderPool
      * @param DataImporterPoolInterface $dataImporterPool
+     * @param RememberProcessorPoolInterface $rememberProcessorPool
      * @param DataImportInfoInterfaceFactory $dataImportInfoF
      * @param ProgressBarWrapper $progressBarWrapper
      * @param DefaultMapping $defaultMapping
@@ -80,6 +90,7 @@ class DefaultImport extends Command
     public function __construct(
         DataProviderPoolInterface $dataProviderPool,
         DataImporterPoolInterface $dataImporterPool,
+        RememberProcessorPoolInterface $rememberProcessorPool,
         DataImportInfoInterfaceFactory $dataImportInfoF,
         ProgressBarWrapper $progressBarWrapper,
         DefaultMapping $defaultMapping,
@@ -87,6 +98,7 @@ class DefaultImport extends Command
     ) {
         $this->dataProviderPool = $dataProviderPool;
         $this->dataImporterPool = $dataImporterPool;
+        $this->rememberProcessorPool = $rememberProcessorPool;
         $this->dataImportInfoF = $dataImportInfoF;
         $this->progressBarWrapper = $progressBarWrapper;
         $this->defaultMapping = $defaultMapping;
@@ -117,7 +129,9 @@ class DefaultImport extends Command
         try {
             $statusCode = $this->importData($dataForImport, $input, $output);
         } catch (\Exception $e) {
+            $output->writeln('<error>' . 'There was error processed during the import progress' . '</error>');
             $output->writeln('<error>' . $e->getMessage() . '</error>');
+            $output->writeln('<error>' . $e->getTraceAsString() . '</error>');
         }
 
         if ($statusCode === Cli::RETURN_SUCCESS) {
@@ -208,8 +222,9 @@ class DefaultImport extends Command
         $output->writeln(__("Recipient name: %1", $dataImportInfo->getRecipientName()));
         $output->writeln(__("Data-provider name: %1", $dataImportInfo->getDataProviderName()));
 
-        $optionDontRememberFailedEntity = $input->getOption(self::OPTION_DONT_REMEMBER_FAILED_ENTITY);
-        if (!$optionDontRememberFailedEntity) {
+        //@todo refactor
+        $rememberMode = $input->getOption(self::OPTION_REMEMBER_MODE);
+        if ($rememberMode !== self::REMEMBER_MODE_DONT_REMEMBER_FAILED_ENTITY) {
             $recipientType .= '_remember';
         }
 
@@ -220,6 +235,11 @@ class DefaultImport extends Command
         if ($dataImporter instanceof ImportWithProgressBarInterface) {
             $this->progressBarWrapper->setOutput($output);
             $dataImporter->setProgressBarWrapper($this->progressBarWrapper);
+        }
+        if ($dataImporter instanceof ImporterRememberInterface) {
+            $rememberProcessor = $this->rememberProcessorPool->getRememberProcessor($rememberMode);
+
+            $dataImporter->setRememberProcessor($rememberProcessor);
         }
         try {
             $dataImporter->importData($dataForImport);
@@ -261,6 +281,12 @@ class DefaultImport extends Command
         return $enteredMapping;
     }
 
+    /**
+     * @param string $type
+     * @param string $path
+     * @param string $logicType
+     * @return string
+     */
     public function getTableNotFoundException(string $type, string $path, string $logicType): string
     {
         $message = __('Cannot find table by path to ' . $logicType . ': %1', $path);
@@ -274,6 +300,7 @@ class DefaultImport extends Command
 
     /**
      * @return array
+     * @throws LocalizedException
      */
     public function getCommandOptions()
     {
@@ -302,13 +329,9 @@ class DefaultImport extends Command
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'Format: data_provider_column/data_recipient_column',
                 []),
-            new InputOption(
-                self::OPTION_DONT_REMEMBER_FAILED_ENTITY,
-                null,
-                InputOption::VALUE_NONE,
-                'Value: either true or false'),
+            $this->getInstanceOfRememberModeOption(),
 
-            //@todo
+//@todo
 //            new InputOption(
 //                'data_bunch_limit',
 //                null,
@@ -323,5 +346,28 @@ class DefaultImport extends Command
 //                not taking into account value of import_state',
 //                null),
         ];
+    }
+
+    /**
+     * @return InputOption
+     * @throws LocalizedException
+     */
+    public function getInstanceOfRememberModeOption(): InputOption
+    {
+        $processorsModes = $this->rememberProcessorPool->getProcessorsModes();
+//        try {
+            $defaultProcessorMode = $this->rememberProcessorPool->getDefaultProcessorMode();
+//        } catch (LocalizedException|\InvalidArgumentException $exception) {
+//
+//        }
+        //@todo Write further description of the options
+        return new InputOption(
+            self::OPTION_REMEMBER_MODE,
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'Exist remember modes: '
+            . implode(', ', $processorsModes)
+            . ', ' . self::REMEMBER_MODE_DONT_REMEMBER_FAILED_ENTITY,
+            $defaultProcessorMode);
     }
 }
