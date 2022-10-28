@@ -6,7 +6,7 @@ use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 
 interface RememberedEntitiesProviderInterface
 {
-    public function getRememberedEntitiesByScope(DataImportInfoInterface $dataImportInfo);
+    public function getRememberedEntitiesByScope(string $entityScope);
 
     public function getRememberedEntities(): array;
 }
