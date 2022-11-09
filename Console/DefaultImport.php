@@ -354,9 +354,10 @@ class DefaultImport extends Command
      */
     public function getInstanceOfRememberModeOption(): InputOption
     {
-        $processorsModes = $this->rememberProcessorPool->getProcessorsModes();
+        $processorModes = $this->rememberProcessorPool->getProcessModes();
+//@todo Test throwing exception
 //        try {
-            $defaultProcessorMode = $this->rememberProcessorPool->getDefaultProcessorMode();
+            $defaultProcessorMode = $this->rememberProcessorPool->getDefaultProcessMode();
 //        } catch (LocalizedException|\InvalidArgumentException $exception) {
 //
 //        }
@@ -366,7 +367,7 @@ class DefaultImport extends Command
             null,
             InputOption::VALUE_OPTIONAL,
             'Exist remember modes: '
-            . implode(', ', $processorsModes)
+            . implode(', ', $processorModes)
             . ', ' . self::REMEMBER_MODE_DONT_REMEMBER_FAILED_ENTITY,
             $defaultProcessorMode);
     }
