@@ -23,11 +23,7 @@ class RememberedEntityRepository implements RememberedEntityRepositoryInterface
 
     private $rememberedEntityRegistry;
 
-    private $rememberedEntityCollectionFactory;
-
     private $searchResultFactory;
-
-    private $extensionAttributesJoinProcessor;
 
     private $collectionProcessor;
 
@@ -43,9 +39,7 @@ class RememberedEntityRepository implements RememberedEntityRepositoryInterface
         $this->rememberedEntityResource = $rememberedEntityResource;
         $this->rememberedEntityFactory = $rememberedEntityFactory;
         $this->rememberedEntityRegistry = $rememberedEntityRegistry;
-        $this->rememberedEntityCollectionFactory = $rememberedEntityCollectionFactory;
         $this->searchResultFactory = $searchResultFactory;
-        $this->extensionAttributesJoinProcessor = $extensionAttributesJoinProcessor;
         $this->collectionProcessor = $collectionProcessor;
     }
 
@@ -124,14 +118,6 @@ class RememberedEntityRepository implements RememberedEntityRepositoryInterface
         $searchResults->setSearchCriteria($searchCriteria);
         /** @var \Magento\Customer\Model\ResourceModel\Customer\Collection $collection */
         $collection = $this->rememberedEntityFactory->create()->getCollection();
-        $this->extensionAttributesJoinProcessor->process(
-            $collection,
-            RememberedEntityInterface::class
-        );
-//        // This is needed to make sure all the attributes are properly loaded
-//        foreach ($this->customerMetadata->getAllAttributesMetadata() as $metadata) {
-//            $collection->addAttributeToSelect($metadata->getAttributeCode());
-//        }
 
         $this->collectionProcessor->process($searchCriteria, $collection);
         $searchResults->setTotalCount($collection->getSize());
