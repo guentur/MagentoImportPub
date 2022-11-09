@@ -67,28 +67,11 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
     public function importData(
         array $dataToInsert
     ) {
-        $dataToInsert = $this->getArraySinceRememberedEntity($dataToInsert, $this->getDataImportInfo());
-
         if ($this->getProgressBarWrapper() instanceof ProgressBarWrapper) {
             $this->runImportWithProgressBar($dataToInsert);
         } else {
             $this->runDefaultImport($dataToInsert);
         }
-    }
-
-    /**
-     * @param array $array
-     * @param DataImportInfoInterface $dataImportInfo
-     * @return array
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    public function getArraySinceRememberedEntity(array $array, DataImportInfoInterface $dataImportInfo): array
-    {
-        $rememberedEntity = $this->getRememberProcessor()->getRememberedEntitiesByScope($dataImportInfo);
-        if (isset($rememberedEntity) && array_key_exists($rememberedEntity, $array)) {
-            $array = array_slice($array, $rememberedEntity, null, true);
-        }
-        return $array;
     }
 
     /**

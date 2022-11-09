@@ -238,8 +238,8 @@ class DefaultImport extends Command
         }
         if ($dataImporter instanceof ImporterRememberInterface) {
             $rememberProcessor = $this->rememberProcessorPool->getRememberProcessor($rememberMode);
-
             $dataImporter->setRememberProcessor($rememberProcessor);
+            $dataForImport = $rememberProcessor->getArraySinceRememberedEntity($dataForImport, $dataImporter->getDataImportInfo());
         }
         try {
             $dataImporter->importData($dataForImport);
