@@ -6,6 +6,7 @@ use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
 use Guentur\MagentoImport\Api\Data\RememberedEntityInterfaceFactory;
+use Guentur\MagentoImport\Api\Data\RememberedEntityInterface;
 use Guentur\MagentoImport\Api\RememberedEntityRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SortOrderBuilder;
@@ -71,22 +72,32 @@ class RememberWhole implements RememberProcessorInterface
      */
     public function rememberEntity(int $entityKey, DataImportInfoInterface $dataImportInfo, $exception)
     {
-        /** @var \Guentur\MagentoImport\Model\Extensions\ApplyObserver $applyObserverModel */
-        $applyObserverModel = $this->applyObserverFactory->create();
-        $scope = $applyObserverModel->getFullEventName($dataImportInfo);
-        $rememberMode = $this->getCurrentRememberMode();
-
-        /** @var \Guentur\MagentoImport\Api\Data\RememberedEntityInterface $rememberedEntity */
+        /** @var RememberedEntityInterface $rememberedEntity */
         $rememberedEntity = $this->rememberedEntityF->create();
-        $rememberedEntity->setScope($scope);
-        $rememberedEntity->setRememberMode($rememberMode);
-        $rememberedEntity->setRememberedEntityKey($entityKey);
+        $rememberedEntity = $this->fillRememberedEntityModelWithData($rememberedEntity, $entityKey, $dataImportInfo);
         $this->rememberedEntityRepository->save($rememberedEntity);
     }
 
     public function getCurrentRememberMode(): string
     {
         return $this->rememberProcessorPool->getProcessModeByClass($this);
+    }
+
+    public function fillRememberedEntityModelWithData(
+        RememberedEntityInterface $rememberedEntity,
+        int $entityKey,
+        DataImportInfoInterface $dataImportInfo
+    ): RememberedEntityInterface {
+        /** @var \Guentur\MagentoImport\Model\Extensions\ApplyObserver $applyObserverModel */
+        $applyObserverModel = $this->applyObserverFactory->create();
+        $scope = $applyObserverModel->getFullEventName($dataImportInfo);
+        $rememberMode = $this->getCurrentRememberMode();
+
+        $rememberedEntity->setScope($scope);
+        $rememberedEntity->setRememberMode($rememberMode);
+        $rememberedEntity->setRememberedEntityKey($entityKey);
+
+        return $rememberedEntity;
     }
 
     /**
@@ -113,7 +124,7 @@ class RememberWhole implements RememberProcessorInterface
         $searchCriteria = $this->searchCriteriaBuilder->create();
         $rememberedEntitiesResult = $this->rememberedEntityRepository->getList($searchCriteria);
 
-        /** @var \Guentur\MagentoImport\Api\Data\RememberedEntityInterface $rememberedEntity */
+        /** @var RememberedEntityInterface $rememberedEntity */
         foreach ($rememberedEntitiesResult->getItems() as $rememberedEntity) {
             $rememberedEntityKey = $rememberedEntity->getRememberedEntityKey();
         }
