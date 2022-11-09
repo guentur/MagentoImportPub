@@ -57,7 +57,8 @@ class RememberedEntityRepository implements RememberedEntityRepositoryInterface
     public function save(RememberedEntityInterface $rememberedEntity)
     {
         try {
-            $rememberedEntityModel = $this->rememberedEntityFactory->create(['data' => $rememberedEntity]);
+            $rememberedEntityModel = $this->rememberedEntityFactory->create();
+            $rememberedEntityModel->setData($rememberedEntity->__toArray());
             $this->rememberedEntityResource->save($rememberedEntityModel);
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
@@ -133,7 +134,6 @@ class RememberedEntityRepository implements RememberedEntityRepositoryInterface
 //        }
 
         $this->collectionProcessor->process($searchCriteria, $collection);
-
         $searchResults->setTotalCount($collection->getSize());
 
         $rememberedEntities = [];
