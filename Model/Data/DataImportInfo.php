@@ -60,4 +60,14 @@ class DataImportInfo extends AbstractSimpleObject implements DataImportInfoInter
     {
         return $this->_get('recipient_type');
     }
+
+//    public function setDataForImport(array $data)
+//    {
+//        $this->setData('data_for_import', $data);
+//    }
+//
+//    public function getDataForImport()
+//    {
+//        return $this->_get('data_for_import');
+//    }
 }
