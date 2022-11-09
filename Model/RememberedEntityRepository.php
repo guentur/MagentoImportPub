@@ -31,9 +31,7 @@ class RememberedEntityRepository implements RememberedEntityRepositoryInterface
         RememberedEntityResource $rememberedEntityResource,
         RememberedEntityFactory $rememberedEntityFactory,
         RememberedEntityRegistry $rememberedEntityRegistry,
-        RememberedEntityCollectionFactory $rememberedEntityCollectionFactory,
         RememberedEntitySearchResultInterfaceFactory $searchResultFactory,
-        JoinProcessorInterface $extensionAttributesJoinProcessor,
         CollectionProcessorInterface $collectionProcessor
     ) {
         $this->rememberedEntityResource = $rememberedEntityResource;
@@ -51,9 +49,11 @@ class RememberedEntityRepository implements RememberedEntityRepositoryInterface
     public function save(RememberedEntityInterface $rememberedEntity)
     {
         try {
-            $rememberedEntityModel = $this->rememberedEntityFactory->create();
-            $rememberedEntityModel->setData($rememberedEntity->__toArray());
-            $this->rememberedEntityResource->save($rememberedEntityModel);
+            if (!$this->rememberedEntityResource->isRememberedEntityExists($rememberedEntity)) {
+                $rememberedEntityModel = $this->rememberedEntityFactory->create();
+                $rememberedEntityModel->setData($rememberedEntity->__toArray());
+                $this->rememberedEntityResource->save($rememberedEntityModel);
+            }
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
                 __('Could not remember entity: %1', $exception->getMessage()),
