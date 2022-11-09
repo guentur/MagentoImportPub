@@ -24,7 +24,7 @@ class RememberedEntity extends AbstractModel
 
     public function __construct(
         RememberedEntityInterfaceFactory $rememberedEntityDataFactory,
-        RememberedEntityInterfaceFactory $dataObjectHelper,
+        DataObjectHelper $dataObjectHelper,
         Context $context,
         Registry $registry,
         AbstractResource $resource = null,
@@ -44,12 +44,12 @@ class RememberedEntity extends AbstractModel
     public function getDataModel()
     {
         $rememberedEntityData = $this->getData();
-        $customerDataObject = $this->rememberedEntityDataFactory->create();
+        $rememberedEntityDataObject = $this->rememberedEntityDataFactory->create();
         $this->dataObjectHelper->populateWithArray(
-            $customerDataObject,
+            $rememberedEntityDataObject,
             $rememberedEntityData,
             \Magento\Customer\Api\Data\CustomerInterface::class
         );
-        return $customerDataObject;
+        return $rememberedEntityDataObject;
     }
 }
