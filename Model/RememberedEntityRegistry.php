@@ -28,6 +28,7 @@ class RememberedEntityRegistry
 
     /**
      * @param \Guentur\MagentoImport\Model\RememberedEntityFactory $rememberedEntityFactory
+     * @param RememberedEntityResource $rememberedEntityResource
      */
     public function __construct(
         RememberedEntityFactory $rememberedEntityFactory,
@@ -54,7 +55,7 @@ class RememberedEntityRegistry
         $rememberedEntityBlank = $this->rememberedEntityFactory->create();
         $rememberedEntity = $this->rememberedEntityResource->load($rememberedEntityBlank, $rememberedEntityId);
         if (!$rememberedEntity->getId()) {
-            // customer does not exist
+            // remembered entity does not exist
             throw NoSuchEntityException::singleField('customerId', $rememberedEntityId);
         } else {
             $this->rememberedEntityRegistryById[$rememberedEntityId] = $rememberedEntity;

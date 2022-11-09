@@ -93,4 +93,11 @@
 
     <preference for="Guentur\MagentoImport\Api\Extensions\ApplyObserverInterface"
                 type="Guentur\MagentoImport\Model\Extensions\ApplyObserver" />
+
+    <preference for="Guentur\MagentoImport\Api\Data\RememberedEntityInterface"
+                type="Guentur\MagentoImport\Model\Data\RememberedEntity" />
+    <preference for="Guentur\MagentoImport\Api\Data\RememberedEntitySearchResultInterface"
+                type="Guentur\MagentoImport\Model\Data\RememberedEntitySearchResults" />
+    <preference for="Guentur\MagentoImport\Api\RememberedEntityRepositoryInterface"
+                type="Guentur\MagentoImport\Model\RememberedEntityRepository" />
 </config>
