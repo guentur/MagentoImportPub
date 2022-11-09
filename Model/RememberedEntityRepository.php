@@ -49,7 +49,7 @@ class RememberedEntityRepository implements RememberedEntityRepositoryInterface
     public function save(RememberedEntityInterface $rememberedEntity)
     {
         try {
-            if (!$this->rememberedEntityResource->isRememberedEntityExists($rememberedEntity)) {
+            if (false === $this->rememberedEntityResource->getRememberedEntityIdByModeScopeAndKey($rememberedEntity)) {
                 $rememberedEntityModel = $this->rememberedEntityFactory->create();
                 $rememberedEntityModel->setData($rememberedEntity->__toArray());
                 $this->rememberedEntityResource->save($rememberedEntityModel);
@@ -80,6 +80,11 @@ class RememberedEntityRepository implements RememberedEntityRepositoryInterface
         return $this->deleteById($rememberedEntity->getId());
     }
 
+    /**
+     * @param $rememberedEntityId
+     * @return bool
+     * @throws CouldNotDeleteException
+     */
     public function deleteById($rememberedEntityId)
     {
         try {

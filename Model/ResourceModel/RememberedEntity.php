@@ -14,10 +14,10 @@ class RememberedEntity extends AbstractDB
 
     /**
      * @param RememberedEntityInterface $rememberedEntity
-     * @return bool
+     * @return string|false
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function isRememberedEntityExists(RememberedEntityInterface $rememberedEntity): bool
+    public function getRememberedEntityIdByModeScopeAndKey(RememberedEntityInterface $rememberedEntity)
     {
         $dbAdapter = $this->getConnection();
         $table = $this->getMainTable();
@@ -31,9 +31,6 @@ class RememberedEntity extends AbstractDB
             ->where('scope = ?', $scope);
         $result = $dbAdapter->fetchOne($select);
 
-        if ($result === false) {
-            return false;
-        }
-        return true;
+        return $result;
     }
 }

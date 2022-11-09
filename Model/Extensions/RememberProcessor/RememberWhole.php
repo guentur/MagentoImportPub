@@ -3,11 +3,11 @@
 namespace Guentur\MagentoImport\Model\Extensions\RememberProcessor;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
 use Guentur\MagentoImport\Api\Data\RememberedEntityInterfaceFactory;
 use Guentur\MagentoImport\Api\Data\RememberedEntityInterface;
 use Guentur\MagentoImport\Api\RememberedEntityRepositoryInterface;
+use Guentur\MagentoImport\Model\ResourceModel\RememberedEntity as RememberedEntityResource;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Guentur\MagentoImport\Model\Extensions\ApplyObserverFactory;
@@ -24,6 +24,8 @@ class RememberWhole implements RememberProcessorInterface
 
     protected $rememberedEntityF;
 
+    protected $rememberedEntityResource;
+
     protected $searchCriteriaBuilder;
 
     protected $applyObserverFactory;
@@ -36,6 +38,7 @@ class RememberWhole implements RememberProcessorInterface
 
     /**
      * @param RememberedEntityInterfaceFactory $rememberedEntityF
+     * @param RememberedEntityResource $rememberedEntityResource
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param ApplyObserverFactory $applyObserverFactory
      * @param RememberProcessorPoolProxy $rememberProcessorPool
@@ -46,6 +49,7 @@ class RememberWhole implements RememberProcessorInterface
      */
     public function __construct(
         RememberedEntityInterfaceFactory $rememberedEntityF,
+        RememberedEntityResource $rememberedEntityResource,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         ApplyObserverFactory $applyObserverFactory,
         RememberProcessorPoolProxy $rememberProcessorPool,
@@ -57,6 +61,7 @@ class RememberWhole implements RememberProcessorInterface
         $this->rememberedEntitiesStorageType = $rememberedEntitiesStorageType;
         $this->rememberedEntitiesStoragePath = $rememberedEntitiesStoragePath;
         $this->rememberedEntityF = $rememberedEntityF;
+        $this->rememberedEntityResource = $rememberedEntityResource;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->applyObserverFactory = $applyObserverFactory;
         $this->rememberProcessorPool = $rememberProcessorPool;
@@ -137,6 +142,12 @@ class RememberWhole implements RememberProcessorInterface
 
     public function forgetEntity(int $entityKey, DataImportInfoInterface $dataImportInfo)
     {
-        //@todo
+        /** @var RememberedEntityInterface $rememberedEntity */
+        $rememberedEntity = $this->rememberedEntityF->create();
+        $rememberedEntity = $this->fillRememberedEntityModelWithData($rememberedEntity, $entityKey, $dataImportInfo);
+        $rememberedEntityId = $this->rememberedEntityResource->getRememberedEntityIdByModeScopeAndKey($rememberedEntity);
+        if (false !== $rememberedEntityId) {
+            $this->rememberedEntityRepository->deleteById($rememberedEntityId);
+        }
     }
 }
