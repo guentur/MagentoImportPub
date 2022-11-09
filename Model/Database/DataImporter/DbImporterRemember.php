@@ -16,6 +16,9 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
 {
     const TYPE = 'database_remember';
 
+    /**
+     * @var ModuleDataSetupInterface
+     */
     private $moduleDataSetup;
 
     /**
@@ -23,8 +26,14 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
      */
     private $rememberProcessor;
 
+    /**
+     * @var ApplyObserverInterfaceFactory
+     */
     private $importObserverFactory;
 
+    /**
+     * @var DefaultMapping
+     */
     private $mapping;
 
     /**
@@ -157,6 +166,8 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
                 }
                 $importObserver->callObserver($dataItem, $this->getDataImportInfo());
                 $this->importItem($dataItem);
+                // if entity was imported successfully we should delete it from list of broken entities
+                $this->getRememberProcessor()->forgetEntity($dataItemKey, $this->getDataImportInfo());
             } catch (\RuntimeException|\Exception $e) {
                 $this->getRememberProcessor()->rememberEntity($dataItemKey, $this->getDataImportInfo(), $e);
             }

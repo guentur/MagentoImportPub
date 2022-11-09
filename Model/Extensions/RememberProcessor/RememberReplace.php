@@ -78,8 +78,8 @@ class RememberReplace extends RememberProcessorAbstract implements RememberProce
         return $this->rememberedEntitiesStoragePath;
     }
 
-    public function getStorageType(): string
+    public function forgetEntity(int $entityKey, DataImportInfoInterface $dataImportInfo)
     {
-        return $this->rememberedEntitiesStorageType;
+        //@todo
     }
 }

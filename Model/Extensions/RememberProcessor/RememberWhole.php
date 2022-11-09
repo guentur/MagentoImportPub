@@ -114,7 +114,7 @@ class RememberWhole implements RememberProcessorInterface
         $rememberedEntitiesResult = $this->rememberedEntityRepository->getList($searchCriteria);
 
         /** @var \Guentur\MagentoImport\Api\Data\RememberedEntityInterface $rememberedEntity */
-        foreach($rememberedEntitiesResult->getItems() as $rememberedEntity) {
+        foreach ($rememberedEntitiesResult->getItems() as $rememberedEntity) {
             $rememberedEntityKey = $rememberedEntity->getRememberedEntityKey();
         }
 
@@ -122,5 +122,10 @@ class RememberWhole implements RememberProcessorInterface
             $array = array_slice($array, $rememberedEntityKey, null, true);
         }
         return $array;
+    }
+
+    public function forgetEntity(int $entityKey, DataImportInfoInterface $dataImportInfo)
+    {
+        //@todo
     }
 }
