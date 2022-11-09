@@ -5,7 +5,8 @@
             "remembered_entity_key": true,
             "scope": true,
             "created_at": true,
-            "updated_at": true
+            "updated_at": true,
+            "remember_mode": true
         },
         "constraint": {
             "PRIMARY": true

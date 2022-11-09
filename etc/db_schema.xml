@@ -6,6 +6,7 @@
         <column xsi:type="smallint" name="remembered_entry_id" identity="true" comment="Primary key. Remembered Entry Id." />
         <column xsi:type="int" name="remembered_entity_key" nullable="false" comment="Entity Key that is in DataProvider for import by scope" />
         <column xsi:type="varchar" name="scope" length="1024" nullable="false" comment="Scope of import" />
+        <column xsi:type="varchar" name="remember_mode" length="100" nullable="false" comment="Strategy of remembering entities" />
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Creation Time"/>
         <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
