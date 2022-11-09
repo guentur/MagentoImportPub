@@ -50,6 +50,16 @@ class RememberProcessorPool implements RememberProcessorPoolInterface
         return array_keys($this->rememberProcessors);
     }
 
+    public function getProcessModeByClass($processClass): string
+    {
+        $processMode = array_search($processClass, $this->rememberProcessors);
+        if ($processMode === false) {
+            throw new \InvalidArgumentException('RememberProcessor mode for class ' . $processClass . ' not found.
+             RememberProcessor must be defined in di.xml file for ' . self::class);
+        }
+        return $processMode;
+    }
+
     /**
      * @return string
      * @throws LocalizedException|\InvalidArgumentException

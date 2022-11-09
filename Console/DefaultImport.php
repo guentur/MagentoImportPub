@@ -202,6 +202,7 @@ class DefaultImport extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
+     * @throws LocalizedException
      */
     public function importData(array $dataForImport, InputInterface $input, OutputInterface $output): int
     {
