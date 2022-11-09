@@ -4,9 +4,33 @@ declare(strict_types=1);
 
 namespace Guentur\MagentoImport\Api\Data;
 
-interface RememberedEntityInterface
+use Magento\Framework\Api\ExtensibleDataInterface;
+
+interface RememberedEntityInterface extends ExtensibleDataInterface
 {
     public function getId();
+
+    public function setScope(string $scope);
+
+    public function getScope();
+
+    public function setRememberMode(string $rememberMode);
+
+    public function getRememberMode();
+
+    public function setRememberedEntityKey($rememberedEntityKey);
+
+    public function getRememberedEntityKey();
+
+    public function getCreatedAt();
+
+    public function setCreatedAt($createdAt);
+
+    public function getUpdatedAt();
+
+    public function setUpdatedAt($updatedAt);
+
+    /////////////////////// Additional logic
 
     public function setPathToRecipient(string $pathToRecipient): void;
 
@@ -19,8 +43,4 @@ interface RememberedEntityInterface
     public function getDataProviderName();
 
     public function getRecipientName();
-
-    public function setScope(string $scope);
-
-    public function getScope();
 }
