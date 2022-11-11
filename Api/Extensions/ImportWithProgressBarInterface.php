@@ -6,7 +6,7 @@ use Guentur\MagentoImport\Model\Extensions\ProgressBarWrapper;
 
 interface ImportWithProgressBarInterface
 {
-    public function runImportWithProgressBar(array $dataToInsert);
+//    public function runImportWithProgressBar(array $dataForImport);
 
     public function setProgressBarWrapper(ProgressBarWrapper $progressBarWrapper);
 

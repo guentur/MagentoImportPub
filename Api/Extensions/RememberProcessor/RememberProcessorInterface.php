@@ -3,18 +3,16 @@
 namespace Guentur\MagentoImport\Api\Extensions\RememberProcessor;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
+use Guentur\MagentoImport\Api\DataImporter\DataImporterInterface;
 
 interface RememberProcessorInterface
 {
     /**
-     * @todo remove Exception param
-     *
      * @param int $entityKey
      * @param DataImportInfoInterface $dataImportInfo
-     * @param \RuntimeException $exception
      * @return mixed
      */
-    public function rememberEntity(int $entityKey, DataImportInfoInterface $dataImportInfo, \RuntimeException $exception);
+    public function rememberEntity(int $entityKey, DataImportInfoInterface $dataImportInfo);
 
     /**
      * @param array $array
@@ -29,4 +27,11 @@ interface RememberProcessorInterface
      * @return mixed
      */
     public function forgetEntity(int $entityKey, DataImportInfoInterface $dataImportInfo);
+
+    /**
+     * @param array $dataForImport
+     * @param DataImporterInterface $dataImporter
+     * @return mixed
+     */
+    public function importData(array $dataForImport, DataImporterInterface $dataImporter);
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Guentur\MagentoImport\Model\Database\DataImporter;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
@@ -86,23 +88,26 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
     }
     ///-----------------------
 
-    public function runImport($dataToInsert)
+    /**
+     * Realize this function as a generator
+     *
+     * @param array $dataForImport
+     * @return iterable $dataItemKey
+     * @throw \Guentur\MagentoImport\Model\Exception\ImportException
+     */
+    public function runImport(array $dataForImport): iterable
     {
-        $progressBar = $this->getProgressBarWrapper()->getProgressBarInstance(count($dataToInsert));
+        $progressBar = $this->getProgressBarWrapper()->getProgressBarInstance(count($dataForImport));
         $importObserver = $this->importObserverFactory->create();
         $progressBar->start();
-        foreach ($dataToInsert as $dataItemKey => $dataItem) {
+        foreach ($dataForImport as $dataItemKey => $dataItem) {
             $progressBar->display();
             try {
-                if ($dataItemKey % 2) {
-                    throw new \RuntimeException('$dataItemKey % 2');
-                }
-
                 $importObserver->callObserver($dataItem, $this->getDataImportInfo());
                 $this->importItem($dataItem);
                 yield $dataItemKey;
             } catch (\Throwable $exception) {
-                throw new ImportException($dataItem, $exception->getMessage(), $exception->getCode(), $exception);
+                throw new ImportException($dataItemKey, $exception->getMessage(), $exception->getCode(), $exception);
             }
             $progressBar->advance();
         }

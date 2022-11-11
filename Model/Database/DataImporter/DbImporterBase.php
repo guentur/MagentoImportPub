@@ -6,6 +6,8 @@ use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\DataImporter\ImporterBaseInterface;
 use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterfaceFactory;
 use Guentur\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
+use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
+use Guentur\MagentoImport\Model\Exception\ImportException;
 use Guentur\MagentoImport\Model\Extensions\ProgressBarWrapper;
 use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
 use Magento\Framework\DB\Adapter\AdapterInterface;
@@ -56,32 +58,65 @@ class DbImporterBase implements ImportWithProgressBarInterface, ImporterBaseInte
         $this->mapping = $mapping;
     }
 
-    /**
-     * @param array $dataToInsert
-     * @return mixed|void
-     */
-    public function importData(
-        array $dataToInsert
-    ) {
-        if ($this->getProgressBarWrapper() instanceof ProgressBarWrapper) {
-            $this->runImportWithProgressBar($dataToInsert);
-        } else {
-            $this->runDefaultImport($dataToInsert);
-        }
-    }
+    ////--------------- @todo Change with runImport
+//    /**
+//     * @param array $dataForImport
+//     * @return mixed|void
+//     * @throws \Magento\Framework\Exception\LocalizedException
+//     */
+//    public function importData(array $dataForImport)
+//    {
+//        if ($this->getProgressBarWrapper() instanceof ProgressBarWrapper) {
+//            $this->runImportWithProgressBar($dataForImport);
+//        } else {
+//            $this->runDefaultImport($dataForImport);
+//        }
+//    }
+    ///-----------------------
 
     /**
-     * @param array $dataToInsert
-     * @return void
+     * Realize this function as a generator
+     *
+     * @param array $dataForImport
+     * @return iterable $dataItemKey
+     * @throw \Guentur\MagentoImport\Model\Exception\ImportException
      */
-    public function runDefaultImport(array $dataToInsert)
+    public function runImport(array $dataForImport): iterable
     {
+        $progressBar = $this->getProgressBarWrapper()->getProgressBarInstance(count($dataForImport));
         $importObserver = $this->importObserverFactory->create();
-        foreach ($dataToInsert as $dataItem) {
-            $importObserver->callObserver($dataItem, $this->getDataImportInfo());
-            $this->importItem($dataItem);
+        $progressBar->start();
+        foreach ($dataForImport as $dataItemKey => $dataItem) {
+            $progressBar->display();
+            try {
+                $importObserver->callObserver($dataItem, $this->getDataImportInfo());
+                $this->importItem($dataItem);
+                yield $dataItemKey;
+            } catch (\Throwable $exception) {
+                throw new ImportException($dataItemKey, $exception->getMessage(), $exception->getCode(), $exception);
+            }
+            $progressBar->advance();
         }
+        $progressBar->finish();
     }
+
+//    /**
+//     * @param array $dataForImport
+//     * @return void
+//     */
+//    public function runDefaultImport(array $dataForImport)
+//    {
+//        $importObserver = $this->importObserverFactory->create();
+//        foreach ($dataForImport as $dataItemKey => $dataItem) {
+//            try {
+//                $importObserver->callObserver($dataItem, $this->getDataImportInfo());
+//                $this->importItem($dataItem);
+//                yield $dataItemKey;
+//            } catch (\Throwable $exception) {
+//                throw new ImportException($dataItemKey, $exception->getMessage(), $exception->getCode(), $exception);
+//            }
+//        }
+//    }
 
     /**
      * @param $dataItem
@@ -119,23 +154,32 @@ class DbImporterBase implements ImportWithProgressBarInterface, ImporterBaseInte
     }
 
     // ---------------- ImportWithProgressBarInterface
-    /**
-     * @param array $dataToInsert
-     * @return void
-     */
-    public function runImportWithProgressBar(array $dataToInsert)
-    {
-        $progressBar = $this->getProgressBarWrapper()->getProgressBarInstance(count($dataToInsert));
-        $importObserver = $this->importObserverFactory->create();
-        $progressBar->start();
-        foreach ($dataToInsert as $dataItem) {
-            $progressBar->display();
-            $importObserver->callObserver($dataItem, $this->getDataImportInfo());
-            $this->importItem($dataItem);
-            $progressBar->advance();
-        }
-        $progressBar->finish();
-    }
+//    /**
+//     * @param array $dataForImport
+//     * @return void
+//     */
+//    public function runImportWithProgressBar(array $dataForImport)
+//    {
+//        $progressBar = $this->getProgressBarWrapper()->getProgressBarInstance(count($dataForImport));
+//        $importObserver = $this->importObserverFactory->create();
+//        $progressBar->start();
+//        foreach ($dataForImport as $dataItemKey => $dataItem) {
+//            $progressBar->display();
+//            try {
+//                if ($dataItemKey % 2) {
+//                    throw new \RuntimeException('$dataItemKey % 2');
+//                }
+//                $importObserver->callObserver($dataItem, $this->getDataImportInfo());
+//                $this->importItem($dataItem);
+//                // if entity was imported successfully we should delete it from list of broken entities
+//                $this->getRememberProcessor()->forgetEntity($dataItemKey, $this->getDataImportInfo());
+//            } catch (\RuntimeException|\Exception $e) {
+//                $this->getRememberProcessor()->rememberEntity($dataItemKey, $this->getDataImportInfo(), $e);
+//            }
+//            $progressBar->advance();
+//        }
+//        $progressBar->finish();
+//    }
 
     /**
      * @param ProgressBarWrapper $progressBarWrapper

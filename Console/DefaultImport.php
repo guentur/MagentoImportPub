@@ -224,11 +224,6 @@ class DefaultImport extends Command
         $output->writeln(__("Data-provider name: %1", $dataImportInfo->getDataProviderName()));
 
         //@todo refactor
-        $rememberMode = $input->getOption(self::OPTION_REMEMBER_MODE);
-        if ($rememberMode !== self::REMEMBER_MODE_DONT_REMEMBER_FAILED_ENTITY) {
-            $recipientType .= '_remember';
-        }
-
         /** @var \Guentur\MagentoImport\Api\DataImporter\DataImporterInterface $dataImporter */
         $dataImporter = $this->dataImporterPool->getDataImporter($recipientType);
         $dataImporter->setDataImportInfo($dataImportInfo);
@@ -237,13 +232,11 @@ class DefaultImport extends Command
             $this->progressBarWrapper->setOutput($output);
             $dataImporter->setProgressBarWrapper($this->progressBarWrapper);
         }
-        if ($dataImporter instanceof ImporterRememberInterface) {
-            $rememberProcessor = $this->rememberProcessorPool->getRememberProcessor($rememberMode);
-            $dataImporter->setRememberProcessor($rememberProcessor);
-            $dataForImport = $rememberProcessor->getArraySinceRememberedEntity($dataForImport, $dataImporter->getDataImportInfo());
-        }
+
         try {
-            $dataImporter->importData($dataForImport);
+            $rememberMode = $input->getOption(self::OPTION_REMEMBER_MODE);
+            $rememberProcessor = $this->rememberProcessorPool->getRememberProcessor($rememberMode);
+            $rememberProcessor->importData($dataForImport, $dataImporter);
         } catch (TableNotFoundException $e) {
             $message = $this->getTableNotFoundException($recipientType, $pathToRecipient, 'Recipient');
             $output->writeln('<error>' . $message . '</error>');
@@ -368,8 +361,7 @@ class DefaultImport extends Command
             null,
             InputOption::VALUE_OPTIONAL,
             'Exist remember modes: '
-            . implode(', ', $processorModes)
-            . ', ' . self::REMEMBER_MODE_DONT_REMEMBER_FAILED_ENTITY,
+            . implode(', ', $processorModes),
             $defaultProcessorMode);
     }
 }

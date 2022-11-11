@@ -13,6 +13,9 @@ use Magento\Framework\Api\SortOrderBuilder;
 use Guentur\MagentoImport\Model\Extensions\ApplyObserverFactory;
 use Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberProcessorPool\Proxy as RememberProcessorPoolProxy;
 
+use Guentur\MagentoImport\Model\Exception\ImportException;
+use Guentur\MagentoImport\Api\DataImporter\DataImporterInterface;
+
 class RememberWhole implements RememberProcessorInterface
 {
 // @todo setup only filename. Make absolute path by function like getMediaPath() in Magento
@@ -58,6 +61,7 @@ class RememberWhole implements RememberProcessorInterface
         string $rememberedEntitiesStorageType,
         string $rememberedEntitiesStoragePath
     ) {
+        //@todo refactor rememberedEntitiesStoragePath etc.
         $this->rememberedEntitiesStorageType = $rememberedEntitiesStorageType;
         $this->rememberedEntitiesStoragePath = $rememberedEntitiesStoragePath;
         $this->rememberedEntityF = $rememberedEntityF;
@@ -72,10 +76,9 @@ class RememberWhole implements RememberProcessorInterface
     /**
      * @param int $entityKey
      * @param DataImportInfoInterface $dataImportInfo
-     * @param $exception
      * @return mixed|void
      */
-    public function rememberEntity(int $entityKey, DataImportInfoInterface $dataImportInfo, $exception)
+    public function rememberEntity(int $entityKey, DataImportInfoInterface $dataImportInfo)
     {
         /** @var RememberedEntityInterface $rememberedEntity */
         $rememberedEntity = $this->rememberedEntityF->create();
@@ -83,6 +86,7 @@ class RememberWhole implements RememberProcessorInterface
         $this->rememberedEntityRepository->save($rememberedEntity);
     }
 
+    //@todo refactor to use a constant directly in this class
     public function getCurrentRememberMode(): string
     {
         return $this->rememberProcessorPool->getProcessModeByClass($this);
@@ -137,6 +141,40 @@ class RememberWhole implements RememberProcessorInterface
             $array = array_slice($array, $rememberedEntityKey, null, true);
         }
         return $array;
+    }
+
+    /**
+     * @param array $dataForImport
+     * @param $dataImportInfo
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function importData(
+        array $dataForImport,
+        DataImporterInterface $dataImporter
+    ) {
+        $dataImportInfo = $dataImporter->getDataImportInfo();
+        try {
+            foreach ($dataImporter->runImport($dataForImport) as $dataItemKey) {
+                // if entity was imported successfully we should delete it from list of broken entities
+                $this->forgetEntity($dataItemKey, $dataImportInfo);
+            }
+            //@todo Write in documentation that remember processor remember entity only if it throws my custom exception.
+            /*
+             * For example
+             * try {
+    //            $itemKey = 1;
+    //            $dataForImport = $observer->getData('data_item');
+    //        } catch (\Throwable $exception) {
+    //            throw new ImportException($dataItemKey, $exception->getMessage(), $exception->getCode(), $exception);
+    //        }
+             */
+        } catch (ImportException $e) {
+            $dataItemKey = $e->getDataItemKey();
+            $this->rememberEntity($dataItemKey, $dataImportInfo, $e);
+            $dataForImport = $this->getArraySinceRememberedEntity($dataForImport, $dataImporter->getDataImportInfo());
+            $this->importData($dataForImport, $dataImporter);
+        }
     }
 
     public function forgetEntity(int $entityKey, DataImportInfoInterface $dataImportInfo)

@@ -112,6 +112,8 @@ abstract class RememberProcessorAbstract implements RememberedEntitiesProviderIn
     }
 
     /**
+     * @todo How to remove method importData() from this method
+     *
      * @param array $allRememberedEntities
      * @return void
      */

@@ -25,7 +25,7 @@
     <type name="Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface">
         <arguments>
             <argument name="dataImporters" xsi:type="array">
-                <item name="database_remember" xsi:type="string">Guentur\MagentoImport\Model\Database\DataImporter\DbImporterRemember</item>
+<!--                <item name="database_remember" xsi:type="string">Guentur\MagentoImport\Model\Database\DataImporter\DbImporterRemember</item>-->
                 <item name="database" xsi:type="string">Guentur\MagentoImport\Model\Database\DataImporter\DbImporterBase</item>
 <!--                @todo create csv data importer with remembering-->
 <!--                <item name="csv_remember" xsi:type="string">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterRemember</item>-->
@@ -86,8 +86,9 @@
             <argument name="rememberProcessors" xsi:type="array">
                 <item name="remember-all-failed-entities" xsi:type="object">Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberWhole</item>
                 <item name="remember-with-replace" xsi:type="object">Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberReplace</item>
+                <item name="dont-remember-failed-entity" xsi:type="object">Guentur\MagentoImport\Model\Extensions\RememberProcessor\DontRemember</item>
             </argument>
-            <argument name="defaultProcessorMode" xsi:type="string">remember-with-replace</argument>
+            <argument name="defaultProcessorMode" xsi:type="string">dont-remember-failed-entity</argument>
         </arguments>
     </type>
 
