@@ -11,6 +11,7 @@ use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
+use Guentur\MagentoImport\Model\Exception\ImportException;
 
 class DbImporterRemember implements ImportWithProgressBarInterface, ImporterRememberInterface
 {
@@ -68,6 +69,7 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
         $this->mapping = $mapping;
     }
 
+    ////--------------- @todo Change with runImport
     /**
      * @param array $dataToInsert
      * @return mixed|void
@@ -81,6 +83,30 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
         } else {
             $this->runDefaultImport($dataToInsert);
         }
+    }
+    ///-----------------------
+
+    public function runImport($dataToInsert)
+    {
+        $progressBar = $this->getProgressBarWrapper()->getProgressBarInstance(count($dataToInsert));
+        $importObserver = $this->importObserverFactory->create();
+        $progressBar->start();
+        foreach ($dataToInsert as $dataItemKey => $dataItem) {
+            $progressBar->display();
+            try {
+                if ($dataItemKey % 2) {
+                    throw new \RuntimeException('$dataItemKey % 2');
+                }
+
+                $importObserver->callObserver($dataItem, $this->getDataImportInfo());
+                $this->importItem($dataItem);
+                yield $dataItemKey;
+            } catch (\Throwable $exception) {
+                throw new ImportException($dataItem, $exception->getMessage(), $exception->getCode(), $exception);
+            }
+            $progressBar->advance();
+        }
+        $progressBar->finish();
     }
 
     /**
