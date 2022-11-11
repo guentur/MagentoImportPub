@@ -73,17 +73,16 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
 
     ////--------------- @todo Change with runImport
     /**
-     * @param array $dataToInsert
+     * @param array $dataForImport
      * @return mixed|void
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function importData(
-        array $dataToInsert
-    ) {
+    public function importData(array $dataForImport)
+    {
         if ($this->getProgressBarWrapper() instanceof ProgressBarWrapper) {
-            $this->runImportWithProgressBar($dataToInsert);
+            $this->runImportWithProgressBar($dataForImport);
         } else {
-            $this->runDefaultImport($dataToInsert);
+            $this->runDefaultImport($dataForImport);
         }
     }
     ///-----------------------
@@ -115,13 +114,13 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
     }
 
     /**
-     * @param array $dataToInsert
+     * @param array $dataForImport
      * @return void
      */
-    public function runDefaultImport(array $dataToInsert)
+    public function runDefaultImport(array $dataForImport)
     {
         $importObserver = $this->importObserverFactory->create();
-        foreach ($dataToInsert as $dataItemKey => $dataItem) {
+        foreach ($dataForImport as $dataItemKey => $dataItem) {
             try {
                 $importObserver->callObserver($dataItem, $this->getDataImportInfo());
                 $this->importItem($dataItem);
@@ -181,15 +180,15 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
 
     // ---------------- ImportWithProgressBarInterface
     /**
-     * @param array $dataToInsert
+     * @param array $dataForImport
      * @return void
      */
-    public function runImportWithProgressBar(array $dataToInsert)
+    public function runImportWithProgressBar(array $dataForImport)
     {
-        $progressBar = $this->getProgressBarWrapper()->getProgressBarInstance(count($dataToInsert));
+        $progressBar = $this->getProgressBarWrapper()->getProgressBarInstance(count($dataForImport));
         $importObserver = $this->importObserverFactory->create();
         $progressBar->start();
-        foreach ($dataToInsert as $dataItemKey => $dataItem) {
+        foreach ($dataForImport as $dataItemKey => $dataItem) {
             $progressBar->display();
             try {
                 if ($dataItemKey % 2) {

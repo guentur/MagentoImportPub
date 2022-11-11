@@ -31,13 +31,13 @@ class CsvImporterBase implements ImporterBaseInterface
     }
 
     /**
-     * @param array $dataToInsert
+     * @param array $dataForImport
      * @return bool
      *
-     * @todo Ask Alexander: "Is it right to pass dataToInsert into Guentur\MagentoImport\Model\Data\DataImportInfo
+     * @todo Ask Alexander: "Is it right to pass dataForImport into Guentur\MagentoImport\Model\Data\DataImportInfo
      * I think it is the right thing, because the data for importing should transfer with information where it is transfering
      */
-    public function importData(array $dataToInsert): bool
+    public function importData(array $dataForImport): bool
     {
         $pathToRecipient = $this->getDataImportInfo()->getPathToRecipient();
         $this->validator->validatePath($pathToRecipient);
@@ -46,12 +46,12 @@ class CsvImporterBase implements ImporterBaseInterface
         $resource = fopen($pathToRecipient, 'w');
         //@todo refactor. Separate DataModel and Buiseness Logic Model in mapping.
         // We should use MappingFactory for non-injectable DataModels
-        $header = $this->mapping->applyMappingForItem(array_values($dataToInsert)[0]);
+        $header = $this->mapping->applyMappingForItem(array_values($dataForImport)[0]);
         fputcsv($resource, array_keys($header));
 
         $importObserver = $this->importObserverFactory->create();
 
-        foreach ($dataToInsert as $row) {
+        foreach ($dataForImport as $row) {
             $this->mapping->applyMappingForItem($row);
             //@todo refactor. Separate DataModel and Buiseness Logic Model in mapping.
             // We should use ImportObserverFactory for non-injectable DataModels
@@ -61,6 +61,12 @@ class CsvImporterBase implements ImporterBaseInterface
         $status = fclose($resource);
 
         return $status;
+    }
+
+    public function runImport(array $dataForImport): iterable
+    {
+        // TODO: Implement runImport() method.
+        yield 1;
     }
 
     /**
