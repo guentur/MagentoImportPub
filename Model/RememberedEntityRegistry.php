@@ -50,10 +50,8 @@ class RememberedEntityRegistry
         if (isset($this->rememberedEntityRegistryById[$rememberedEntityId])) {
             return $this->rememberedEntityRegistryById[$rememberedEntityId];
         }
-        /** @var RememberedEntity $rememberedEntityBlank */
-        /** @var RememberedEntity $rememberedEntity */
-        $rememberedEntityBlank = $this->rememberedEntityFactory->create();
-        $rememberedEntity = $this->rememberedEntityResource->load($rememberedEntityBlank, $rememberedEntityId);
+        $rememberedEntity = $this->rememberedEntityFactory->create();
+        $this->rememberedEntityResource->load($rememberedEntity, $rememberedEntityId);
         if (!$rememberedEntity->getId()) {
             // remembered entity does not exist
             throw NoSuchEntityException::singleField('customerId', $rememberedEntityId);
