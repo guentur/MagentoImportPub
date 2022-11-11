@@ -129,7 +129,6 @@ class RememberWhole implements RememberProcessorInterface
         $searchCriteria = $this->searchCriteriaBuilder->create();
         $rememberedEntitiesResult = $this->rememberedEntityRepository->getList($searchCriteria);
 
-        /** @var RememberedEntityInterface $rememberedEntity */
         foreach ($rememberedEntitiesResult->getItems() as $rememberedEntity) {
             $rememberedEntityKey = $rememberedEntity->getRememberedEntityKey();
         }
