@@ -139,6 +139,17 @@ class RememberReplace extends RememberProcessorAbstract implements RememberProce
         return $array;
     }
 
+    /**
+     * @param array $array
+     * @param DataImportInfoInterface $dataImportInfo
+     * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getRememberedStateDataForImport(array $array, DataImportInfoInterface $dataImportInfo): array
+    {
+        return $this->getArraySinceRememberedEntity($array, $dataImportInfo);
+    }
+
     public function forgetEntity(int $entityKey, DataImportInfoInterface $dataImportInfo)
     {
         //@todo

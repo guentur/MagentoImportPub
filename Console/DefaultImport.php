@@ -45,6 +45,8 @@ class DefaultImport extends Command
 
     private const OPTION_COLUMNS_MAPPING = 'columns-mapping';
 
+    private const OPTION_IMPORT_REMEMBERED_ENTITIES = 'import-remembered-entities';
+
     private const OPTION_REMEMBER_MODE = 'remember-mode';
 
     private const REMEMBER_MODE_DONT_REMEMBER_FAILED_ENTITY = 'dont-remember-failed-entity';
@@ -225,6 +227,8 @@ class DefaultImport extends Command
 
         //@todo refactor
         $rememberMode = $input->getOption(self::OPTION_REMEMBER_MODE);
+        $importRememberedEntities = $input->getOption(self::OPTION_IMPORT_REMEMBERED_ENTITIES);
+
         if ($rememberMode !== self::REMEMBER_MODE_DONT_REMEMBER_FAILED_ENTITY) {
             $recipientType .= '_remember';
         }
@@ -238,9 +242,16 @@ class DefaultImport extends Command
             $dataImporter->setProgressBarWrapper($this->progressBarWrapper);
         }
         if ($dataImporter instanceof ImporterRememberInterface) {
+            //@todo refactor to use different remember processor from import through remembered entities
             $rememberProcessor = $this->rememberProcessorPool->getRememberProcessor($rememberMode);
             $dataImporter->setRememberProcessor($rememberProcessor);
-            $dataForImport = $rememberProcessor->getArraySinceRememberedEntity($dataForImport, $dataImporter->getDataImportInfo());
+            //@todo refactor to use constants and classes to run import through remembered entities
+            if ($importRememberedEntities && $rememberMode === 'remember-with-replace') {
+                $dataForImport = $rememberProcessor->getRememberedStateDataForImport($dataForImport, $dataImporter->getDataImportInfo());
+            } else if ($importRememberedEntities && $rememberMode === 'remember-all-failed-entities') {
+
+                $dataForImport = $rememberProcessor->getRememberedStateDataForImport($dataForImport, $dataImporter->getDataImportInfo());
+            }
         }
         try {
             $dataImporter->importData($dataForImport);
@@ -330,6 +341,15 @@ class DefaultImport extends Command
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'Format: data_provider_column/data_recipient_column',
                 []),
+            //@todo refactor description to pass only constants
+            new InputOption(
+                self::OPTION_IMPORT_REMEMBERED_ENTITIES,
+                null,
+                InputOption::VALUE_NONE,
+                'Start import from remembered entity if there is ' . self::OPTION_REMEMBER_MODE
+                . ' with value `remember-with-replace`. Run import through all remembered entities if there is option '
+                . self::OPTION_REMEMBER_MODE . ' with value `remember-all-failed-entities`',
+            ),
             $this->getInstanceOfRememberModeOption(),
 
 //@todo
@@ -358,7 +378,7 @@ class DefaultImport extends Command
         $processorModes = $this->rememberProcessorPool->getProcessModes();
 //@todo Test throwing exception
 //        try {
-            $defaultProcessorMode = $this->rememberProcessorPool->getDefaultProcessMode();
+        $defaultProcessorMode = $this->rememberProcessorPool->getDefaultProcessMode();
 //        } catch (LocalizedException|\InvalidArgumentException $exception) {
 //
 //        }
