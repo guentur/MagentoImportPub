@@ -24,6 +24,13 @@ interface RememberProcessorInterface
     public function getArraySinceRememberedEntity(array $array, DataImportInfoInterface $dataImportInfo): array;
 
     /**
+     * @param array $array
+     * @param DataImportInfoInterface $dataImportInfo
+     * @return array
+     */
+    public function getRememberedStateDataForImport(array $array, DataImportInfoInterface $dataImportInfo): array;
+
+    /**
      * @param int $entityKey
      * @param DataImportInfoInterface $dataImportInfo
      * @return mixed
