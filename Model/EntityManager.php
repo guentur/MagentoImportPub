@@ -7,6 +7,9 @@ use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 
 class EntityManager
 {
+    /**
+     * @var EntityScopeManager
+     */
     private $entityScopeManager;
 
     /**
@@ -14,6 +17,10 @@ class EntityManager
      */
     private $dataImportInfoF;
 
+    /**
+     * @param EntityScopeManager $entityScopeManager
+     * @param DataImportInfoInterfaceFactory $dataImportInfoF
+     */
     public function __construct(
         EntityScopeManager $entityScopeManager,
         DataImportInfoInterfaceFactory $dataImportInfoF
@@ -47,11 +54,15 @@ class EntityManager
             $dataImportInfo->setPathToDataProvider($importData['path_to_provider']);
             $dataImportInfo->setPathToRecipient($importData['path_to_recipient']);
             $entityScope = $this->entityScopeManager->getEntityScope($dataImportInfo);
-            $scopeFormatEntityList[$entityScope] = $importData['entity_key'];
+            $scopeFormatEntityList[$entityScope][] = $importData['entity_key'];
         }
         return $scopeFormatEntityList;
     }
 
+    /**
+     * @param array $scopeFormatEntityList
+     * @return array
+     */
     public function getImportFormatEntityList(array $scopeFormatEntityList): array
     {
         $importFormatEntityList = [];

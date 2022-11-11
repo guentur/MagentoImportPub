@@ -16,11 +16,11 @@ interface RememberProcessorPoolInterface
     /**
      * @return array
      */
-    public function getProcessorsModes(): array;
+    public function getProcessModes(): array;
 
     /**
      * @return string
      * @throws LocalizedException|\InvalidArgumentException
      */
-    public function getDefaultProcessorMode(): string;
+    public function getDefaultProcessMode(): string;
 }

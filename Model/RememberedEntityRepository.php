@@ -23,11 +23,7 @@ class RememberedEntityRepository implements RememberedEntityRepositoryInterface
 
     private $rememberedEntityRegistry;
 
-    private $rememberedEntityCollectionFactory;
-
     private $searchResultFactory;
-
-    private $extensionAttributesJoinProcessor;
 
     private $collectionProcessor;
 
@@ -35,17 +31,13 @@ class RememberedEntityRepository implements RememberedEntityRepositoryInterface
         RememberedEntityResource $rememberedEntityResource,
         RememberedEntityFactory $rememberedEntityFactory,
         RememberedEntityRegistry $rememberedEntityRegistry,
-        RememberedEntityCollectionFactory $rememberedEntityCollectionFactory,
         RememberedEntitySearchResultInterfaceFactory $searchResultFactory,
-        JoinProcessorInterface $extensionAttributesJoinProcessor,
         CollectionProcessorInterface $collectionProcessor
     ) {
         $this->rememberedEntityResource = $rememberedEntityResource;
         $this->rememberedEntityFactory = $rememberedEntityFactory;
         $this->rememberedEntityRegistry = $rememberedEntityRegistry;
-        $this->rememberedEntityCollectionFactory = $rememberedEntityCollectionFactory;
         $this->searchResultFactory = $searchResultFactory;
-        $this->extensionAttributesJoinProcessor = $extensionAttributesJoinProcessor;
         $this->collectionProcessor = $collectionProcessor;
     }
 
@@ -57,8 +49,11 @@ class RememberedEntityRepository implements RememberedEntityRepositoryInterface
     public function save(RememberedEntityInterface $rememberedEntity)
     {
         try {
-            $rememberedEntityModel = $this->rememberedEntityFactory->create(['data' => $rememberedEntity]);
-            $this->rememberedEntityResource->save($rememberedEntityModel);
+            if (false === $this->rememberedEntityResource->getRememberedEntityIdByModeScopeAndKey($rememberedEntity)) {
+                $rememberedEntityModel = $this->rememberedEntityFactory->create();
+                $rememberedEntityModel->setData($rememberedEntity->__toArray());
+                $this->rememberedEntityResource->save($rememberedEntityModel);
+            }
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
                 __('Could not remember entity: %1', $exception->getMessage()),
@@ -85,6 +80,11 @@ class RememberedEntityRepository implements RememberedEntityRepositoryInterface
         return $this->deleteById($rememberedEntity->getId());
     }
 
+    /**
+     * @param $rememberedEntityId
+     * @return bool
+     * @throws CouldNotDeleteException
+     */
     public function deleteById($rememberedEntityId)
     {
         try {
@@ -123,17 +123,8 @@ class RememberedEntityRepository implements RememberedEntityRepositoryInterface
         $searchResults->setSearchCriteria($searchCriteria);
         /** @var \Magento\Customer\Model\ResourceModel\Customer\Collection $collection */
         $collection = $this->rememberedEntityFactory->create()->getCollection();
-        $this->extensionAttributesJoinProcessor->process(
-            $collection,
-            RememberedEntityInterface::class
-        );
-//        // This is needed to make sure all the attributes are properly loaded
-//        foreach ($this->customerMetadata->getAllAttributesMetadata() as $metadata) {
-//            $collection->addAttributeToSelect($metadata->getAttributeCode());
-//        }
 
         $this->collectionProcessor->process($searchCriteria, $collection);
-
         $searchResults->setTotalCount($collection->getSize());
 
         $rememberedEntities = [];

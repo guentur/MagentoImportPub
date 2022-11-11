@@ -102,13 +102,11 @@ abstract class RememberProcessorAbstract implements RememberedEntitiesProviderIn
      * @return mixed|null
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function getRememberedEntitiesByScope(DataImportInfoInterface $dataImportInfo)
+    public function getRememberedEntitiesByScope(string $entityScope)
     {
         //@todo optimize
         $rememberedEntities = $this->getRememberedEntities();
-
         $formattedEntityList = $this->entityManager->getScopeFormatEntityList($rememberedEntities);
-        $entityScope = $this->entityScopeManager->getEntityScope($dataImportInfo);
 
         return array_key_exists($entityScope, $formattedEntityList) ? $formattedEntityList[$entityScope] : null;
     }

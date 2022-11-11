@@ -16,6 +16,9 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
 {
     const TYPE = 'database_remember';
 
+    /**
+     * @var ModuleDataSetupInterface
+     */
     private $moduleDataSetup;
 
     /**
@@ -23,8 +26,14 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
      */
     private $rememberProcessor;
 
+    /**
+     * @var ApplyObserverInterfaceFactory
+     */
     private $importObserverFactory;
 
+    /**
+     * @var DefaultMapping
+     */
     private $mapping;
 
     /**
@@ -67,28 +76,11 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
     public function importData(
         array $dataToInsert
     ) {
-        $dataToInsert = $this->getArraySinceRememberedEntity($dataToInsert, $this->getDataImportInfo());
-
         if ($this->getProgressBarWrapper() instanceof ProgressBarWrapper) {
             $this->runImportWithProgressBar($dataToInsert);
         } else {
             $this->runDefaultImport($dataToInsert);
         }
-    }
-
-    /**
-     * @param array $array
-     * @param DataImportInfoInterface $dataImportInfo
-     * @return array
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    public function getArraySinceRememberedEntity(array $array, DataImportInfoInterface $dataImportInfo): array
-    {
-        $rememberedEntity = $this->getRememberProcessor()->getRememberedEntitiesByScope($dataImportInfo);
-        if (isset($rememberedEntity) && array_key_exists($rememberedEntity, $array)) {
-            $array = array_slice($array, $rememberedEntity, null, true);
-        }
-        return $array;
     }
 
     /**
@@ -174,6 +166,8 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
                 }
                 $importObserver->callObserver($dataItem, $this->getDataImportInfo());
                 $this->importItem($dataItem);
+                // if entity was imported successfully we should delete it from list of broken entities
+                $this->getRememberProcessor()->forgetEntity($dataItemKey, $this->getDataImportInfo());
             } catch (\RuntimeException|\Exception $e) {
                 $this->getRememberProcessor()->rememberEntity($dataItemKey, $this->getDataImportInfo(), $e);
             }

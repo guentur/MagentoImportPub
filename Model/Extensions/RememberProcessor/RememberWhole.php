@@ -3,15 +3,17 @@
 namespace Guentur\MagentoImport\Model\Extensions\RememberProcessor;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
-use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
-use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
-use Guentur\MagentoImport\Model\EntityManager;
 use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
-use Guentur\MagentoImport\Model\EntityScopeManager;
-use Guentur\MagentoImport\Model\Solver\StorageSolverPool;
+use Guentur\MagentoImport\Api\Data\RememberedEntityInterfaceFactory;
+use Guentur\MagentoImport\Api\Data\RememberedEntityInterface;
+use Guentur\MagentoImport\Api\RememberedEntityRepositoryInterface;
+use Guentur\MagentoImport\Model\ResourceModel\RememberedEntity as RememberedEntityResource;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SortOrderBuilder;
+use Guentur\MagentoImport\Model\Extensions\ApplyObserverFactory;
+use Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberProcessorPool\Proxy as RememberProcessorPoolProxy;
 
-class RememberWhole extends RememberProcessorAbstract implements RememberProcessorInterface
+class RememberWhole implements RememberProcessorInterface
 {
 // @todo setup only filename. Make absolute path by function like getMediaPath() in Magento
     public const IMPORT_STATE_FILE_NAME = __DIR__ . '/../../../etc/whole_broken_entities.csv';
@@ -20,36 +22,51 @@ class RememberWhole extends RememberProcessorAbstract implements RememberProcess
 
     protected $rememberedEntitiesStoragePath;
 
+    protected $rememberedEntityF;
+
+    protected $rememberedEntityResource;
+
+    protected $searchCriteriaBuilder;
+
+    protected $applyObserverFactory;
+
+    protected $rememberProcessorPool;
+
+    protected $sortOrderBuilder;
+
+    protected $rememberedEntityRepository;
+
     /**
-     * @param DataImporterPoolInterface $dataImporterPool
-     * @param DataImportInfoInterfaceFactory $dataImportInfoF
-     * @param DataProviderPoolInterface $dataProviderPool
-     * @param EntityManager $entityManager
-     * @param StorageSolverPool $storageSolverPool
-     * @param EntityScopeManager $entityScopeManager
+     * @param RememberedEntityInterfaceFactory $rememberedEntityF
+     * @param RememberedEntityResource $rememberedEntityResource
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param ApplyObserverFactory $applyObserverFactory
+     * @param RememberProcessorPoolProxy $rememberProcessorPool
+     * @param SortOrderBuilder $sortOrderBuilder
+     * @param RememberedEntityRepositoryInterface $rememberedEntityRepository
      * @param string $rememberedEntitiesStorageType
      * @param string $rememberedEntitiesStoragePath
      */
     public function __construct(
-        DataImporterPoolInterface $dataImporterPool,
-        DataImportInfoInterfaceFactory $dataImportInfoF,
-        DataProviderPoolInterface $dataProviderPool,
-        EntityManager $entityManager,
-        StorageSolverPool $storageSolverPool,
-        EntityScopeManager $entityScopeManager,
+        RememberedEntityInterfaceFactory $rememberedEntityF,
+        RememberedEntityResource $rememberedEntityResource,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        ApplyObserverFactory $applyObserverFactory,
+        RememberProcessorPoolProxy $rememberProcessorPool,
+        SortOrderBuilder $sortOrderBuilder,
+        RememberedEntityRepositoryInterface $rememberedEntityRepository,
         string $rememberedEntitiesStorageType,
         string $rememberedEntitiesStoragePath
     ) {
         $this->rememberedEntitiesStorageType = $rememberedEntitiesStorageType;
         $this->rememberedEntitiesStoragePath = $rememberedEntitiesStoragePath;
-        parent::__construct(
-            $dataImporterPool,
-            $dataImportInfoF,
-            $dataProviderPool,
-            $entityManager,
-            $storageSolverPool,
-            $entityScopeManager
-        );
+        $this->rememberedEntityF = $rememberedEntityF;
+        $this->rememberedEntityResource = $rememberedEntityResource;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->applyObserverFactory = $applyObserverFactory;
+        $this->rememberProcessorPool = $rememberProcessorPool;
+        $this->sortOrderBuilder = $sortOrderBuilder;
+        $this->rememberedEntityRepository = $rememberedEntityRepository;
     }
 
     /**
@@ -60,28 +77,76 @@ class RememberWhole extends RememberProcessorAbstract implements RememberProcess
      */
     public function rememberEntity(int $entityKey, DataImportInfoInterface $dataImportInfo, $exception)
     {
-        $recipientName = $dataImportInfo->getRecipientName();
-        $providerName = $dataImportInfo->getDataProviderName();
-        //@todo Important. Refactor to use Guentur\MagentoImport\Model\Data\DataImportInfo
-        $currentEntityInfo = [
-            'path_to_provider' => $providerName,
-            'path_to_recipient' => $recipientName,
-            'entity_key' => (int) $entityKey,
-        ];
-
-        $rememberedEntities = $this->getRememberedEntities();
-        $rememberedEntities[] = $currentEntityInfo;
-        $this->importRememberedEntities($rememberedEntities);
+        /** @var RememberedEntityInterface $rememberedEntity */
+        $rememberedEntity = $this->rememberedEntityF->create();
+        $rememberedEntity = $this->fillRememberedEntityModelWithData($rememberedEntity, $entityKey, $dataImportInfo);
+        $this->rememberedEntityRepository->save($rememberedEntity);
     }
 
-    //@todo refactor
-    public function getStoragePath(): string
+    public function getCurrentRememberMode(): string
     {
-        return $this->rememberedEntitiesStoragePath;
+        return $this->rememberProcessorPool->getProcessModeByClass($this);
     }
 
-    public function getStorageType(): string
+    public function fillRememberedEntityModelWithData(
+        RememberedEntityInterface $rememberedEntity,
+        int $entityKey,
+        DataImportInfoInterface $dataImportInfo
+    ): RememberedEntityInterface {
+        /** @var \Guentur\MagentoImport\Model\Extensions\ApplyObserver $applyObserverModel */
+        $applyObserverModel = $this->applyObserverFactory->create();
+        $scope = $applyObserverModel->getFullEventName($dataImportInfo);
+        $rememberMode = $this->getCurrentRememberMode();
+
+        $rememberedEntity->setScope($scope);
+        $rememberedEntity->setRememberMode($rememberMode);
+        $rememberedEntity->setRememberedEntityKey($entityKey);
+
+        return $rememberedEntity;
+    }
+
+    /**
+     * @param array $array
+     * @param DataImportInfoInterface $dataImportInfo
+     * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getArraySinceRememberedEntity(array $array, DataImportInfoInterface $dataImportInfo): array
     {
-        return $this->rememberedEntitiesStorageType;
+        /** @var \Guentur\MagentoImport\Model\Extensions\ApplyObserver $applyObserverModel */
+        $applyObserverModel = $this->applyObserverFactory->create();
+        $scope = $applyObserverModel->getFullEventName($dataImportInfo);
+
+        $this->searchCriteriaBuilder->addFilter('scope', $scope);
+
+        // Get first remembered entity that was remembered by whole remember
+        $sortOrder = $this->sortOrderBuilder
+            ->setField('created_at')
+            ->setAscendingDirection()
+            ->create();
+        $this->searchCriteriaBuilder->addSortOrder($sortOrder);
+        $this->searchCriteriaBuilder->setPageSize(1)->setCurrentPage(1);
+        $searchCriteria = $this->searchCriteriaBuilder->create();
+        $rememberedEntitiesResult = $this->rememberedEntityRepository->getList($searchCriteria);
+
+        foreach ($rememberedEntitiesResult->getItems() as $rememberedEntity) {
+            $rememberedEntityKey = $rememberedEntity->getRememberedEntityKey();
+        }
+
+        if (isset($rememberedEntityKey) && array_key_exists($rememberedEntityKey, $array)) {
+            $array = array_slice($array, $rememberedEntityKey, null, true);
+        }
+        return $array;
+    }
+
+    public function forgetEntity(int $entityKey, DataImportInfoInterface $dataImportInfo)
+    {
+        /** @var RememberedEntityInterface $rememberedEntity */
+        $rememberedEntity = $this->rememberedEntityF->create();
+        $rememberedEntity = $this->fillRememberedEntityModelWithData($rememberedEntity, $entityKey, $dataImportInfo);
+        $rememberedEntityId = $this->rememberedEntityResource->getRememberedEntityIdByModeScopeAndKey($rememberedEntity);
+        if (false !== $rememberedEntityId) {
+            $this->rememberedEntityRepository->deleteById($rememberedEntityId);
+        }
     }
 }

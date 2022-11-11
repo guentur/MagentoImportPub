@@ -202,6 +202,7 @@ class DefaultImport extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
+     * @throws LocalizedException
      */
     public function importData(array $dataForImport, InputInterface $input, OutputInterface $output): int
     {
@@ -238,8 +239,8 @@ class DefaultImport extends Command
         }
         if ($dataImporter instanceof ImporterRememberInterface) {
             $rememberProcessor = $this->rememberProcessorPool->getRememberProcessor($rememberMode);
-
             $dataImporter->setRememberProcessor($rememberProcessor);
+            $dataForImport = $rememberProcessor->getArraySinceRememberedEntity($dataForImport, $dataImporter->getDataImportInfo());
         }
         try {
             $dataImporter->importData($dataForImport);
@@ -354,9 +355,10 @@ class DefaultImport extends Command
      */
     public function getInstanceOfRememberModeOption(): InputOption
     {
-        $processorsModes = $this->rememberProcessorPool->getProcessorsModes();
+        $processorModes = $this->rememberProcessorPool->getProcessModes();
+//@todo Test throwing exception
 //        try {
-            $defaultProcessorMode = $this->rememberProcessorPool->getDefaultProcessorMode();
+            $defaultProcessorMode = $this->rememberProcessorPool->getDefaultProcessMode();
 //        } catch (LocalizedException|\InvalidArgumentException $exception) {
 //
 //        }
@@ -366,7 +368,7 @@ class DefaultImport extends Command
             null,
             InputOption::VALUE_OPTIONAL,
             'Exist remember modes: '
-            . implode(', ', $processorsModes)
+            . implode(', ', $processorModes)
             . ', ' . self::REMEMBER_MODE_DONT_REMEMBER_FAILED_ENTITY,
             $defaultProcessorMode);
     }

@@ -17,12 +17,16 @@ interface RememberProcessorInterface
     public function rememberEntity(int $entityKey, DataImportInfoInterface $dataImportInfo, \RuntimeException $exception);
 
     /**
-     * @return string
+     * @param array $array
+     * @param DataImportInfoInterface $dataImportInfo
+     * @return array
      */
-    public function getStoragePath(): string;
+    public function getArraySinceRememberedEntity(array $array, DataImportInfoInterface $dataImportInfo): array;
 
     /**
-     * @return string
+     * @param int $entityKey
+     * @param DataImportInfoInterface $dataImportInfo
+     * @return mixed
      */
-    public function getStorageType(): string;
+    public function forgetEntity(int $entityKey, DataImportInfoInterface $dataImportInfo);
 }

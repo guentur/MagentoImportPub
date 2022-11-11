@@ -37,7 +37,7 @@ class RememberProcessorPool implements RememberProcessorPoolInterface
      */
     public function getRememberProcessor(string $processorMode): RememberProcessorInterface
     {
-        $this->validateProcessorMode($this->defaultProcessorMode);
+        $this->validateProcessMode($this->defaultProcessorMode);
 
         return $this->rememberProcessors[$processorMode];
     }
@@ -45,18 +45,28 @@ class RememberProcessorPool implements RememberProcessorPoolInterface
     /**
      * @return array
      */
-    public function getProcessorsModes(): array
+    public function getProcessModes(): array
     {
         return array_keys($this->rememberProcessors);
+    }
+
+    public function getProcessModeByClass($processClass): string
+    {
+        $processMode = array_search($processClass, $this->rememberProcessors);
+        if ($processMode === false) {
+            throw new \InvalidArgumentException('RememberProcessor mode for class ' . $processClass . ' not found.
+             RememberProcessor must be defined in di.xml file for ' . self::class);
+        }
+        return $processMode;
     }
 
     /**
      * @return string
      * @throws LocalizedException|\InvalidArgumentException
      */
-    public function getDefaultProcessorMode(): string
+    public function getDefaultProcessMode(): string
     {
-        $this->validateProcessorMode($this->defaultProcessorMode);
+        $this->validateProcessMode($this->defaultProcessorMode);
 
         return $this->defaultProcessorMode;
     }
@@ -67,7 +77,7 @@ class RememberProcessorPool implements RememberProcessorPoolInterface
      * @return void
      * @throws LocalizedException|\InvalidArgumentException
      */
-    public function validateProcessorMode($processorMode)
+    public function validateProcessMode($processorMode)
     {
         if (!array_key_exists($processorMode, $this->rememberProcessors)) {
             throw new \InvalidArgumentException('RememberProcessor for mode ' . $processorMode . ' not found.

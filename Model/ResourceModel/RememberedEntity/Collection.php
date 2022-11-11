@@ -8,7 +8,7 @@ class Collection extends AbstractCollection
 {
     protected function _construct()
     {
-        $this->_init(\Guentur\MagentoImport\Model\Data\RememberedEntity::class,
+        $this->_init(\Guentur\MagentoImport\Model\RememberedEntity::class,
                      \Guentur\MagentoImport\Model\ResourceModel\RememberedEntity::class);
     }
 }
