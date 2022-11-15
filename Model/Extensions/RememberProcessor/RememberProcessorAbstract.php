@@ -97,35 +97,35 @@ abstract class RememberProcessorAbstract implements RememberedEntitiesProviderIn
         return $rememberedEntities;
     }
 
-    /**
-     * @param DataImportInfoInterface $dataImportInfo
-     * @return mixed|null
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    public function getRememberedEntitiesByScope(string $entityScope)
-    {
-        //@todo optimize
-        $rememberedEntities = $this->getRememberedEntities();
-        $formattedEntityList = $this->entityManager->getScopeFormatEntityList($rememberedEntities);
+//    /**
+//     * @param DataImportInfoInterface $dataImportInfo
+//     * @return mixed|null
+//     * @throws \Magento\Framework\Exception\LocalizedException
+//     */
+//    public function getRememberedEntitiesByScope(string $entityScope)
+//    {
+//        //@todo optimize
+//        $rememberedEntities = $this->getRememberedEntities();
+//        $formattedEntityList = $this->entityManager->getScopeFormatEntityList($rememberedEntities);
+//
+//        return array_key_exists($entityScope, $formattedEntityList) ? $formattedEntityList[$entityScope] : null;
+//    }
 
-        return array_key_exists($entityScope, $formattedEntityList) ? $formattedEntityList[$entityScope] : null;
-    }
-
-    /**
-     * @param array $allRememberedEntities
-     * @return void
-     */
-    public function importRememberedEntities(array $allRememberedEntities): void
-    {
-        /** DataImportInfoInterface $dataImportInfo */
-        $dataImportInfo = $this->dataImportInfoF->create();
-        // Hide not used cells from dataImportInfo. In this case pathToDataProvider
-        // if we don't remember failed entity while import remembered entities data there is not required path to data-provider
-        $dataImportInfo->setPathToRecipient($this->rememberedEntitiesStoragePath);
-
-        /** @var \Guentur\MagentoImport\Api\DataImporter\DataImporterInterface $dataImporter */
-        $dataImporter = $this->dataImporterPool->getDataImporter($this->rememberedEntitiesStorageType);
-        $dataImporter->setDataImportInfo($dataImportInfo);
-        $dataImporter->importData($allRememberedEntities);
-    }
+//    /**
+//     * @param array $allRememberedEntities
+//     * @return void
+//     */
+//    public function importRememberedEntities(array $allRememberedEntities): void
+//    {
+//        /** DataImportInfoInterface $dataImportInfo */
+//        $dataImportInfo = $this->dataImportInfoF->create();
+//        // Hide not used cells from dataImportInfo. In this case pathToDataProvider
+//        // if we don't remember failed entity while import remembered entities data there is not required path to data-provider
+//        $dataImportInfo->setPathToRecipient($this->rememberedEntitiesStoragePath);
+//
+//        /** @var \Guentur\MagentoImport\Api\DataImporter\DataImporterInterface $dataImporter */
+//        $dataImporter = $this->dataImporterPool->getDataImporter($this->rememberedEntitiesStorageType);
+//        $dataImporter->setDataImportInfo($dataImportInfo);
+//        $dataImporter->importData($allRememberedEntities);
+//    }
 }

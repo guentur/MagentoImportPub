@@ -208,6 +208,7 @@ class DefaultImport extends Command
      */
     public function importData(array $dataForImport, InputInterface $input, OutputInterface $output): int
     {
+        $result = Cli::RETURN_SUCCESS;
         $recipientType = $input->getOption(self::OPTION_RECIPIENT);
         $pathToRecipient = $input->getOption(self::OPTION_PATH_TO_RECIPIENT);
         $pathToProvider = $input->getOption(self::OPTION_PATH_TO_DATA_PROVIDER);
@@ -246,11 +247,16 @@ class DefaultImport extends Command
             $rememberProcessor = $this->rememberProcessorPool->getRememberProcessor($rememberMode);
             $dataImporter->setRememberProcessor($rememberProcessor);
             //@todo refactor to use constants and classes to run import through remembered entities
-            if ($importRememberedEntities && $rememberMode === 'remember-with-replace') {
-                $dataForImport = $rememberProcessor->getRememberedStateDataForImport($dataForImport, $dataImporter->getDataImportInfo());
-            } else if ($importRememberedEntities && $rememberMode === 'remember-all-failed-entities') {
-
-                $dataForImport = $rememberProcessor->getRememberedStateDataForImport($dataForImport, $dataImporter->getDataImportInfo());
+            if ($importRememberedEntities) {
+                if ($rememberMode === 'remember-with-replace') {
+                    $dataForImport = $rememberProcessor->getRememberedStateDataForImport($dataForImport, $dataImporter->getDataImportInfo());
+                } else if ($rememberMode === 'remember-all-failed-entities') {
+                    $dataForImport = $rememberProcessor->getRememberedStateDataForImport($dataForImport, $dataImporter->getDataImportInfo());
+                }
+                if (empty($dataForImport)) {
+                    $output->writeln('<bg=yellow>' . __("There are not remembered entities for this provider+recipient+remember_mode combination") . '</>');
+                    return $result;
+                }
             }
         }
         try {
@@ -258,10 +264,29 @@ class DefaultImport extends Command
         } catch (TableNotFoundException $e) {
             $message = $this->getTableNotFoundException($recipientType, $pathToRecipient, 'Recipient');
             $output->writeln('<error>' . $message . '</error>');
-            return Cli::RETURN_FAILURE;
+            $result = Cli::RETURN_FAILURE;
+        }  catch (\Exception $e) {
+            $output->writeln('<error>' . 'There was error processed during the import progress' . '</error>');
+            $output->writeln('<error>' . $e->getMessage() . '</error>');
+            $output->writeln('<error>' . $e->getTraceAsString() . '</error>');
+            $result = Cli::RETURN_FAILURE;
         }
 
-        return Cli::RETURN_SUCCESS;
+        //@todo refactor
+        if ($dataImporter instanceof ImporterRememberInterface) {
+            $rememberProcessor = $dataImporter->getRememberProcessor();
+            $dataImportInfo = $dataImporter->getDataImportInfo();
+            $rememberedEntities = $rememberProcessor->getRememberedEntitiesByScope($dataImportInfo);
+
+            $output->writeln('<bg=yellow>'
+                             . __("Count of entities that were remembered cause there were exceptions during importing: ")
+                             . '</>'
+                             . '<bg=yellow;options=bold,underscore>'
+                             . $rememberedEntities->getTotalCount()
+                             . '</>');
+        }
+
+        return $result;
     }
 
     /**

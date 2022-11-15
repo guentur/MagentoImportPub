@@ -3,6 +3,7 @@
 namespace Guentur\MagentoImport\Model\Extensions\RememberProcessor;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
+use Guentur\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
 use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
 use Guentur\MagentoImport\Api\Data\RememberedEntityInterfaceFactory;
 use Guentur\MagentoImport\Api\Data\RememberedEntityInterface;
@@ -141,6 +142,17 @@ class RememberWhole implements RememberProcessorInterface
 
     public function getRememberedStateDataForImport(array $dataForImport, DataImportInfoInterface $dataImportInfo): array
     {
+        $rememberedEntitiesResult = $this->getRememberedEntitiesByScope($dataImportInfo);
+
+        $rememberedDataForImport = [];
+        foreach ($rememberedEntitiesResult->getItems() as $rememberedEntity) {
+            $rememberedDataForImport[$rememberedEntity->getRememberedEntityKey()] = $dataForImport[$rememberedEntity->getRememberedEntityKey()];
+        }
+        return $rememberedDataForImport;
+    }
+
+    public function getRememberedEntitiesByScope(DataImportInfoInterface $dataImportInfo): RememberedEntitySearchResultInterface
+    {
         $applyObserverModel = $this->applyObserverFactory->create();
         $scope = $applyObserverModel->getFullEventName($dataImportInfo);
         $rememberMode = $this->getCurrentRememberMode();
@@ -151,11 +163,7 @@ class RememberWhole implements RememberProcessorInterface
         $searchCriteria = $this->searchCriteriaBuilder->create();
         $rememberedEntitiesResult = $this->rememberedEntityRepository->getList($searchCriteria);
 
-        $rememberedDataForImport = [];
-        foreach ($rememberedEntitiesResult->getItems() as $rememberedEntity) {
-            $rememberedDataForImport[$rememberedEntity->getRememberedEntityKey()] = $dataForImport[$rememberedEntity->getRememberedEntityKey()];
-        }
-        return $rememberedDataForImport;
+        return $rememberedEntitiesResult;
     }
 
     public function forgetEntity(int $entityKey, DataImportInfoInterface $dataImportInfo)
