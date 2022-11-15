@@ -6,6 +6,7 @@ use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 use Guentur\MagentoImport\Api\Data\RememberedEntityInterface;
 use Guentur\MagentoImport\Api\Data\RememberedEntityInterfaceFactory;
+use Guentur\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
 use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
 use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
 use Guentur\MagentoImport\Model\EntityManager;
@@ -16,8 +17,11 @@ use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Guentur\MagentoImport\Api\RememberedEntityRepositoryInterface;
 use Guentur\MagentoImport\Model\Extensions\ApplyObserverFactory;
+use Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberProcessorPool\Proxy as RememberProcessorPoolProxy;
+use Guentur\MagentoImport\Model\ResourceModel\RememberedEntity as RememberedEntityResource;
+use Guentur\MagentoImport\Api\DataImporter\DataImporterInterface;
 
-class RememberReplace extends RememberProcessorAbstract implements RememberProcessorInterface
+class RememberReplace implements RememberProcessorInterface
 {
     // @todo setup only filename. Make absolute path by function like getMediaPath() in Magento
     const IMPORT_STATE_FILE_NAME = __DIR__ . '/../../../etc/import_state.csv';
@@ -32,18 +36,18 @@ class RememberReplace extends RememberProcessorAbstract implements RememberProce
 
     private $applyObserverFactory;
 
+    private $rememberProcessorPool;
+
+    private $rememberedEntityResource;
+
     public function __construct(
-        DataImporterPoolInterface $dataImporterPool,
-        DataImportInfoInterfaceFactory $dataImportInfoF,
-        DataProviderPoolInterface $dataProviderPool,
-        EntityManager $entityManager,
-        StorageSolverPool $storageSolverPool,
-        EntityScopeManager $entityScopeManager,
         RememberedEntityInterfaceFactory $rememberedEntityF,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         ApplyObserverFactory $applyObserverFactory,
         SortOrderBuilder $sortOrderBuilder,
         RememberedEntityRepositoryInterface $rememberedEntityRepository,
+        RememberProcessorPoolProxy $rememberProcessorPool,
+        RememberedEntityResource $rememberedEntityResource,
         string $rememberedEntitiesStorageType,
         string $rememberedEntitiesStoragePath
     ) {
@@ -54,14 +58,9 @@ class RememberReplace extends RememberProcessorAbstract implements RememberProce
         $this->applyObserverFactory = $applyObserverFactory;
         $this->sortOrderBuilder = $sortOrderBuilder;
         $this->rememberedEntityRepository = $rememberedEntityRepository;
-        parent::__construct(
-            $dataImporterPool,
-            $dataImportInfoF,
-            $dataProviderPool,
-            $entityManager,
-            $storageSolverPool,
-            $entityScopeManager
-        );
+
+        $this->rememberProcessorPool = $rememberProcessorPool;
+        $this->rememberedEntityResource = $rememberedEntityResource;
     }
 
     /**
