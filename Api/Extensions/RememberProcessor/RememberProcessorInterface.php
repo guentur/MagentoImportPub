@@ -3,6 +3,7 @@
 namespace Guentur\MagentoImport\Api\Extensions\RememberProcessor;
 
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
+use Guentur\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
 
 interface RememberProcessorInterface
 {
@@ -24,11 +25,11 @@ interface RememberProcessorInterface
     public function getArraySinceRememberedEntity(array $array, DataImportInfoInterface $dataImportInfo): array;
 
     /**
-     * @param array $array
+     * @param array $dataForImport
      * @param DataImportInfoInterface $dataImportInfo
      * @return array
      */
-    public function getRememberedStateDataForImport(array $array, DataImportInfoInterface $dataImportInfo): array;
+    public function getRememberedStateDataForImport(array $dataForImport, DataImportInfoInterface $dataImportInfo): array;
 
     /**
      * @param int $entityKey
@@ -36,4 +37,10 @@ interface RememberProcessorInterface
      * @return mixed
      */
     public function forgetEntity(int $entityKey, DataImportInfoInterface $dataImportInfo);
+
+    /**
+     * @param DataImportInfoInterface $dataImportInfo
+     * @return RememberedEntitySearchResultInterface
+     */
+    public function getRememberedEntitiesByScope(DataImportInfoInterface $dataImportInfo): RememberedEntitySearchResultInterface;
 }
