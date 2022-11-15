@@ -5,6 +5,10 @@ namespace Guentur\MagentoImport\Model\Extensions\RememberProcessor;
 use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\Data\RememberedEntityInterface;
 
+/**
+ * Operational model for remembering function.
+ * @todo use it instead of Abstract class of rememberer Classes
+ */
 class RememberActions
 {
     /**

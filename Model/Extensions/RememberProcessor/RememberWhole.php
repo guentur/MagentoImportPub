@@ -173,6 +173,7 @@ class RememberWhole implements RememberProcessorInterface
             $dataItemKey = $e->getDataItemKey();
             $this->rememberEntity($dataItemKey, $dataImportInfo, $e);
             $dataForImport = $this->getArraySinceRememberedEntity($dataForImport, $dataImporter->getDataImportInfo());
+            //@todo Error:  Maximum function nesting level of '512' reached, aborting! in /home/kyrylo/projects/222/magento24/proj/mage24/vendor/magento/framework/Config/Scope.php on line 46
             $this->importData($dataForImport, $dataImporter);
         }
     }
