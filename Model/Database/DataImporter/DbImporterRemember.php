@@ -94,6 +94,8 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
             try {
                 $importObserver->callObserver($dataItem, $this->getDataImportInfo());
                 $this->importItem($dataItem);
+                // if entity was imported successfully we should delete it from list of broken entities
+                $this->getRememberProcessor()->forgetEntity($dataItemKey, $this->getDataImportInfo());
             } catch (\RuntimeException|\Exception $e) {
                 $this->getRememberProcessor()->rememberEntity($dataItemKey, $this->getDataImportInfo(), $e);
             }
