@@ -1,7 +1,7 @@
 # Elogic_MagentoImport
 
 ## How to install
-`composer require guentur/magento-import`
+`composer require elogic/magento-import`
 
 ## Functionality
 - Database data provider/importer

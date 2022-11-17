@@ -60,7 +60,7 @@ class ApplyObserver implements ApplyObserverInterface
             $type = $providerType . '_' . $recipientType;
 
             //@todo add importer type part to event name
-            $this->fullEventName = 'guentur_import_' . $name . '_' . $type;
+            $this->fullEventName = 'elogic_import_' . $name . '_' . $type;
         }
         return $this->fullEventName;
     }

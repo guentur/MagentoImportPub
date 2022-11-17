@@ -110,7 +110,7 @@ class DefaultImport extends Command
      */
     protected function configure()
     {
-        $this->setName('guentur:import')
+        $this->setName('elogic:import')
             ->setDescription(__('Quick data import with memory and flexible settings'))
             ->setDefinition($this->getCommandOptions());
 
