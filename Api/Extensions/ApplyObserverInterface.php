@@ -1,8 +1,8 @@
 <?php
 
-namespace Guentur\MagentoImport\Api\Extensions;
+namespace Elogic\MagentoImport\Api\Extensions;
 
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
 
 interface ApplyObserverInterface
 {

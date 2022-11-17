@@ -1,8 +1,8 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Csv\Validator;
+namespace Elogic\MagentoImport\Model\Csv\Validator;
 
-use Guentur\MagentoImport\Model\Exception\InvalidFileExtensionException;
+use Elogic\MagentoImport\Model\Exception\InvalidFileExtensionException;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 class CsvFileValidator

@@ -1,10 +1,10 @@
 <?php
 
-namespace Guentur\MagentoImport\Api;
+namespace Elogic\MagentoImport\Api;
 
-use Guentur\MagentoImport\Api\Data\RememberedEntityInterface;
+use Elogic\MagentoImport\Api\Data\RememberedEntityInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
-use Guentur\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
+use Elogic\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
 
 /**
  * @api

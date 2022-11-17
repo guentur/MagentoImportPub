@@ -4,100 +4,100 @@
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="GuenturMagentoImport" xsi:type="object">Guentur\MagentoImport\Console\DefaultImport</item>
+                <item name="ElogicMagentoImport" xsi:type="object">Elogic\MagentoImport\Console\DefaultImport</item>
             </argument>
         </arguments>
     </type>
 
-    <preference for="Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface"
-                type="Guentur\MagentoImport\Model\DataProvider\DataProviderPool" />
-    <type name="Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface">
+    <preference for="Elogic\MagentoImport\Api\DataProvider\DataProviderPoolInterface"
+                type="Elogic\MagentoImport\Model\DataProvider\DataProviderPool" />
+    <type name="Elogic\MagentoImport\Api\DataProvider\DataProviderPoolInterface">
         <arguments>
             <argument name="dataProviders" xsi:type="array">
-                <item name="database" xsi:type="object">Guentur\MagentoImport\Model\Database\DbDataProvider</item>
-                <item name="csv" xsi:type="object">Guentur\MagentoImport\Model\Csv\CsvDataProvider</item>
+                <item name="database" xsi:type="object">Elogic\MagentoImport\Model\Database\DbDataProvider</item>
+                <item name="csv" xsi:type="object">Elogic\MagentoImport\Model\Csv\CsvDataProvider</item>
             </argument>
         </arguments>
     </type>
 
-    <preference for="Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface"
-                type="Guentur\MagentoImport\Model\DataImporter\DataImporterPool" />
-    <type name="Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface">
+    <preference for="Elogic\MagentoImport\Api\DataImporter\DataImporterPoolInterface"
+                type="Elogic\MagentoImport\Model\DataImporter\DataImporterPool" />
+    <type name="Elogic\MagentoImport\Api\DataImporter\DataImporterPoolInterface">
         <arguments>
             <argument name="dataImporters" xsi:type="array">
-                <item name="database_remember" xsi:type="string">Guentur\MagentoImport\Model\Database\DataImporter\DbImporterRemember</item>
-                <item name="database" xsi:type="string">Guentur\MagentoImport\Model\Database\DataImporter\DbImporterBase</item>
+                <item name="database_remember" xsi:type="string">Elogic\MagentoImport\Model\Database\DataImporter\DbImporterRemember</item>
+                <item name="database" xsi:type="string">Elogic\MagentoImport\Model\Database\DataImporter\DbImporterBase</item>
 <!--                @todo create csv data importer with remembering-->
-<!--                <item name="csv_remember" xsi:type="string">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterRemember</item>-->
-                <item name="csv_remember" xsi:type="string">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterBase</item>
-                <item name="csv" xsi:type="string">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterBase</item>
+<!--                <item name="csv_remember" xsi:type="string">Elogic\MagentoImport\Model\Csv\DataImporter\CsvImporterRemember</item>-->
+                <item name="csv_remember" xsi:type="string">Elogic\MagentoImport\Model\Csv\DataImporter\CsvImporterBase</item>
+                <item name="csv" xsi:type="string">Elogic\MagentoImport\Model\Csv\DataImporter\CsvImporterBase</item>
             </argument>
         </arguments>
     </type>
 
-    <type name="Guentur\MagentoImport\Model\Solver\StorageSolverPool">
+    <type name="Elogic\MagentoImport\Model\Solver\StorageSolverPool">
         <arguments>
             <argument name="solvers" xsi:type="array">
 <!--                @todo-->
 <!--                <item name="database" xsi:type="string"></item>-->
-                <item name="csv" xsi:type="object">Guentur\MagentoImport\Model\Solver\CsvStorageSolver</item>
+                <item name="csv" xsi:type="object">Elogic\MagentoImport\Model\Solver\CsvStorageSolver</item>
             </argument>
         </arguments>
     </type>
 
-<!--    <type name="Guentur\MagentoImport\Api\PoolInterface">-->
+<!--    <type name="Elogic\MagentoImport\Api\PoolInterface">-->
 <!--        <arguments>-->
 <!--            <argument name="type" xsi:type="array">-->
 <!--                <item name="database" xsi:type="array">-->
-<!--                    <item name="dataImporter" xsi:type="string">Guentur\MagentoImport\Model\Database\DataImporter\DbImporterRemember</item>-->
-<!--                    <item name="dataProvider" xsi:type="string">Guentur\MagentoImport\Model\DataProvider\DbDataProvider</item>-->
+<!--                    <item name="dataImporter" xsi:type="string">Elogic\MagentoImport\Model\Database\DataImporter\DbImporterRemember</item>-->
+<!--                    <item name="dataProvider" xsi:type="string">Elogic\MagentoImport\Model\DataProvider\DbDataProvider</item>-->
 <!--                </item>-->
 <!--                <item name="csv" xsi:type="array">-->
-<!--                    <item name="dataImporter" xsi:type="string">Guentur\MagentoImport\Model\DataImporter\CsvDataImporter</item>-->
-<!--                    <item name="dataProvider" xsi:type="string">Guentur\MagentoImport\Model\DataProvider\CsvDataProvider</item>-->
-<!--                    <item name="solver" xsi:type="string">Guentur\MagentoImport\Model\Solver\CsvStorageSolver</item>-->
+<!--                    <item name="dataImporter" xsi:type="string">Elogic\MagentoImport\Model\DataImporter\CsvDataImporter</item>-->
+<!--                    <item name="dataProvider" xsi:type="string">Elogic\MagentoImport\Model\DataProvider\CsvDataProvider</item>-->
+<!--                    <item name="solver" xsi:type="string">Elogic\MagentoImport\Model\Solver\CsvStorageSolver</item>-->
 <!--                </item>-->
 <!--            </argument>-->
 <!--        </arguments>-->
 <!--    </type>-->
 
-    <type name="Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberReplace">
+    <type name="Elogic\MagentoImport\Model\Extensions\RememberProcessor\RememberReplace">
         <arguments>
-            <argument name="rememberedEntitiesStorageType" xsi:type="const">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterBase::TYPE</argument>
-            <argument name="rememberedEntitiesStoragePath" xsi:type="const">Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberReplace::IMPORT_STATE_FILE_NAME</argument>
+            <argument name="rememberedEntitiesStorageType" xsi:type="const">Elogic\MagentoImport\Model\Csv\DataImporter\CsvImporterBase::TYPE</argument>
+            <argument name="rememberedEntitiesStoragePath" xsi:type="const">Elogic\MagentoImport\Model\Extensions\RememberProcessor\RememberReplace::IMPORT_STATE_FILE_NAME</argument>
         </arguments>
     </type>
 
-    <type name="Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberWhole">
+    <type name="Elogic\MagentoImport\Model\Extensions\RememberProcessor\RememberWhole">
         <arguments>
-            <argument name="rememberedEntitiesStorageType" xsi:type="const">Guentur\MagentoImport\Model\Csv\DataImporter\CsvImporterBase::TYPE</argument>
-            <argument name="rememberedEntitiesStoragePath" xsi:type="const">Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberWhole::IMPORT_STATE_FILE_NAME</argument>
+            <argument name="rememberedEntitiesStorageType" xsi:type="const">Elogic\MagentoImport\Model\Csv\DataImporter\CsvImporterBase::TYPE</argument>
+            <argument name="rememberedEntitiesStoragePath" xsi:type="const">Elogic\MagentoImport\Model\Extensions\RememberProcessor\RememberWhole::IMPORT_STATE_FILE_NAME</argument>
         </arguments>
     </type>
 
-    <preference for="Guentur\MagentoImport\Api\Data\DataImportInfoInterface"
-                type="Guentur\MagentoImport\Model\Data\DataImportInfo" />
+    <preference for="Elogic\MagentoImport\Api\Data\DataImportInfoInterface"
+                type="Elogic\MagentoImport\Model\Data\DataImportInfo" />
 
-    <preference for="Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorPoolInterface"
-                type="Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberProcessorPool" />
+    <preference for="Elogic\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorPoolInterface"
+                type="Elogic\MagentoImport\Model\Extensions\RememberProcessor\RememberProcessorPool" />
 
-    <type name="Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorPoolInterface">
+    <type name="Elogic\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorPoolInterface">
         <arguments>
             <argument name="rememberProcessors" xsi:type="array">
-                <item name="remember-all-failed-entities" xsi:type="object">Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberWhole</item>
-                <item name="remember-with-replace" xsi:type="object">Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberReplace</item>
+                <item name="remember-all-failed-entities" xsi:type="object">Elogic\MagentoImport\Model\Extensions\RememberProcessor\RememberWhole</item>
+                <item name="remember-with-replace" xsi:type="object">Elogic\MagentoImport\Model\Extensions\RememberProcessor\RememberReplace</item>
             </argument>
             <argument name="defaultProcessorMode" xsi:type="string">remember-with-replace</argument>
         </arguments>
     </type>
 
-    <preference for="Guentur\MagentoImport\Api\Extensions\ApplyObserverInterface"
-                type="Guentur\MagentoImport\Model\Extensions\ApplyObserver" />
+    <preference for="Elogic\MagentoImport\Api\Extensions\ApplyObserverInterface"
+                type="Elogic\MagentoImport\Model\Extensions\ApplyObserver" />
 
-    <preference for="Guentur\MagentoImport\Api\Data\RememberedEntityInterface"
-                type="Guentur\MagentoImport\Model\Data\RememberedEntity" />
-    <preference for="Guentur\MagentoImport\Api\Data\RememberedEntitySearchResultInterface"
-                type="Guentur\MagentoImport\Model\Data\RememberedEntitySearchResults" />
-    <preference for="Guentur\MagentoImport\Api\RememberedEntityRepositoryInterface"
-                type="Guentur\MagentoImport\Model\RememberedEntityRepository" />
+    <preference for="Elogic\MagentoImport\Api\Data\RememberedEntityInterface"
+                type="Elogic\MagentoImport\Model\Data\RememberedEntity" />
+    <preference for="Elogic\MagentoImport\Api\Data\RememberedEntitySearchResultInterface"
+                type="Elogic\MagentoImport\Model\Data\RememberedEntitySearchResults" />
+    <preference for="Elogic\MagentoImport\Api\RememberedEntityRepositoryInterface"
+                type="Elogic\MagentoImport\Model\RememberedEntityRepository" />
 </config>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Guentur\MagentoImport\Api\DataProvider;
+namespace Elogic\MagentoImport\Api\DataProvider;
 
 interface DataProviderInterface
 {

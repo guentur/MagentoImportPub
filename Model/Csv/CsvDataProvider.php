@@ -1,9 +1,9 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Csv;
+namespace Elogic\MagentoImport\Model\Csv;
 
-use Guentur\MagentoImport\Api\DataProvider\TableDataProviderInterface;
-use Guentur\MagentoImport\Model\Csv\Validator\CsvFileValidator;
+use Elogic\MagentoImport\Api\DataProvider\TableDataProviderInterface;
+use Elogic\MagentoImport\Model\Csv\Validator\CsvFileValidator;
 
 class CsvDataProvider implements TableDataProviderInterface
 {

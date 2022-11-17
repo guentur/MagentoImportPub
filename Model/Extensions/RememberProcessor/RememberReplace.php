@@ -1,21 +1,21 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Extensions\RememberProcessor;
+namespace Elogic\MagentoImport\Model\Extensions\RememberProcessor;
 
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
-use Guentur\MagentoImport\Api\Data\RememberedEntityInterface;
-use Guentur\MagentoImport\Api\Data\RememberedEntityInterfaceFactory;
-use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
-use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
-use Guentur\MagentoImport\Model\EntityManager;
-use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
-use Guentur\MagentoImport\Model\EntityScopeManager;
-use Guentur\MagentoImport\Model\Solver\StorageSolverPool;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
+use Elogic\MagentoImport\Api\Data\RememberedEntityInterface;
+use Elogic\MagentoImport\Api\Data\RememberedEntityInterfaceFactory;
+use Elogic\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
+use Elogic\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
+use Elogic\MagentoImport\Model\EntityManager;
+use Elogic\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
+use Elogic\MagentoImport\Model\EntityScopeManager;
+use Elogic\MagentoImport\Model\Solver\StorageSolverPool;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Guentur\MagentoImport\Api\RememberedEntityRepositoryInterface;
-use Guentur\MagentoImport\Model\Extensions\ApplyObserverFactory;
+use Elogic\MagentoImport\Api\RememberedEntityRepositoryInterface;
+use Elogic\MagentoImport\Model\Extensions\ApplyObserverFactory;
 
 class RememberReplace extends RememberProcessorAbstract implements RememberProcessorInterface
 {
@@ -75,7 +75,7 @@ class RememberReplace extends RememberProcessorAbstract implements RememberProce
     {
         $pathToRecipient = $dataImportInfo->getPathToRecipient();
         $pathToProvider = $dataImportInfo->getPathToDataProvider();
-        //@todo Important. Refactor to use Guentur\MagentoImport\Model\Data\DataImportInfo
+        //@todo Important. Refactor to use Elogic\MagentoImport\Model\Data\DataImportInfo
         $currentEntityInfo = [
             'path_to_provider' => $pathToProvider,
             'path_to_recipient' => $pathToRecipient,
@@ -86,11 +86,11 @@ class RememberReplace extends RememberProcessorAbstract implements RememberProce
         $allRememberedEntities = $this->mergeWithAllRememberedEntities($rememberedEntities, $currentEntityInfo);
         $this->importRememberedEntities($allRememberedEntities);
 
-        /** @var \Guentur\MagentoImport\Model\Extensions\ApplyObserver $applyObserverModel */
+        /** @var \Elogic\MagentoImport\Model\Extensions\ApplyObserver $applyObserverModel */
         $applyObserverModel = $this->applyObserverFactory->create();
         $scope = $applyObserverModel->getFullEventName($dataImportInfo);
 
-        /** @var \Guentur\MagentoImport\Api\Data\RememberedEntityInterface $rememberedEntity */
+        /** @var \Elogic\MagentoImport\Api\Data\RememberedEntityInterface $rememberedEntity */
         $rememberedEntity = $this->rememberedEntityF->create();
         $rememberedEntity->setScope($scope);
         $rememberedEntity->setRememberedEntityKey($scope);

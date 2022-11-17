@@ -1,10 +1,10 @@
 <?php
 
-namespace Guentur\MagentoImport\Model;
+namespace Elogic\MagentoImport\Model;
 
-use Guentur\MagentoImport\Model\RememberedEntity;
-use Guentur\MagentoImport\Model\RememberedEntityFactory;
-use Guentur\MagentoImport\Model\ResourceModel\RememberedEntity as RememberedEntityResource;
+use Elogic\MagentoImport\Model\RememberedEntity;
+use Elogic\MagentoImport\Model\RememberedEntityFactory;
+use Elogic\MagentoImport\Model\ResourceModel\RememberedEntity as RememberedEntityResource;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 class RememberedEntityRegistry
@@ -12,7 +12,7 @@ class RememberedEntityRegistry
     const REGISTRY_SEPARATOR = ':';
 
     /**
-     * @var \Guentur\MagentoImport\Model\RememberedEntityFactory
+     * @var \Elogic\MagentoImport\Model\RememberedEntityFactory
      */
     private $rememberedEntityFactory;
 
@@ -27,7 +27,7 @@ class RememberedEntityRegistry
     private $rememberedEntityRegistryById = [];
 
     /**
-     * @param \Guentur\MagentoImport\Model\RememberedEntityFactory $rememberedEntityFactory
+     * @param \Elogic\MagentoImport\Model\RememberedEntityFactory $rememberedEntityFactory
      * @param RememberedEntityResource $rememberedEntityResource
      */
     public function __construct(

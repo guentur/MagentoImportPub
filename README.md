@@ -1,4 +1,4 @@
-# Guentur_MagentoImport
+# Elogic_MagentoImport
 
 ## How to install
 `composer require guentur/magento-import`
@@ -6,7 +6,7 @@
 ## Functionality
 - Database data provider/importer
 - Csv data provider/importer
-- Remember failled data-item and ability to continue importing from this remembered data-item (`Guentur\MagentoImport\Api\DataImporter\ImporterRememberInterface`)
+- Remember failled data-item and ability to continue importing from this remembered data-item (`Elogic\MagentoImport\Api\DataImporter\ImporterRememberInterface`)
 - Progress bar (Doesn't work for chsv import yet)
 ![image](https://user-images.githubusercontent.com/64845469/195119397-08e732cc-3d02-47a2-901e-78ad41ae522b.png)
 - Mapping for tablelike data import

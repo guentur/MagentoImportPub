@@ -1,8 +1,8 @@
 <?php
 
-namespace Guentur\MagentoImport\Api\DataImporter;
+namespace Elogic\MagentoImport\Api\DataImporter;
 
-use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
+use Elogic\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
 
 interface ImporterRememberInterface extends DataImporterInterface
 {

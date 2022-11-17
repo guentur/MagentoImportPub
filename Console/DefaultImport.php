@@ -1,15 +1,15 @@
 <?php
 
-namespace Guentur\MagentoImport\Console;
+namespace Elogic\MagentoImport\Console;
 
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
-use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
-use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
-use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorPoolInterface;
-use Guentur\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
-use Guentur\MagentoImport\Api\DataImporter\ImporterRememberInterface;
-use Guentur\MagentoImport\Model\Extensions\ProgressBarWrapper;
-use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
+use Elogic\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
+use Elogic\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
+use Elogic\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorPoolInterface;
+use Elogic\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
+use Elogic\MagentoImport\Api\DataImporter\ImporterRememberInterface;
+use Elogic\MagentoImport\Model\Extensions\ProgressBarWrapper;
+use Elogic\MagentoImport\Model\Mapper\DefaultMapping;
 use Magento\Framework\Console\Cli;
 use Magento\Framework\DB\Adapter\TableNotFoundException;
 use Magento\Framework\Exception\LocalizedException;
@@ -183,7 +183,7 @@ class DefaultImport extends Command
 
         $dataForImport = [];
         try {
-            /** @var \Guentur\MagentoImport\Api\DataProvider\TableDataProviderInterface $dataProvider */
+            /** @var \Elogic\MagentoImport\Api\DataProvider\TableDataProviderInterface $dataProvider */
             $dataProvider = $this->dataProviderPool->getDataProvider($dataProviderType);
             $dataForImport = $dataProvider->getData($pathToDataProvider);
         } catch (\InvalidArgumentException $e) {
@@ -212,7 +212,7 @@ class DefaultImport extends Command
         $output->writeln(__("Recipient type: %1", $recipientType));
         $output->writeln(__("Path to recipient: %1", $pathToRecipient));
 
-        /** \Guentur\MagentoImport\Api\Data\DataImportInfoInterface $dataImportInfo */
+        /** \Elogic\MagentoImport\Api\Data\DataImportInfoInterface $dataImportInfo */
         $dataImportInfo = $this->dataImportInfoF->create();
         $dataImportInfo->setPathToDataProvider($pathToProvider);
         $dataImportInfo->setPathToRecipient($pathToRecipient);
@@ -229,7 +229,7 @@ class DefaultImport extends Command
             $recipientType .= '_remember';
         }
 
-        /** @var \Guentur\MagentoImport\Api\DataImporter\DataImporterInterface $dataImporter */
+        /** @var \Elogic\MagentoImport\Api\DataImporter\DataImporterInterface $dataImporter */
         $dataImporter = $this->dataImporterPool->getDataImporter($recipientType);
         $dataImporter->setDataImportInfo($dataImportInfo);
 
@@ -255,7 +255,7 @@ class DefaultImport extends Command
 
     /**
      * You can set up you plugin here ;)
-     * @see \Guentur\MagentoImport\Console\DefaultImport::interact()
+     * @see \Elogic\MagentoImport\Console\DefaultImport::interact()
      *
      * @param InputInterface $input
      * @param OutputInterface $output
@@ -266,7 +266,7 @@ class DefaultImport extends Command
     {
         $dataProviderType = $input->getOption(self::OPTION_DATA_PROVIDER);
         $pathToDataProvider = $input->getOption(self::OPTION_PATH_TO_DATA_PROVIDER);
-        /** @var \Guentur\MagentoImport\Api\DataProvider\TableDataProviderInterface $dataProvider */
+        /** @var \Elogic\MagentoImport\Api\DataProvider\TableDataProviderInterface $dataProvider */
         $dataProvider = $this->dataProviderPool->getDataProvider($dataProviderType);
         $dataProviderColumns = $dataProvider->getColumnNames($pathToDataProvider);
         /** @var \Symfony\Component\Console\Helper\QuestionHelper $questionHelper */

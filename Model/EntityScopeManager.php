@@ -1,9 +1,9 @@
 <?php
 
-namespace Guentur\MagentoImport\Model;
+namespace Elogic\MagentoImport\Model;
 
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
-use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
+use Elogic\MagentoImport\Model\Mapper\DefaultMapping;
 
 class EntityScopeManager
 {

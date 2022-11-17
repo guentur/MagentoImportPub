@@ -1,10 +1,10 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Extensions;
+namespace Elogic\MagentoImport\Model\Extensions;
 
-use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterface;
+use Elogic\MagentoImport\Api\Extensions\ApplyObserverInterface;
 use Magento\Framework\DataObject;
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
 use Magento\Framework\Event\ManagerInterface;
 
 class ApplyObserver implements ApplyObserverInterface

@@ -1,9 +1,9 @@
 <?php
 
-namespace Guentur\MagentoImport\Model;
+namespace Elogic\MagentoImport\Model;
 
-use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
+use Elogic\MagentoImport\Model\Mapper\DefaultMapping;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 
 class EntityManager
 {
@@ -49,7 +49,7 @@ class EntityManager
     {
         $scopeFormatEntityList = [];
         foreach ($importFormatEntityList as $importData) {
-            /** \Guentur\MagentoImport\Api\Data\DataImportInfoInterface $dataImportInfo */
+            /** \Elogic\MagentoImport\Api\Data\DataImportInfoInterface $dataImportInfo */
             $dataImportInfo = $this->dataImportInfoF->create();
             $dataImportInfo->setPathToDataProvider($importData['path_to_provider']);
             $dataImportInfo->setPathToRecipient($importData['path_to_recipient']);
