@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Guentur\MagentoImport\Model\Data;
+namespace Elogic\MagentoImport\Model\Data;
 
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
 use Magento\Framework\Api\AbstractSimpleObject;
 
 class DataImportInfo extends AbstractSimpleObject implements DataImportInfoInterface

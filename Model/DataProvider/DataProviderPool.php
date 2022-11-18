@@ -1,9 +1,9 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\DataProvider;
+namespace Elogic\MagentoImport\Model\DataProvider;
 
-use Guentur\MagentoImport\Api\DataProvider\DataProviderInterface;
-use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
+use Elogic\MagentoImport\Api\DataProvider\DataProviderInterface;
+use Elogic\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
 use InvalidArgumentException;
 use Magento\Framework\Exception\LocalizedException;
 

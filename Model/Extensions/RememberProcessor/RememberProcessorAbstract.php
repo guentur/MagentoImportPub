@@ -1,16 +1,16 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Extensions\RememberProcessor;
+namespace Elogic\MagentoImport\Model\Extensions\RememberProcessor;
 
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
-use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
-use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
-use Guentur\MagentoImport\Model\EntityManager;
-use Guentur\MagentoImport\Model\EntityScopeManager;
-use Guentur\MagentoImport\Model\Solver\StorageSolverPool;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
+use Elogic\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
+use Elogic\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
+use Elogic\MagentoImport\Model\EntityManager;
+use Elogic\MagentoImport\Model\EntityScopeManager;
+use Elogic\MagentoImport\Model\Solver\StorageSolverPool;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
-use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberedEntitiesProviderInterface;
+use Elogic\MagentoImport\Api\Extensions\RememberProcessor\RememberedEntitiesProviderInterface;
 
 abstract class RememberProcessorAbstract implements RememberedEntitiesProviderInterface
 {

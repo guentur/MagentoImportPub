@@ -1,9 +1,9 @@
 <?php
 
-namespace Guentur\MagentoImport\Model;
+namespace Elogic\MagentoImport\Model;
 
 use Magento\Framework\Model\AbstractModel;
-use Guentur\MagentoImport\Api\Data\RememberedEntityInterfaceFactory;
+use Elogic\MagentoImport\Api\Data\RememberedEntityInterfaceFactory;
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Registry;
@@ -38,7 +38,7 @@ class RememberedEntity extends AbstractModel
 
     protected function _construct()
     {
-        $this->_init(\Guentur\MagentoImport\Model\ResourceModel\RememberedEntity::class);
+        $this->_init(\Elogic\MagentoImport\Model\ResourceModel\RememberedEntity::class);
     }
 
     public function getDataModel()

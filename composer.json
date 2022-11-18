@@ -1,5 +1,5 @@
 {
-    "name": "guentur/magento-import",
+    "name": "elogic/magento-import",
     "description": "Run import from csv to database table and vise versa. You can extend functionality",
     "require": {
         "magento/framework": "*",
@@ -13,7 +13,7 @@
     "autoload": {
         "files": [ "registration.php" ],
         "psr-4": {
-            "Guentur\\MagentoImport\\": ""
+            "Elogic\\MagentoImport\\": ""
         }
     }
 }

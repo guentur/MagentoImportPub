@@ -1,6 +1,6 @@
 <?php
 
-namespace Guentur\MagentoImport\Api;
+namespace Elogic\MagentoImport\Api;
 
 interface EntitiesStorageSolverInterface
 {

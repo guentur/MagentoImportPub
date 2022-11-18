@@ -1,8 +1,8 @@
 <?php
 
-namespace Guentur\MagentoImport\Api\Extensions\RememberProcessor;
+namespace Elogic\MagentoImport\Api\Extensions\RememberProcessor;
 
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
 use Guentur\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
 
 interface RememberProcessorInterface

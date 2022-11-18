@@ -1,8 +1,8 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\ResourceModel;
+namespace Elogic\MagentoImport\Model\ResourceModel;
 
-use Guentur\MagentoImport\Api\Data\RememberedEntityInterface;
+use Elogic\MagentoImport\Api\Data\RememberedEntityInterface;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDB;
 
 class RememberedEntity extends AbstractDB

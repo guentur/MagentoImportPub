@@ -1,8 +1,8 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Solver;
+namespace Elogic\MagentoImport\Model\Solver;
 
-use Guentur\MagentoImport\Api\EntitiesStorageSolverInterface;
+use Elogic\MagentoImport\Api\EntitiesStorageSolverInterface;
 use Magento\Framework\Exception\LocalizedException;
 
 class StorageSolverPool

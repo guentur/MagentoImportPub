@@ -1,10 +1,10 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Extensions;
+namespace Elogic\MagentoImport\Model\Extensions;
 
-use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterface;
+use Elogic\MagentoImport\Api\Extensions\ApplyObserverInterface;
 use Magento\Framework\DataObject;
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
 use Magento\Framework\Event\ManagerInterface;
 
 class ApplyObserver implements ApplyObserverInterface
@@ -64,7 +64,7 @@ class ApplyObserver implements ApplyObserverInterface
             $type = $providerType . '_' . $recipientType;
 
             //@todo add importer type part to event name
-            $this->fullEventName = 'guentur_import_' . $name . '_' . $type;
+            $this->fullEventName = 'elogic_import_' . $name . '_' . $type;
         }
         return $this->fullEventName;
     }

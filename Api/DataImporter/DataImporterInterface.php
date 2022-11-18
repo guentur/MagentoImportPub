@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Guentur\MagentoImport\Api\DataImporter;
+namespace Elogic\MagentoImport\Api\DataImporter;
 
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
 
 interface DataImporterInterface
 {

@@ -1,25 +1,21 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Extensions\RememberProcessor;
+namespace Elogic\MagentoImport\Model\Extensions\RememberProcessor;
 
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
-use Guentur\MagentoImport\Api\Data\RememberedEntityInterface;
-use Guentur\MagentoImport\Api\Data\RememberedEntityInterfaceFactory;
-use Guentur\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
-use Guentur\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
-use Guentur\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
-use Guentur\MagentoImport\Model\EntityManager;
-use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
-use Guentur\MagentoImport\Model\EntityScopeManager;
-use Guentur\MagentoImport\Model\Solver\StorageSolverPool;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
+use Elogic\MagentoImport\Api\Data\RememberedEntityInterface;
+use Elogic\MagentoImport\Api\Data\RememberedEntityInterfaceFactory;
+use Elogic\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
+use Elogic\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
+use Elogic\MagentoImport\Model\EntityManager;
+use Elogic\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
+use Elogic\MagentoImport\Model\EntityScopeManager;
+use Elogic\MagentoImport\Model\Solver\StorageSolverPool;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Guentur\MagentoImport\Api\RememberedEntityRepositoryInterface;
-use Guentur\MagentoImport\Model\Extensions\ApplyObserverFactory;
-use Guentur\MagentoImport\Model\Extensions\RememberProcessor\RememberProcessorPool\Proxy as RememberProcessorPoolProxy;
-use Guentur\MagentoImport\Model\ResourceModel\RememberedEntity as RememberedEntityResource;
-use Guentur\MagentoImport\Api\DataImporter\DataImporterInterface;
+use Elogic\MagentoImport\Api\RememberedEntityRepositoryInterface;
+use Elogic\MagentoImport\Model\Extensions\ApplyObserverFactory;
 
 class RememberReplace implements RememberProcessorInterface
 {

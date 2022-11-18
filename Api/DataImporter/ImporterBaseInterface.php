@@ -1,6 +1,6 @@
 <?php
 
-namespace Guentur\MagentoImport\Api\DataImporter;
+namespace Elogic\MagentoImport\Api\DataImporter;
 
 interface ImporterBaseInterface extends DataImporterInterface
 {

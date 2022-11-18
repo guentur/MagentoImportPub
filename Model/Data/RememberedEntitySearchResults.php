@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Guentur\MagentoImport\Model\Data;
+namespace Elogic\MagentoImport\Model\Data;
 
-use Guentur\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
+use Elogic\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
 use Magento\Framework\Api\SearchResults;
 
 /**

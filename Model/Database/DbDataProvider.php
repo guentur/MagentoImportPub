@@ -1,8 +1,8 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Database;
+namespace Elogic\MagentoImport\Model\Database;
 
-use Guentur\MagentoImport\Api\DataProvider\TableDataProviderInterface;
+use Elogic\MagentoImport\Api\DataProvider\TableDataProviderInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
 class DbDataProvider implements TableDataProviderInterface

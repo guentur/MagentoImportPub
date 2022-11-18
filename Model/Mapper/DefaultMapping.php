@@ -1,6 +1,6 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Mapper;
+namespace Elogic\MagentoImport\Model\Mapper;
 
 use \InvalidArgumentException;
 

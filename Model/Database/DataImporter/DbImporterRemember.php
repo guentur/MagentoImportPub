@@ -1,16 +1,16 @@
 <?php
 
-namespace Guentur\MagentoImport\Model\Database\DataImporter;
+namespace Elogic\MagentoImport\Model\Database\DataImporter;
 
-use Guentur\MagentoImport\Api\Data\DataImportInfoInterface;
-use Guentur\MagentoImport\Api\DataImporter\ImporterRememberInterface;
-use Guentur\MagentoImport\Api\Extensions\ApplyObserverInterfaceFactory;
-use Guentur\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
-use Guentur\MagentoImport\Model\Extensions\ProgressBarWrapper;
-use Guentur\MagentoImport\Model\Mapper\DefaultMapping;
+use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
+use Elogic\MagentoImport\Api\DataImporter\ImporterRememberInterface;
+use Elogic\MagentoImport\Api\Extensions\ApplyObserverInterfaceFactory;
+use Elogic\MagentoImport\Api\Extensions\ImportWithProgressBarInterface;
+use Elogic\MagentoImport\Model\Extensions\ProgressBarWrapper;
+use Elogic\MagentoImport\Model\Mapper\DefaultMapping;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
-use Guentur\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
+use Elogic\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
 
 class DbImporterRemember implements ImportWithProgressBarInterface, ImporterRememberInterface
 {
