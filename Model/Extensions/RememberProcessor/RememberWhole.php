@@ -12,6 +12,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Elogic\MagentoImport\Model\Extensions\ApplyObserverFactory;
 use Elogic\MagentoImport\Model\Extensions\RememberProcessor\RememberProcessorPool\Proxy as RememberProcessorPoolProxy;
+use Elogic\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
 
 class RememberWhole implements RememberProcessorInterface
 {

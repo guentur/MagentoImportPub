@@ -123,7 +123,7 @@ abstract class RememberProcessorAbstract implements RememberedEntitiesProviderIn
 //        // if we don't remember failed entity while import remembered entities data there is not required path to data-provider
 //        $dataImportInfo->setPathToRecipient($this->rememberedEntitiesStoragePath);
 //
-//        /** @var \Guentur\MagentoImport\Api\DataImporter\DataImporterInterface $dataImporter */
+//        /** @var \Elogic\MagentoImport\Api\DataImporter\DataImporterInterface $dataImporter */
 //        $dataImporter = $this->dataImporterPool->getDataImporter($this->rememberedEntitiesStorageType);
 //        $dataImporter->setDataImportInfo($dataImportInfo);
 //        $dataImporter->importData($allRememberedEntities);

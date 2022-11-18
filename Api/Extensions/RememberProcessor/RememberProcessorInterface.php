@@ -3,7 +3,7 @@
 namespace Elogic\MagentoImport\Api\Extensions\RememberProcessor;
 
 use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
-use Guentur\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
+use Elogic\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
 
 interface RememberProcessorInterface
 {
