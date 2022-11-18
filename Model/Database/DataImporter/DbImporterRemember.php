@@ -92,8 +92,10 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
         $importObserver = $this->importObserverFactory->create();
         foreach ($dataToInsert as $dataItemKey => $dataItem) {
             try {
-                $importObserver->callObserver($dataItem, $this->getDataImportInfo());
+                $dataItem = $importObserver->callObserver($dataItem, $this->getDataImportInfo());
                 $this->importItem($dataItem);
+                // if entity was imported successfully we should delete it from list of broken entities
+                $this->getRememberProcessor()->forgetEntity($dataItemKey, $this->getDataImportInfo());
             } catch (\RuntimeException|\Exception $e) {
                 $this->getRememberProcessor()->rememberEntity($dataItemKey, $this->getDataImportInfo(), $e);
             }
@@ -161,10 +163,7 @@ class DbImporterRemember implements ImportWithProgressBarInterface, ImporterReme
         foreach ($dataToInsert as $dataItemKey => $dataItem) {
             $progressBar->display();
             try {
-                if ($dataItemKey % 2) {
-                    throw new \RuntimeException('$dataItemKey % 2');
-                }
-                $importObserver->callObserver($dataItem, $this->getDataImportInfo());
+                $dataItem = $importObserver->callObserver($dataItem, $this->getDataImportInfo());
                 $this->importItem($dataItem);
                 // if entity was imported successfully we should delete it from list of broken entities
                 $this->getRememberProcessor()->forgetEntity($dataItemKey, $this->getDataImportInfo());

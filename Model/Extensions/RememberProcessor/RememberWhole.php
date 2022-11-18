@@ -139,6 +139,32 @@ class RememberWhole implements RememberProcessorInterface
         return $array;
     }
 
+    public function getRememberedStateDataForImport(array $dataForImport, DataImportInfoInterface $dataImportInfo): array
+    {
+        $rememberedEntitiesResult = $this->getRememberedEntitiesByScope($dataImportInfo);
+
+        $rememberedDataForImport = [];
+        foreach ($rememberedEntitiesResult->getItems() as $rememberedEntity) {
+            $rememberedDataForImport[$rememberedEntity->getRememberedEntityKey()] = $dataForImport[$rememberedEntity->getRememberedEntityKey()];
+        }
+        return $rememberedDataForImport;
+    }
+
+    public function getRememberedEntitiesByScope(DataImportInfoInterface $dataImportInfo): RememberedEntitySearchResultInterface
+    {
+        $applyObserverModel = $this->applyObserverFactory->create();
+        $scope = $applyObserverModel->getFullEventName($dataImportInfo);
+        $rememberMode = $this->getCurrentRememberMode();
+
+        $this->searchCriteriaBuilder->addFilter('scope', $scope);
+        $this->searchCriteriaBuilder->addFilter('remember_mode', $rememberMode);
+
+        $searchCriteria = $this->searchCriteriaBuilder->create();
+        $rememberedEntitiesResult = $this->rememberedEntityRepository->getList($searchCriteria);
+
+        return $rememberedEntitiesResult;
+    }
+
     public function forgetEntity(int $entityKey, DataImportInfoInterface $dataImportInfo)
     {
         /** @var RememberedEntityInterface $rememberedEntity */

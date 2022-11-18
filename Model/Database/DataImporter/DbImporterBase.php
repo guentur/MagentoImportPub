@@ -78,7 +78,7 @@ class DbImporterBase implements ImportWithProgressBarInterface, ImporterBaseInte
     {
         $importObserver = $this->importObserverFactory->create();
         foreach ($dataToInsert as $dataItem) {
-            $importObserver->callObserver($dataItem, $this->getDataImportInfo());
+            $dataItem = $importObserver->callObserver($dataItem, $this->getDataImportInfo());
             $this->importItem($dataItem);
         }
     }
@@ -130,7 +130,7 @@ class DbImporterBase implements ImportWithProgressBarInterface, ImporterBaseInte
         $progressBar->start();
         foreach ($dataToInsert as $dataItem) {
             $progressBar->display();
-            $importObserver->callObserver($dataItem, $this->getDataImportInfo());
+            $dataItem = $importObserver->callObserver($dataItem, $this->getDataImportInfo());
             $this->importItem($dataItem);
             $progressBar->advance();
         }

@@ -14,6 +14,12 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="remembered_entry_id" />
         </constraint>
-<!--        @todo create an index for scope field-->
+<!--        @todo create an index for scope and mode fields-->
+<!--        as follows this article https://stackoverflow.com/questions/8746207/1071-specified-key-was-too-long-max-key-length-is-1000-bytes -->
+
+<!--        <index referenceId="ENTITIES_REMEMBER_MODE_SCOPE" indexType="btree">-->
+<!--            <column name="remember_mode"/>-->
+<!--            <column name="scope"/>-->
+<!--        </index>-->
     </table>
 </schema>

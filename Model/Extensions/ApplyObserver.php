@@ -26,6 +26,10 @@ class ApplyObserver implements ApplyObserverInterface
     }
 
     /**
+     * @todo ask Is it better to change $dataItem using php linking:
+     * callObserver(array &$dataItem
+     * or just return value from a method?
+     *
      * @param array $dataItem
      * @param DataImportInfoInterface $dataImportInfo
      * @return array
