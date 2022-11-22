@@ -1,6 +1,6 @@
 <?php
 
-namespace Elogic\MagentoImport\Model\Extensions;
+namespace ElogicCo\MagentoImport\Model\Extensions;
 
 use Magento\Framework\ObjectManagerInterface;
 use Symfony\Component\Console\Helper\ProgressBar;

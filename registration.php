@@ -2,4 +2,4 @@
 
 use Magento\Framework\Component\ComponentRegistrar;
 
-ComponentRegistrar::register(ComponentRegistrar::MODULE, 'Elogic_MagentoImport', __DIR__);
+ComponentRegistrar::register(ComponentRegistrar::MODULE, 'ElogicCo_MagentoImport', __DIR__);

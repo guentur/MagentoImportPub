@@ -1,25 +1,25 @@
 <?php
 
-namespace Elogic\MagentoImport\Model\Extensions\RememberProcessor;
+namespace ElogicCo\MagentoImport\Model\Extensions\RememberProcessor;
 
-use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
-use Elogic\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
-use Elogic\MagentoImport\Api\Data\RememberedEntityInterface;
-use Elogic\MagentoImport\Api\Data\RememberedEntityInterfaceFactory;
-use Elogic\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
-use Elogic\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
-use Elogic\MagentoImport\Model\EntityManager;
-use Elogic\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
-use Elogic\MagentoImport\Model\EntityScopeManager;
-use Elogic\MagentoImport\Model\Solver\StorageSolverPool;
+use ElogicCo\MagentoImport\Api\Data\DataImportInfoInterface;
+use ElogicCo\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
+use ElogicCo\MagentoImport\Api\Data\RememberedEntityInterface;
+use ElogicCo\MagentoImport\Api\Data\RememberedEntityInterfaceFactory;
+use ElogicCo\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
+use ElogicCo\MagentoImport\Api\DataProvider\DataProviderPoolInterface;
+use ElogicCo\MagentoImport\Model\EntityManager;
+use ElogicCo\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
+use ElogicCo\MagentoImport\Model\EntityScopeManager;
+use ElogicCo\MagentoImport\Model\Solver\StorageSolverPool;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Elogic\MagentoImport\Api\RememberedEntityRepositoryInterface;
-use Elogic\MagentoImport\Model\Extensions\ApplyObserverFactory;
-use Elogic\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
-use Elogic\MagentoImport\Model\Extensions\RememberProcessor\RememberProcessorPool\Proxy as RememberProcessorPoolProxy;
-use Elogic\MagentoImport\Model\ResourceModel\RememberedEntity as RememberedEntityResource;
-use Elogic\MagentoImport\Api\DataImporter\DataImporterInterface;
+use ElogicCo\MagentoImport\Api\RememberedEntityRepositoryInterface;
+use ElogicCo\MagentoImport\Model\Extensions\ApplyObserverFactory;
+use ElogicCo\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
+use ElogicCo\MagentoImport\Model\Extensions\RememberProcessor\RememberProcessorPool\Proxy as RememberProcessorPoolProxy;
+use ElogicCo\MagentoImport\Model\ResourceModel\RememberedEntity as RememberedEntityResource;
+use ElogicCo\MagentoImport\Api\DataImporter\DataImporterInterface;
 
 class RememberReplace implements RememberProcessorInterface
 {
@@ -90,7 +90,7 @@ class RememberReplace implements RememberProcessorInterface
         int $entityKey,
         DataImportInfoInterface $dataImportInfo
     ): RememberedEntityInterface {
-        /** @var \Elogic\MagentoImport\Model\Extensions\ApplyObserver $applyObserverModel */
+        /** @var \ElogicCo\MagentoImport\Model\Extensions\ApplyObserver $applyObserverModel */
         $applyObserverModel = $this->applyObserverFactory->create();
         $scope = $applyObserverModel->getFullEventName($dataImportInfo);
         $rememberMode = $this->getCurrentRememberMode();
@@ -110,7 +110,7 @@ class RememberReplace implements RememberProcessorInterface
      */
     public function getArraySinceRememberedEntity(array $array, DataImportInfoInterface $dataImportInfo): array
     {
-        /** @var \Elogic\MagentoImport\Model\Extensions\ApplyObserver $applyObserverModel */
+        /** @var \ElogicCo\MagentoImport\Model\Extensions\ApplyObserver $applyObserverModel */
         $applyObserverModel = $this->applyObserverFactory->create();
         $scope = $applyObserverModel->getFullEventName($dataImportInfo);
 

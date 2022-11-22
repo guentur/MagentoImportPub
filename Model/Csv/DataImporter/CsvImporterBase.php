@@ -1,12 +1,12 @@
 <?php
 
-namespace Elogic\MagentoImport\Model\Csv\DataImporter;
+namespace ElogicCo\MagentoImport\Model\Csv\DataImporter;
 
-use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
-use Elogic\MagentoImport\Api\DataImporter\ImporterBaseInterface;
-use Elogic\MagentoImport\Model\Csv\Validator\CsvFileValidator;
-use Elogic\MagentoImport\Api\Extensions\ApplyObserverInterfaceFactory;
-use Elogic\MagentoImport\Model\Mapper\DefaultMapping;
+use ElogicCo\MagentoImport\Api\Data\DataImportInfoInterface;
+use ElogicCo\MagentoImport\Api\DataImporter\ImporterBaseInterface;
+use ElogicCo\MagentoImport\Model\Csv\Validator\CsvFileValidator;
+use ElogicCo\MagentoImport\Api\Extensions\ApplyObserverInterfaceFactory;
+use ElogicCo\MagentoImport\Model\Mapper\DefaultMapping;
 
 class CsvImporterBase implements ImporterBaseInterface
 {
@@ -34,7 +34,7 @@ class CsvImporterBase implements ImporterBaseInterface
      * @param array $dataToInsert
      * @return bool
      *
-     * @todo Ask Alexander: "Is it right to pass dataToInsert into Elogic\MagentoImport\Model\Data\DataImportInfo
+     * @todo Ask Alexander: "Is it right to pass dataToInsert into ElogicCo\MagentoImport\Model\Data\DataImportInfo
      * I think it is the right thing, because the data for importing should transfer with information where it is transfering
      */
     public function importData(array $dataToInsert): bool

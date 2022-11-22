@@ -1,6 +1,6 @@
 <?php
 
-namespace Elogic\MagentoImport\Api\Extensions\RememberProcessor;
+namespace ElogicCo\MagentoImport\Api\Extensions\RememberProcessor;
 
 use Magento\Framework\Exception\LocalizedException;
 

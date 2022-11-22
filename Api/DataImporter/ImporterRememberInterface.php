@@ -1,8 +1,8 @@
 <?php
 
-namespace Elogic\MagentoImport\Api\DataImporter;
+namespace ElogicCo\MagentoImport\Api\DataImporter;
 
-use Elogic\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
+use ElogicCo\MagentoImport\Api\Extensions\RememberProcessor\RememberProcessorInterface;
 
 interface ImporterRememberInterface extends DataImporterInterface
 {

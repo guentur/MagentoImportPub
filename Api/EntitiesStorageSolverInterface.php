@@ -1,6 +1,6 @@
 <?php
 
-namespace Elogic\MagentoImport\Api;
+namespace ElogicCo\MagentoImport\Api;
 
 interface EntitiesStorageSolverInterface
 {

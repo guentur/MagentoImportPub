@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Elogic\MagentoImport\Model\Data;
+namespace ElogicCo\MagentoImport\Model\Data;
 
-use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
+use ElogicCo\MagentoImport\Api\Data\DataImportInfoInterface;
 use Magento\Framework\Api\AbstractSimpleObject;
 
 class DataImportInfo extends AbstractSimpleObject implements DataImportInfoInterface

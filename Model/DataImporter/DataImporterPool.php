@@ -1,9 +1,9 @@
 <?php
 
-namespace Elogic\MagentoImport\Model\DataImporter;
+namespace ElogicCo\MagentoImport\Model\DataImporter;
 
-use Elogic\MagentoImport\Api\DataImporter\DataImporterInterface;
-use Elogic\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
+use ElogicCo\MagentoImport\Api\DataImporter\DataImporterInterface;
+use ElogicCo\MagentoImport\Api\DataImporter\DataImporterPoolInterface;
 use InvalidArgumentException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\ObjectManagerInterface;
@@ -31,7 +31,7 @@ class DataImporterPool implements DataImporterPoolInterface
     {
         if (!array_key_exists($type, $this->dataImporters)) {
             throw new InvalidArgumentException('Data importer for name ' . $type . ' not found.
-             Data importer must be defined in di.xml file for Elogic\MagentoImport\Api\DataImporterPoolInterface');
+             Data importer must be defined in di.xml file for ElogicCo\MagentoImport\Api\DataImporterPoolInterface');
         }
 
         $dataImporterInstance = $this->create($this->dataImporters[$type]);
