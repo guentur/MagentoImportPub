@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Elogic\MagentoImport\Model\Data;
+namespace ElogicCo\MagentoImport\Model\Data;
 
-use Elogic\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
+use ElogicCo\MagentoImport\Api\Data\RememberedEntitySearchResultInterface;
 use Magento\Framework\Api\SearchResults;
 
 /**

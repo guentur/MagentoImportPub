@@ -1,6 +1,6 @@
 <?php
 
-namespace Elogic\MagentoImport\Api\DataImporter;
+namespace ElogicCo\MagentoImport\Api\DataImporter;
 
 interface ImporterBaseInterface extends DataImporterInterface
 {

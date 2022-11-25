@@ -1,9 +1,9 @@
 <?php
 
-namespace Elogic\MagentoImport\Model;
+namespace ElogicCo\MagentoImport\Model;
 
-use Elogic\MagentoImport\Model\Mapper\DefaultMapping;
-use Elogic\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
+use ElogicCo\MagentoImport\Model\Mapper\DefaultMapping;
+use ElogicCo\MagentoImport\Api\Data\DataImportInfoInterfaceFactory;
 
 class EntityManager
 {
@@ -49,7 +49,7 @@ class EntityManager
     {
         $scopeFormatEntityList = [];
         foreach ($importFormatEntityList as $importData) {
-            /** \Elogic\MagentoImport\Api\Data\DataImportInfoInterface $dataImportInfo */
+            /** \ElogicCo\MagentoImport\Api\Data\DataImportInfoInterface $dataImportInfo */
             $dataImportInfo = $this->dataImportInfoF->create();
             $dataImportInfo->setPathToDataProvider($importData['path_to_provider']);
             $dataImportInfo->setPathToRecipient($importData['path_to_recipient']);

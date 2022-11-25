@@ -1,8 +1,8 @@
 <?php
 
-namespace Elogic\MagentoImport\Api\Extensions\RememberProcessor;
+namespace ElogicCo\MagentoImport\Api\Extensions\RememberProcessor;
 
-use Elogic\MagentoImport\Api\Data\DataImportInfoInterface;
+use ElogicCo\MagentoImport\Api\Data\DataImportInfoInterface;
 
 interface RememberedEntitiesProviderInterface
 {

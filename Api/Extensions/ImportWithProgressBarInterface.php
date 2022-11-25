@@ -1,8 +1,8 @@
 <?php
 
-namespace Elogic\MagentoImport\Api\Extensions;
+namespace ElogicCo\MagentoImport\Api\Extensions;
 
-use Elogic\MagentoImport\Model\Extensions\ProgressBarWrapper;
+use ElogicCo\MagentoImport\Model\Extensions\ProgressBarWrapper;
 
 interface ImportWithProgressBarInterface
 {
